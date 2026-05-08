@@ -1,0 +1,23 @@
+services:
+  niamoto:
+    image: nginx:alpine
+    container_name: niamoto-nc
+    restart: unless-stopped
+    volumes:
+      - ${NIAMOTO_WWW_PATH:-/home/niamoto/nginx-www}:/usr/share/nginx/html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik}"
+      - "traefik.http.routers.niamoto.rule=Host(`niamoto.nc`) || Host(`www.niamoto.nc`) || Host(`niamoto.endemia.nc`)"
+      - "traefik.http.routers.niamoto.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}"
+      - "traefik.http.routers.niamoto.tls=true"
+      - "traefik.http.routers.niamoto.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}"
+      - "traefik.http.services.niamoto.loadbalancer.server.port=80"
+
+networks:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-traefik}

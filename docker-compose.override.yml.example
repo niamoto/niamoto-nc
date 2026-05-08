@@ -1,0 +1,16 @@
+# Copier en `docker-compose.override.yml` (gitignoré) pour les ajustements
+# spécifiques à l'environnement où ce stack tourne : middlewares Traefik,
+# routes additionnelles, mounts supplémentaires, etc.
+
+services:
+  niamoto:
+    labels:
+      # Exemple : middleware Anubis (TecharoHQ/anubis) pour filtrer les bots.
+      # À activer quand niamoto exposera des endpoints dynamiques sensibles.
+      # - "traefik.http.routers.niamoto.middlewares=anubis@docker"
+
+      # Exemple : middleware d'auth basique pour un environnement de test.
+      # - "traefik.http.routers.niamoto.middlewares=basic-auth@file"
+
+      # Exemple : limiter par géolocalisation.
+      # - "traefik.http.routers.niamoto.middlewares=geo-block@file"
