@@ -1,0 +1,692 @@
+{
+    "id": 651,
+    "full_name": "Cryptocarya bitriplinervia",
+    "authors": "Kosterm.",
+    "rank_name": "species",
+    "metadata": {
+        "auto_generated": false,
+        "taxon_type": "species",
+        "parent_family": "Lauraceae",
+        "parent_genus": "Cryptocarya",
+        "id_taxonref": 2695,
+        "taxonref": "Cryptocarya bitriplinervia Kosterm.",
+        "id_endemia": 3994,
+        "id_florical": 2220,
+        "endemia_url": "https://endemia.nc/flore/fiche3994",
+        "endemic": true,
+        "protected": false,
+        "protected_provnord": false,
+        "protected_provsud": false,
+        "redlist": true,
+        "redlist_cat": "DD",
+        "images": []
+    },
+    "lft": 1373,
+    "rght": 1374,
+    "level": 2,
+    "parent_id": 178,
+    "taxon_id": 651,
+    "general_info": {
+        "name": {
+            "value": "Cryptocarya bitriplinervia"
+        },
+        "rank": {
+            "value": "species"
+        },
+        "taxon_type": {
+            "value": "species"
+        },
+        "parent_family": {
+            "value": "Lauraceae"
+        },
+        "parent_genus": {
+            "value": "Cryptocarya"
+        },
+        "occurrences_count": {
+            "value": 6
+        },
+        "endemic": {
+            "value": "True"
+        },
+        "id_florical": {
+            "value": "2220"
+        },
+        "redlist_cat": {
+            "value": "DD"
+        },
+        "endemia_url": {
+            "value": "https://endemia.nc/flore/fiche3994"
+        },
+        "image_url": {
+            "value": null
+        },
+        "images": {
+            "value": "[]"
+        }
+    },
+    "distribution_map": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.78330994,
+                        -20.55983353
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.3544258,
+                        -21.9331227
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.354441,
+                        -21.93313289
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.25233459472656,
+                        -21.66844367980957
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.351111111111,
+                        -21.9361111111111
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            }
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Cryptocarya bitriplinervia"
+        ],
+        "counts": [
+            6
+        ]
+    },
+    "distribution_substrat": {
+        "um": 4,
+        "num": 2,
+        "um_percent": 66.67,
+        "num_percent": 33.33
+    },
+    "phenology": {
+        "phenology_raw": {
+            "month_data": {
+                "fleur": [
+                    0,
+                    0,
+                    0.0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.0
+                ],
+                "fruit": [
+                    0,
+                    0,
+                    0.0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    100.0
+                ]
+            },
+            "labels": [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Avr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aou",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ]
+        },
+        "phenology_peaks": {
+            "fleur": {
+                "value": [],
+                "count": 0,
+                "heights": [],
+                "threshold": 30.0,
+                "mean": 0.0,
+                "std": 0.0,
+                "min": 0.0,
+                "max": 0.0
+            },
+            "fruit": {
+                "value": [],
+                "count": 0,
+                "heights": [],
+                "threshold": 30.0,
+                "mean": 8.333333333333334,
+                "std": 27.638539919628336,
+                "min": 0.0,
+                "max": 100.0
+            }
+        },
+        "phenology_periods": {
+            "value": {
+                "fleur": {
+                    "periods": [],
+                    "count": 0,
+                    "total_active_duration": 0,
+                    "activity_percentage": 0.0
+                },
+                "fruit": {
+                    "periods": [
+                        {
+                            "start": 11,
+                            "end": 11,
+                            "duration": 1,
+                            "start_label": "Dec",
+                            "end_label": "Dec",
+                            "mean_value": 100.0,
+                            "max_value": 100.0
+                        }
+                    ],
+                    "count": 1,
+                    "total_active_duration": 1,
+                    "activity_percentage": 8.333333333333332
+                }
+            },
+            "series_count": 2,
+            "threshold": 0.0,
+            "min_duration": 1
+        },
+        "phenology_data": {
+            "value": {
+                "raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0
+                        ],
+                        "fruit": [
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            100.0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "peaks": {
+                    "fleur": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    },
+                    "fruit": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 8.333333333333334,
+                        "std": 27.638539919628336,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 1,
+                            "total_active_duration": 1,
+                            "activity_percentage": 8.333333333333332
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            },
+            "formula": "{'raw': phenology_raw, 'peaks': phenology_peaks, 'periods': phenology_periods}",
+            "description": "Custom formula",
+            "variables": {
+                "phenology_raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0
+                        ],
+                        "fruit": [
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            100.0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "phenology_peaks": {
+                    "fleur": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    },
+                    "fruit": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 8.333333333333334,
+                        "std": 27.638539919628336,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "phenology_periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 1,
+                            "total_active_duration": 1,
+                            "activity_percentage": 8.333333333333332
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            }
+        }
+    },
+    "phenology_distribution": {
+        "month_data": {
+            "fleur": [
+                0,
+                0,
+                0.0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0
+            ],
+            "fruit": [
+                0,
+                0,
+                0.0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                100.0
+            ]
+        },
+        "labels": [
+            "Jan",
+            "Fev",
+            "Mar",
+            "Avr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aou",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            200,
+            300,
+            400,
+            500
+        ],
+        "counts": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "dbh_max": {
+        "max": 10.8,
+        "units": "cm",
+        "max_value": 500
+    },
+    "height_max": {
+        "max": null,
+        "units": "m",
+        "max_value": 40
+    },
+    "elevation_distribution": {
+        "bins": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            1000,
+            1100,
+            1200,
+            1700
+        ],
+        "counts": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+        ],
+        "percentages": [
+            25.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            50.0,
+            0.0,
+            0.0,
+            0.0,
+            25.0,
+            0.0,
+            0.0
+        ]
+    },
+    "wood_density": {
+        "mean": null,
+        "units": "g/cm3",
+        "max_value": 1.2
+    },
+    "rainfall_distribution": {
+        "bins": [
+            1000,
+            1500,
+            2000,
+            2500,
+            3000,
+            3500,
+            4000,
+            4500,
+            5000
+        ],
+        "counts": [
+            1,
+            2,
+            0,
+            0,
+            3,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            16.67,
+            33.33,
+            0.0,
+            0.0,
+            50.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "holdridge_distribution": {
+        "categories": [
+            1,
+            2,
+            3
+        ],
+        "counts": [
+            0,
+            3,
+            3
+        ],
+        "labels": [
+            "Sec",
+            "Humide",
+            "Tr\u00e8s humide"
+        ],
+        "percentages": [
+            0.0,
+            50.0,
+            50.0
+        ]
+    },
+    "strata_distribution": {
+        "categories": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0
+        ],
+        "labels": [
+            "Sous-bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ]
+    },
+    "bark_thickness": {
+        "mean": null,
+        "units": "mm",
+        "max_value": 80
+    },
+    "leaf_sla": {
+        "mean": null,
+        "units": "g/m2",
+        "max_value": 50
+    },
+    "leaf_area": {
+        "mean": null,
+        "units": "cm2",
+        "max_value": 1500
+    },
+    "leaf_thickness": {
+        "mean": null,
+        "units": "\u00b5m",
+        "max_value": 800
+    }
+}

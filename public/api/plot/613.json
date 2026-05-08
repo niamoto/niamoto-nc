@@ -1,0 +1,232 @@
+{
+    "id": 613,
+    "locality": "Tchingou",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            164.991062,
+            -20.907664
+        ]
+    },
+    "plot_id": 613,
+    "general_info": {
+        "plot_name": {
+            "value": "Tchingou"
+        },
+        "elevation": {
+            "value": "936",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "3250",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "True"
+        },
+        "nb_families": {
+            "value": "33"
+        },
+        "nb_species": {
+            "value": "83"
+        },
+        "occurrences_count": {
+            "value": "1323"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.991062,
+                        -20.907664
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Sapindaceae",
+            "Lauraceae",
+            "Balanopaceae",
+            "Myrtaceae",
+            "Araliaceae",
+            "Sapotaceae",
+            "Primulaceae",
+            "Podocarpaceae",
+            "Myodocarpaceae",
+            "Celastraceae"
+        ],
+        "counts": [
+            316.0,
+            151.0,
+            86.0,
+            83.0,
+            69.0,
+            65.0,
+            55.0,
+            55.0,
+            52.0,
+            51.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Gongrodiscus bilocularis",
+            "Cryptocarya velutinosa",
+            "Balanops sparsiflora",
+            "Pleioluma rubicunda",
+            "Retrophyllum comptonii",
+            "Nemuaron vieillardii",
+            "Salaciopsis sparsiflora",
+            "Myrsine asymmetrica",
+            "Burretiokentia vieillardii",
+            "Chionanthus brachystachys"
+        ],
+        "counts": [
+            284.0,
+            106.0,
+            86.0,
+            53.0,
+            48.0,
+            48.0,
+            47.0,
+            43.0,
+            34.0,
+            29.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            1046.0,
+            194.0,
+            53.0,
+            16.0,
+            13.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            52,
+            256,
+            992,
+            23
+        ],
+        "percentages": [
+            3.93,
+            19.35,
+            74.98,
+            1.74
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            24,
+            55,
+            35,
+            1208
+        ],
+        "percentages": [
+            1.82,
+            4.16,
+            2.65,
+            91.38
+        ]
+    },
+    "species_level": {
+        "value": "0.9947",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1323,
+            151
+        ],
+        "percentages": [
+            89.76,
+            10.24
+        ],
+        "arbres_vivants": {
+            "value": 1323,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 151,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "9.6",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6829347357584883",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "35.9",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 83,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.43",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.78",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.93",
+        "units": ""
+    },
+    "biomass": {
+        "value": "163.504634373308",
+        "units": "t/ha"
+    }
+}

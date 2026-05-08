@@ -1,0 +1,232 @@
+{
+    "id": 17,
+    "locality": "Laguen",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            164.7802124,
+            -20.62504005
+        ]
+    },
+    "plot_id": 17,
+    "general_info": {
+        "plot_name": {
+            "value": "Laguen"
+        },
+        "elevation": {
+            "value": "568",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "3150",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "40"
+        },
+        "nb_species": {
+            "value": "83"
+        },
+        "occurrences_count": {
+            "value": "1405"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.7802124,
+                        -20.62504005
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Arecaceae",
+            "Sapindaceae",
+            "Monimiaceae",
+            "Rhizophoraceae",
+            "Sapotaceae",
+            "Dicksoniaceae",
+            "Lauraceae",
+            "Meliaceae",
+            "Nyctaginaceae",
+            "Araliaceae"
+        ],
+        "counts": [
+            495.0,
+            179.0,
+            91.0,
+            90.0,
+            77.0,
+            75.0,
+            70.0,
+            65.0,
+            43.0,
+            35.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Basselinia glabrata",
+            "Cyphophoenix alba",
+            "Burretiokentia vieillardii",
+            "Crossostylis multiflora",
+            "Pycnandra comptonii",
+            "Dicksonia thyrsopteroides",
+            "Hedycarya cupulata",
+            "Didymocheton kouiriensis",
+            "Cupaniopsis petiolulata",
+            "Cupaniopsis macrocarpa"
+        ],
+        "counts": [
+            289.0,
+            107.0,
+            94.0,
+            90.0,
+            76.0,
+            75.0,
+            65.0,
+            61.0,
+            59.0,
+            45.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            1123.0,
+            148.0,
+            74.0,
+            33.0,
+            21.0,
+            6.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            441,
+            6,
+            784,
+            174
+        ],
+        "percentages": [
+            31.39,
+            0.43,
+            55.8,
+            12.38
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            70,
+            0,
+            463,
+            872
+        ],
+        "percentages": [
+            4.98,
+            0.0,
+            32.95,
+            62.06
+        ]
+    },
+    "species_level": {
+        "value": "0.9964",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1405,
+            90
+        ],
+        "percentages": [
+            93.98,
+            6.02
+        ],
+        "arbres_vivants": {
+            "value": 1405,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 90,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "11.2",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.5986522356654713",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "41.8",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 83,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.29",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.75",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.94",
+        "units": ""
+    },
+    "biomass": {
+        "value": "209.082494491058",
+        "units": "t/ha"
+    }
+}

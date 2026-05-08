@@ -4,7 +4,7 @@ services:
     container_name: niamoto-nc
     restart: unless-stopped
     volumes:
-      - ${NIAMOTO_WWW_PATH:-/home/niamoto/nginx-www}:/usr/share/nginx/html:ro
+      - ./public:/usr/share/nginx/html:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - traefik

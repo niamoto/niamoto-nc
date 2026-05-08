@@ -1,0 +1,3260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Niamoto - Zones Géographiques</title>
+
+<style>
+    .search-container {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    #searchInput {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #718096;
+    }
+
+    /* Styles pour les onglets */
+    .tabs-container {
+        margin-bottom: 2rem;
+    }
+    
+    .tabs-header {
+        display: flex;
+        overflow-x: auto;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 1rem;
+    }
+    
+    .tab-button {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+    }
+    
+    .tab-button:hover {
+        background-color: #f7fafc;
+    }
+    
+    .tab-button.active {
+        border-bottom-color: #4299e1;
+        color: #4299e1;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+
+    .shape-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+
+    .shape-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .shape-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .shape-card-header {
+        padding: 1rem;
+        background-color: #f7fafc;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .shape-card-body {
+        padding: 1rem;
+    }
+
+    .shape-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .shape-info-label {
+        color: #718096;
+        font-size: 0.875rem;
+    }
+
+    .shape-info-value {
+        font-weight: 500;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #718096;
+        font-style: italic;
+    }
+
+    .shape-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem 0.75rem;
+        background-color: #edf2f7;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #4a5568;
+        margin-left: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .shape-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .tabs-header {
+            flex-wrap: nowrap;
+        }
+    }
+</style>
+
+    <link rel="stylesheet" href="../js/vendor/tailwindcss/2.2.19_dist_tailwind.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.9.4_leaflet.css">
+    <link rel="stylesheet" href="../css/font-awesome/6.6.0_all.min.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.css" />
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.Default.css" />
+
+
+    <style>
+        ul {
+            list-style-type: none;
+        }
+
+        .loader-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .button-container {
+            transition: all 0.3s ease;
+        }
+        .button-container.fixed {
+            position: fixed;
+            top: 63px; /* Adjust this value to match the height of your navigation menu */
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bg p-0 fixed w-full top-0 shadow-md z-50 custom-nav">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <a id="home-link" class="inline-flex items-center py-2 px-4 text-white no-underline" href="#" data-link="index.html">
+                <span class="site-title">Niamoto</span>
+            </a>
+        </div>
+
+        <div class="block lg:hidden">
+            <button id="nav-toggle"
+                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0zm0 6h20v2H0zm0 6h20v2H0z" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
+            <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="index.html">
+                        <i class="fas fa-home menu-icon"></i>Accueil
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#introduction">Introduction</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#project">Projet</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#objective">Objectifs</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#context">Contexte</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#flora">Flore</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="methodology.html">
+                        <i class="fas fa-flask menu-icon"></i>Méthodologie
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#methodes">Nos méthodes</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#faq">FAQ</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="trees.html">
+                        <i class="fas fa-leaf menu-icon"></i>Arbres
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#learnTaxon">Étudier les
+                arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#taxon">Les arbres de
+                Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="plots.html">
+                        <i class="fas fa-map-marked-alt menu-icon"></i>Peuplements
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#learnPlot">Étudier les
+                            peuplements forestiers</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#plot">Les
+                peuplements forestiers de Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="forests.html">
+                        <i class="fas fa-tree menu-icon"></i>Forêt
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#learnForest">Étudier la
+                forêt</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#forestNC">La forêt de Nouvelle-Calédonie</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#">
+                        <i class="fas fa-database menu-icon"></i>Accéder aux données
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="taxon/index.html">Arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plot/index.html">Peuplements</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="shape/index.html">Forêt</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="resources.html">
+                        <i class="fas fa-book menu-icon"></i>Ressources
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#equipe">L'équipe</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#productions">Productions</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    document.getElementById('nav-toggle').onclick = () =>
+        document.getElementById('nav-content').classList.toggle('hidden');
+
+    // Function to adjust the navigation links based on page depth
+        function adjustNavLinks(depth) {
+            document.querySelectorAll('a[data-link]').forEach(link => {
+                link.href = depth + link.getAttribute('data-link');
+            });
+        }
+
+        // Adjust the navigation links based on the depth
+        adjustNavLinks("../");
+
+</script>
+
+<style>
+    .site-title {
+        font-family: 'Arial Black', sans-serif; /* Custom font for a bold effect */
+        font-size: 2rem; /* Increased font size */
+        text-transform: uppercase; /* Uppercase letters for visibility */
+        letter-spacing: 2px; /* Spacing between letters */
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Text shadow for better visibility */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .site-title:hover {
+        color: #ffdd57; /* Change color on hover */
+    }
+
+    .text-contour {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .nav-bg {
+        background-color: rgba(34, 139, 34, 0.8); /* Fond vert semi-transparent */
+        transition: background-color 0.3s;
+    }
+
+    .nav-bg:hover {
+        background-color: rgba(34, 139, 34, 1); /* Fond vert opaque au survol */
+    }
+
+    .group:hover .group-hover\:block {
+        display: block;
+    }
+
+    .custom-nav {
+        z-index: 1500;
+    }
+
+    .custom-dropdown {
+        z-index: 1500;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* Fond blanc transparent au survol */
+        border-radius: 4px;
+    }
+
+    .menu-icon {
+        margin-right: 8px;
+    }
+</style>
+    <div class="flex flex-col lg:flex-row">
+        
+        
+        <div class="w-full">
+            
+<div class="container mx-auto px-4 py-8 mt-16">
+    <h1 class="text-3xl font-bold mb-6">Zones Géographiques</h1>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Rechercher une zone géographique..."
+            aria-label="Rechercher une zone géographique">
+        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+    </div>
+
+    <div id="noResults" class="no-results hidden">
+        <p>Aucune zone géographique trouvée pour cette recherche.</p>
+    </div>
+
+    <div class="tabs-container" id="shapesContainer">
+        <div class="tabs-header">
+            
+            <div class="tab-button active" data-tab="provinces">
+                Provinces
+                <span class="shape-badge">2</span>
+            </div>
+            
+            <div class="tab-button" data-tab="communes">
+                Communes
+                <span class="shape-badge">30</span>
+            </div>
+            
+            <div class="tab-button" data-tab="protected_areas">
+                Aires protégées
+                <span class="shape-badge">34</span>
+            </div>
+            
+            <div class="tab-button" data-tab="substrates">
+                Substrats
+                <span class="shape-badge">1</span>
+            </div>
+            
+            <div class="tab-button" data-tab="holdridge">
+                Zone de vie
+                <span class="shape-badge">3</span>
+            </div>
+            
+            <div class="tab-button" data-tab="water_catchments">
+                Captage
+                <span class="shape-badge">2</span>
+            </div>
+            
+            <div class="tab-button" data-tab="mines">
+                Emprises Minières
+                <span class="shape-badge">17</span>
+            </div>
+            
+        </div>
+
+        
+        <div class="tab-content active" data-type="provinces">
+            <div class="shape-grid">
+                
+                <a href="../shape/1.html" class="shape-card" data-id="1"
+                    data-name="province nord" data-type="provinces">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">PROVINCE NORD</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">941 252 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">321
+                                712 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">214.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/2.html" class="shape-card" data-id="2"
+                    data-name="province sud" data-type="provinces">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">PROVINCE SUD</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">698 046 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">219
+                                352 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">211.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="tab-content" data-type="communes">
+            <div class="shape-grid">
+                
+                <a href="../shape/29.html" class="shape-card" data-id="29"
+                    data-name="belep" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">BELEP</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">6 464 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">917 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">99.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/31.html" class="shape-card" data-id="31"
+                    data-name="boulouparis" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">BOULOUPARIS</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">86 145 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">17
+                                537 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">201.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/22.html" class="shape-card" data-id="22"
+                    data-name="bourail" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">BOURAIL</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">79 380 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">16
+                                366 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">94.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/14.html" class="shape-card" data-id="14"
+                    data-name="canala" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">CANALA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">43 143 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">14
+                                264 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">305.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/21.html" class="shape-card" data-id="21"
+                    data-name="dumbea" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">DUMBEA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">25 135 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">8
+                                443 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">329.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/16.html" class="shape-card" data-id="16"
+                    data-name="farino" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">FARINO</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">4 799 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">2
+                                879 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">318.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/20.html" class="shape-card" data-id="20"
+                    data-name="hienghene" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">HIENGHENE</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">95 743 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">52
+                                332 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">368.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/27.html" class="shape-card" data-id="27"
+                    data-name="houailou" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">HOUAILOU</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">93 522 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">46
+                                428 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">307.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/17.html" class="shape-card" data-id="17"
+                    data-name="ile des pins" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">ILE DES PINS</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">15 822 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">10
+                                478 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">24.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/24.html" class="shape-card" data-id="24"
+                    data-name="kaala gomen" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">KAALA GOMEN</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">74 223 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">9
+                                581 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">159.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/18.html" class="shape-card" data-id="18"
+                    data-name="kone" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">KONE</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">36 916 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">7
+                                024 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">112.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/26.html" class="shape-card" data-id="26"
+                    data-name="kouaoua" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">KOUAOUA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">38 309 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">12
+                                446 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">307.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/25.html" class="shape-card" data-id="25"
+                    data-name="koumac" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">KOUMAC</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">55 078 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">5
+                                479 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">135.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/4.html" class="shape-card" data-id="4"
+                    data-name="la foa" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">LA FOA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">46 077 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">12
+                                674 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">100.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/7.html" class="shape-card" data-id="7"
+                    data-name="moindou" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">MOINDOU</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">32 131 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">12
+                                905 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">205.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/3.html" class="shape-card" data-id="3"
+                    data-name="mont dore" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">MONT DORE</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">63 576 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">11
+                                678 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">149.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/13.html" class="shape-card" data-id="13"
+                    data-name="noumea" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">NOUMEA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">4 940 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">323 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">15.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/6.html" class="shape-card" data-id="6"
+                    data-name="ouegoa" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">OUEGOA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">64 863 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">18
+                                204 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">168.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/11.html" class="shape-card" data-id="11"
+                    data-name="paita" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">PAITA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">69 208 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">12
+                                669 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">158.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/15.html" class="shape-card" data-id="15"
+                    data-name="poindimie" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">POINDIMIE</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">66 482 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">38
+                                605 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">268.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/23.html" class="shape-card" data-id="23"
+                    data-name="ponerihouen" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">PONERIHOUEN</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">70 029 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">42
+                                718 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">304.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/9.html" class="shape-card" data-id="9"
+                    data-name="pouebo" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">POUEBO</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">19 561 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">8
+                                871 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">350.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/28.html" class="shape-card" data-id="28"
+                    data-name="pouembout" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">POUEMBOUT</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">66 754 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">12
+                                240 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">131.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/5.html" class="shape-card" data-id="5"
+                    data-name="poum" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">POUM</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">46 989 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">2
+                                524 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">41.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/19.html" class="shape-card" data-id="19"
+                    data-name="poya" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">POYA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">83 963 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">24
+                                475 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">126.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/8.html" class="shape-card" data-id="8"
+                    data-name="sarramea" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">SARRAMEA</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">10 536 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">6
+                                752 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">366.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/32.html" class="shape-card" data-id="32"
+                    data-name="thio" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">THIO</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">98 874 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">43
+                                062 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">436.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/30.html" class="shape-card" data-id="30"
+                    data-name="touho" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">TOUHO</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">27 673 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">14
+                                099 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">204.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/12.html" class="shape-card" data-id="12"
+                    data-name="voh" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">VOH</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">79 663 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">16
+                                984 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">190.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/10.html" class="shape-card" data-id="10"
+                    data-name="yate" data-type="communes">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">YATE</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">133 301 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">58
+                                107 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">323.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="tab-content" data-type="protected_areas">
+            <div class="shape-grid">
+                
+                <a href="../shape/54.html" class="shape-card" data-id="54"
+                    data-name="barrage de yaté" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Barrage de Yaté</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">548 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">114 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">231.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/56.html" class="shape-card" data-id="56"
+                    data-name="bois du sud" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Bois du Sud</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">15 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">8 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">188.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/48.html" class="shape-card" data-id="48"
+                    data-name="cap n'dua" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Cap N'dua</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">806 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">196 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">59.5 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/47.html" class="shape-card" data-id="47"
+                    data-name="chutes de la madeleine" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Chutes de la Madeleine</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">393 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">21 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">246.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/59.html" class="shape-card" data-id="59"
+                    data-name="fausse yaté" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Fausse Yaté</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">387 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">258 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">371.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/41.html" class="shape-card" data-id="41"
+                    data-name="forêt cachée" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Forêt cachée</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">630 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">179 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">365.5 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/36.html" class="shape-card" data-id="36"
+                    data-name="forêt de saille" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Forêt de Saille</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">1 099 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">705 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">663.5 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/51.html" class="shape-card" data-id="51"
+                    data-name="forêt nord" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Forêt Nord</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">419 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">220 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">257.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/52.html" class="shape-card" data-id="52"
+                    data-name="haute dumbéa" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Haute Dumbéa</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">8 125 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">4
+                                415 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">485.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/43.html" class="shape-card" data-id="43"
+                    data-name="haute pourina" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Haute Pourina</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">4 462 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">3
+                                931 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">511.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/45.html" class="shape-card" data-id="45"
+                    data-name="haute yaté" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Haute Yaté</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">5 541 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">4
+                                160 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">601.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/58.html" class="shape-card" data-id="58"
+                    data-name="massif du kouakoué" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Massif du Kouakoué</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">7 480 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">6
+                                635 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">816.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/39.html" class="shape-card" data-id="39"
+                    data-name="mont do" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Mont Do</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">298 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">116 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">827.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/60.html" class="shape-card" data-id="60"
+                    data-name="mont humboldt" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Mont Humboldt</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">1 658 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1
+                                069 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">1151.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/57.html" class="shape-card" data-id="57"
+                    data-name="mont mou" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Mont Mou</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">675 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">319 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">858.5 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/44.html" class="shape-card" data-id="44"
+                    data-name="montagne des sources" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Montagne des sources</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">5 694 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">2
+                                234 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">499.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/53.html" class="shape-card" data-id="53"
+                    data-name="netcha" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Netcha</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">69 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">0 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">233.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/34.html" class="shape-card" data-id="34"
+                    data-name="nodéla" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Nodéla</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">919 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">837 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">746.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/35.html" class="shape-card" data-id="35"
+                    data-name="parc de la côte oubliée" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Parc de la Côte Oubliée</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">92 969 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">57
+                                833 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">601.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/61.html" class="shape-card" data-id="61"
+                    data-name="parc de la haute dumbéa" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Parc de la Haute Dumbéa</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">9 171 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">4
+                                626 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">468.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/33.html" class="shape-card" data-id="33"
+                    data-name="parc des grandes fougères" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Parc des Grandes Fougères</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">4 542 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">4
+                                110 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">503.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/38.html" class="shape-card" data-id="38"
+                    data-name="parc municipal du ouen toro - albert etuvé et lucien audet" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Parc Municipal du Ouen Toro - Albert Etuvé et Lucien Audet</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">51 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">15 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">51.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/37.html" class="shape-card" data-id="37"
+                    data-name="parc provincial de la rivière bleue" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Parc provincial de la Rivière bleue</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">22 070 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">13
+                                097 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">384.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/40.html" class="shape-card" data-id="40"
+                    data-name="parc zoologique et forestier michel corbasson" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Parc zoologique et forestier Michel Corbasson</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">31 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">13 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">87.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/55.html" class="shape-card" data-id="55"
+                    data-name="pic du grand kaori" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Pic du grand Kaori</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">309 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">79 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">354.5 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/50.html" class="shape-card" data-id="50"
+                    data-name="pic du pin" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Pic du Pin</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">1 495 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">674 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">386.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/49.html" class="shape-card" data-id="49"
+                    data-name="pic ningua" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Pic Ningua</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">357 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">276 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">1143.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/64.html" class="shape-card" data-id="64"
+                    data-name="roches de la ouaième" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Roches de la Ouaième</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">576 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">230 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">458.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/62.html" class="shape-card" data-id="62"
+                    data-name="réserve de l'aoupinié" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Réserve de l'Aoupinié</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">5 364 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">4
+                                996 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">506.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/66.html" class="shape-card" data-id="66"
+                    data-name="réserve de l'ilot pam" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Réserve de l'Ilot Pam</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">466 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">31.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/63.html" class="shape-card" data-id="63"
+                    data-name="réserve du mont panié" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Réserve du Mont Panié</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">10 333 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">8
+                                963 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">705.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/42.html" class="shape-card" data-id="42"
+                    data-name="vallée de la thy" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Vallée de la Thy</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">1 116 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">679 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">489.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/65.html" class="shape-card" data-id="65"
+                    data-name="zone tampon de l'agdr de hyabé-lé jao" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Zone tampon de l'AGDR de Hyabé-lé Jao</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">3 091 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1
+                                584 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">416.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/46.html" class="shape-card" data-id="46"
+                    data-name="île leprédour" data-type="protected_areas">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Île Leprédour</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">569 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">17 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">48.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="tab-content" data-type="substrates">
+            <div class="shape-grid">
+                
+                <a href="../shape/67.html" class="shape-card" data-id="67"
+                    data-name="ultramafique" data-type="substrates">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Ultramafique</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">220 736 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">51
+                                403 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">247.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="tab-content" data-type="holdridge">
+            <div class="shape-grid">
+                
+                <a href="../shape/69.html" class="shape-card" data-id="69"
+                    data-name="humide" data-type="holdridge">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Humide</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">983 749 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">298
+                                331 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">213.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/68.html" class="shape-card" data-id="68"
+                    data-name="sec" data-type="holdridge">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Sec</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">480 912 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">44
+                                465 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">62.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/70.html" class="shape-card" data-id="70"
+                    data-name="très humide" data-type="holdridge">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Très Humide</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">323 242 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">186
+                                195 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">438.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="tab-content" data-type="water_catchments">
+            <div class="shape-grid">
+                
+                <a href="../shape/71.html" class="shape-card" data-id="71"
+                    data-name="ppe province nord" data-type="water_catchments">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">PPE Province Nord</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">95 621 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">48
+                                843 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">342.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/72.html" class="shape-card" data-id="72"
+                    data-name="ppe province sud" data-type="water_catchments">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">PPE Province Sud</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">217 330 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">71
+                                551 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">348.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="tab-content" data-type="mines">
+            <div class="shape-grid">
+                
+                <a href="../shape/86.html" class="shape-card" data-id="86"
+                    data-name="bogota" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Bogota</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">12 071 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">688 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">158.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/87.html" class="shape-card" data-id="87"
+                    data-name="camp des sapins" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Camp des Sapins</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">29 308 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">7
+                                449 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">517.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/80.html" class="shape-card" data-id="80"
+                    data-name="cap bocage" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Cap Bocage</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">5 493 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">517 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">112.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/73.html" class="shape-card" data-id="73"
+                    data-name="grand sud" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Grand Sud</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">74 348 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">12
+                                234 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">190.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/83.html" class="shape-card" data-id="83"
+                    data-name="koniambo" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Koniambo</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">17 113 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1
+                                905 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">243.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/79.html" class="shape-card" data-id="79"
+                    data-name="kopeto" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Kopeto</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">19 271 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">6
+                                228 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">406.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/78.html" class="shape-card" data-id="78"
+                    data-name="mont kaala" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Mont Kaala</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">5 638 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1
+                                017 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">293.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/81.html" class="shape-card" data-id="81"
+                    data-name="montagne de poum" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Montagne de Poum</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">4 830 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">42 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">45.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/89.html" class="shape-card" data-id="89"
+                    data-name="nakety_dothio" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Nakety_Dothio</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">8 378 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1
+                                318 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">231.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/77.html" class="shape-card" data-id="77"
+                    data-name="ouazangou" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Ouazangou</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">4 917 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">169 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">170.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/75.html" class="shape-card" data-id="75"
+                    data-name="ouinne" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Ouinne</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">10 877 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">3
+                                544 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">210.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/76.html" class="shape-card" data-id="76"
+                    data-name="pinpin" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Pinpin</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">4 824 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1
+                                826 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">345.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/84.html" class="shape-card" data-id="84"
+                    data-name="poro_boakaine_kiel" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Poro_Boakaine_Kiel</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">49 130 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">10
+                                154 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">259.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/74.html" class="shape-card" data-id="74"
+                    data-name="taom" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Taom</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">5 063 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">2
+                                241 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">454.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/85.html" class="shape-card" data-id="85"
+                    data-name="thio plateau" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Thio Plateau</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">6 762 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">1
+                                077 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">250.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/82.html" class="shape-card" data-id="82"
+                    data-name="tiebaghi" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Tiebaghi</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">13 266 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">382 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">89.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+                <a href="../shape/88.html" class="shape-card" data-id="88"
+                    data-name="tontouta_sensu_lato" data-type="mines">
+                    <div class="shape-card-header">
+                        <h3 class="font-bold text-lg">Tontouta_sensu_lato</h3>
+                    </div>
+                    <div class="shape-card-body">
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface totale:</span>
+                            <span class="shape-info-value">37 319 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Surface forestière:</span>
+                            <span class="shape-info-value">12
+                                890 ha</span>
+                        </div>
+                        
+
+                        
+                        <div class="shape-info">
+                            <span class="shape-info-label">Altitude médiane:</span>
+                            <span class="shape-info-value">485.0 m</span>
+                        </div>
+                        
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+        </div>
+    </div>
+    <footer class="bg-green-700 text-white p-4 mt-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white p-2 w-3/5 rounded-lg shadow-md flex justify-center">
+                    <a class='logo' href="https://www.province-nord.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="pn" src="../files/pn_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.province-sud.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/ps_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://endemia.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/endemia_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://amap.cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="amap" src="../files/amap_100.png"></figure>
+                    </a>
+                    <a class='logo' href="http://publish.plantnet-project.org/project/nou" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="herbarium" src="../files/herbarium_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://iac.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="iac" src="../files/iac_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://nouvelle-caledonie.ird.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ird" src="../files/ird_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="cirad" src="../files/cirad_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.ofb.gouv.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ofb" src="../files/ofb_100.png"></figure>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>Niamoto - Portail de la forêt de Nouvelle-Calédonie</p>
+                <a class="inline-block py-2 px-4 text-white no-underline" href="https://github.com/niamoto/niamoto" target="_blank">
+                    <span class="fab fa-github fa-lg" aria-hidden="true"></span> Github
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/vendor/chart/4.4.2_chart.js"></script>
+    <script src="../js/vendor/d3/7.8.5_d3.js"></script>
+    <script src="../js/vendor/jquery/3.6.0_jquery.js"></script>
+    <script src="../js/vendor/lodash/4.17.21_lodash.min.js"></script>
+    <script src="../js/vendor/raphael/2.3.0_raphael.js"></script>
+    <script src="../js/vendor/justgage/1.6.1_justgage.js"></script>
+    <script src="../js/vendor/leaflet/1.9.4_leaflet.js"></script>
+    <script src="../js/vendor/leaflet/1.5.3_leaflet.markercluster.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const buttonContainer = document.getElementById('buttonContainer');
+
+            // Only proceed if the button container exists
+            if (buttonContainer) {
+                const buttonContainerOffset = buttonContainer.offsetTop;
+                const navHeight = 60; // Adjust this value to match your navigation height
+
+                window.onscroll = () => {
+                    if (window.pageYOffset > buttonContainerOffset - navHeight) {
+                        buttonContainer.classList.add('fixed');
+                    } else {
+                        buttonContainer.classList.remove('fixed');
+                    }
+                };
+
+                // Initial check in case the page is loaded scrolled
+                window.onscroll();
+            }
+        });
+    </script>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Set up tabs functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tabName = this.dataset.tab;
+                
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to current button and content
+                this.classList.add('active');
+                document.querySelector(`.tab-content[data-type="${tabName}"]`).classList.add('active');
+            });
+        });
+
+        // Set up search functionality
+        const searchInput = document.getElementById('searchInput');
+        const shapeCards = document.querySelectorAll('.shape-card');
+        const tabContainers = document.querySelectorAll('.tab-content');
+        const noResultsMessage = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase().trim();
+            let hasResults = false;
+
+            if (searchTerm === '') {
+                // If search is empty, restore original tab view
+                shapeCards.forEach(card => {
+                    card.style.display = '';
+                });
+                tabContainers.forEach(container => {
+                    container.style.display = '';
+                });
+                document.querySelector('.tab-button.active').click();
+                noResultsMessage.style.display = 'none';
+                return;
+            }
+
+            // Show all tabs content for searching
+            tabContainers.forEach(container => {
+                container.classList.add('active');
+            });
+
+            // Hide/show cards based on search term
+            shapeCards.forEach(card => {
+                const name = card.dataset.name;
+                const type = card.dataset.type;
+                const matches = name.includes(searchTerm);
+
+                card.style.display = matches ? '' : 'none';
+
+                if (matches) {
+                    hasResults = true;
+                }
+            });
+
+            // Show/hide no results message
+            noResultsMessage.style.display = hasResults ? 'none' : 'block';
+        });
+    });
+</script>
+
+</body>
+</html>

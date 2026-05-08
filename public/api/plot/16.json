@@ -1,0 +1,232 @@
+{
+    "id": 16,
+    "locality": "Kouaoua",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.75047302,
+            -21.43766403
+        ]
+    },
+    "plot_id": 16,
+    "general_info": {
+        "plot_name": {
+            "value": "Kouaoua"
+        },
+        "elevation": {
+            "value": "914",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2310",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "True"
+        },
+        "nb_families": {
+            "value": "26"
+        },
+        "nb_species": {
+            "value": "42"
+        },
+        "occurrences_count": {
+            "value": "1198"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.75047302,
+                        -21.43766403
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Nothofagaceae",
+            "Myrtaceae",
+            "Myodocarpaceae",
+            "Araucariaceae",
+            "Metteniusaceae",
+            "Cunoniaceae",
+            "Atherospermataceae",
+            "Oleaceae",
+            "Balanopaceae",
+            "Clusiaceae"
+        ],
+        "counts": [
+            734.0,
+            104.0,
+            88.0,
+            65.0,
+            48.0,
+            36.0,
+            14.0,
+            14.0,
+            13.0,
+            12.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Nothofagus balansae",
+            "Myodocarpus gracilis",
+            "Araucaria montana",
+            "Apodytes clusiifolia",
+            "Syzygium frutescens",
+            "Xanthomyrtus kanalaensis",
+            "Cunonia montana",
+            "Syzygium brongniartii",
+            "Myodocarpus fraxinifolius",
+            "Notelaea cymosa"
+        ],
+        "counts": [
+            734.0,
+            65.0,
+            65.0,
+            48.0,
+            30.0,
+            28.0,
+            26.0,
+            25.0,
+            23.0,
+            14.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            978.0,
+            187.0,
+            26.0,
+            5.0,
+            2.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            49,
+            178,
+            940,
+            31
+        ],
+        "percentages": [
+            4.09,
+            14.86,
+            78.46,
+            2.59
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            9,
+            74,
+            1,
+            1114
+        ],
+        "percentages": [
+            0.75,
+            6.18,
+            0.08,
+            92.99
+        ]
+    },
+    "species_level": {
+        "value": "0.9992",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1198,
+            307
+        ],
+        "percentages": [
+            79.6,
+            20.4
+        ],
+        "arbres_vivants": {
+            "value": 1198,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 307,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "9.5",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.7280040295990899",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "27",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 42,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "1.83",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.49",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.61",
+        "units": ""
+    },
+    "biomass": {
+        "value": "122.968358624035",
+        "units": "t/ha"
+    }
+}

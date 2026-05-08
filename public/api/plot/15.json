@@ -1,0 +1,232 @@
+{
+    "id": 15,
+    "locality": "Katalupa\u00ef",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.00839233,
+            -20.85251427
+        ]
+    },
+    "plot_id": 15,
+    "general_info": {
+        "plot_name": {
+            "value": "Katalupa\u00ef"
+        },
+        "elevation": {
+            "value": "294",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2260",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "39"
+        },
+        "nb_species": {
+            "value": "93"
+        },
+        "occurrences_count": {
+            "value": "1265"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.00839233,
+                        -20.85251427
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Arecaceae",
+            "Sapindaceae",
+            "Rutaceae",
+            "Meliaceae",
+            "Rhizophoraceae",
+            "Ebenaceae",
+            "Malvaceae",
+            "Annonaceae",
+            "Rubiaceae",
+            "Lauraceae"
+        ],
+        "counts": [
+            221.0,
+            183.0,
+            111.0,
+            95.0,
+            72.0,
+            67.0,
+            48.0,
+            46.0,
+            42.0,
+            40.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Burretiokentia vieillardii",
+            "Flindersia fournieri",
+            "Cupaniopsis macrocarpa",
+            "Crossostylis grandiflora",
+            "Acropogon macrocarpus",
+            "Diospyros samoensis",
+            "Xylopia vieillardii",
+            "Didymocheton rufescens",
+            "Cupaniopsis sylvatica",
+            "Didymocheton kouiriensis"
+        ],
+        "counts": [
+            221.0,
+            96.0,
+            71.0,
+            53.0,
+            48.0,
+            46.0,
+            46.0,
+            39.0,
+            39.0,
+            39.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            1.0,
+            1002.0,
+            166.0,
+            53.0,
+            28.0,
+            14.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            175,
+            397,
+            664,
+            29
+        ],
+        "percentages": [
+            13.83,
+            31.38,
+            52.49,
+            2.29
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            38,
+            0,
+            221,
+            1006
+        ],
+        "percentages": [
+            3.0,
+            0.0,
+            17.47,
+            79.53
+        ]
+    },
+    "species_level": {
+        "value": "0.9992",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1265,
+            69
+        ],
+        "percentages": [
+            94.83,
+            5.17
+        ],
+        "arbres_vivants": {
+            "value": 1265,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 69,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "12.3",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6600857747878585",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "35.3",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 93,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.6",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.79",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.95",
+        "units": ""
+    },
+    "biomass": {
+        "value": "199.236394450931",
+        "units": "t/ha"
+    }
+}

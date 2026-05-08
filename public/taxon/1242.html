@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Niamoto - Pleioluma azou</title>
+
+    <script src="../js/taxonomy_tree.js"></script>
+
+    <style>
+        /* Sidebar styles */
+        #taxonomy-tree-container {
+            height: 100vh;
+            overflow-y: auto;
+            padding-top: 1rem;
+        }
+
+        #taxonomy-tree {
+            transition: all 0.3s ease-in-out;
+        }
+
+        @media (max-width: 1024px) {
+            #taxonomy-tree:not(.hidden) {
+                animation: slideDown 0.3s ease-in-out;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        #taxonSearch {
+            width: 100%;
+            padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 23%;
+            color: #666;
+            pointer-events: none;
+        }
+
+        #taxonomy-tree ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        #taxonomy-tree li {
+            margin: 5px 0;
+        }
+
+        #taxonomy-tree .toggle {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        #taxonomy-tree a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        #taxonomy-tree a:hover {
+            text-decoration: underline;
+        }
+
+        #taxonomy-tree .current-taxon {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Map styles */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chart styles */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        /* Widget styles */
+        .widget-container {
+            @apply bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0;
+        }
+
+        .widget-header {
+            @apply bg-gray-600 text-white p-3;
+        }
+
+        .widget-content {
+            @apply p-4;
+            min-height: 300px;
+        }
+
+        .tooltip-content {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-100%);
+            background-color: #ffffff;
+            color: #333333;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: normal;
+            width: 20rem;
+            z-index: 9999;
+            display: none;
+        }
+
+        .group:hover .tooltip-content {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            #taxonomy-tree-container {
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .widget-content {
+                min-height: 250px;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+        }
+
+        .loading-indicator {
+            padding: 8px 10px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-top-color: #007bff;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+
+        #imageModal {
+            background: rgba(255, 255, 255, 0); /* Fond semi-transparent noir autour */
+        }
+
+        #imageModal > div {
+            background-color: transparent; /* Rend le fond du conteneur transparent */
+            box-shadow: none; /* Supprime l'ombre si nécessaire */
+        }
+
+        #imageModal img {
+            border-radius: 8px; /* Coins arrondis pour l'image directement */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Ombre légère autour de l'image */
+        }
+
+
+@keyframes spin {
+    to {transform: rotate(360deg);}
+}
+    </style>
+
+    <script>
+        const taxonId = 1242;
+    </script>
+
+    <link rel="stylesheet" href="../js/vendor/tailwindcss/2.2.19_dist_tailwind.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.9.4_leaflet.css">
+    <link rel="stylesheet" href="../css/font-awesome/6.6.0_all.min.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.css" />
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.Default.css" />
+
+
+    <style>
+        ul {
+            list-style-type: none;
+        }
+
+        .loader-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .button-container {
+            transition: all 0.3s ease;
+        }
+        .button-container.fixed {
+            position: fixed;
+            top: 63px; /* Adjust this value to match the height of your navigation menu */
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bg p-0 fixed w-full top-0 shadow-md z-50 custom-nav">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <a id="home-link" class="inline-flex items-center py-2 px-4 text-white no-underline" href="#" data-link="index.html">
+                <span class="site-title">Niamoto</span>
+            </a>
+        </div>
+
+        <div class="block lg:hidden">
+            <button id="nav-toggle"
+                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0zm0 6h20v2H0zm0 6h20v2H0z" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
+            <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="index.html">
+                        <i class="fas fa-home menu-icon"></i>Accueil
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#introduction">Introduction</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#project">Projet</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#objective">Objectifs</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#context">Contexte</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#flora">Flore</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="methodology.html">
+                        <i class="fas fa-flask menu-icon"></i>Méthodologie
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#methodes">Nos méthodes</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#faq">FAQ</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="trees.html">
+                        <i class="fas fa-leaf menu-icon"></i>Arbres
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#learnTaxon">Étudier les
+                arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#taxon">Les arbres de
+                Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="plots.html">
+                        <i class="fas fa-map-marked-alt menu-icon"></i>Peuplements
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#learnPlot">Étudier les
+                            peuplements forestiers</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#plot">Les
+                peuplements forestiers de Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="forests.html">
+                        <i class="fas fa-tree menu-icon"></i>Forêt
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#learnForest">Étudier la
+                forêt</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#forestNC">La forêt de Nouvelle-Calédonie</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#">
+                        <i class="fas fa-database menu-icon"></i>Accéder aux données
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="taxon/index.html">Arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plot/index.html">Peuplements</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="shape/index.html">Forêt</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="resources.html">
+                        <i class="fas fa-book menu-icon"></i>Ressources
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#equipe">L'équipe</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#productions">Productions</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    document.getElementById('nav-toggle').onclick = () =>
+        document.getElementById('nav-content').classList.toggle('hidden');
+
+    // Function to adjust the navigation links based on page depth
+        function adjustNavLinks(depth) {
+            document.querySelectorAll('a[data-link]').forEach(link => {
+                link.href = depth + link.getAttribute('data-link');
+            });
+        }
+
+        // Adjust the navigation links based on the depth
+        adjustNavLinks("../");
+
+</script>
+
+<style>
+    .site-title {
+        font-family: 'Arial Black', sans-serif; /* Custom font for a bold effect */
+        font-size: 2rem; /* Increased font size */
+        text-transform: uppercase; /* Uppercase letters for visibility */
+        letter-spacing: 2px; /* Spacing between letters */
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Text shadow for better visibility */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .site-title:hover {
+        color: #ffdd57; /* Change color on hover */
+    }
+
+    .text-contour {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .nav-bg {
+        background-color: rgba(34, 139, 34, 0.8); /* Fond vert semi-transparent */
+        transition: background-color 0.3s;
+    }
+
+    .nav-bg:hover {
+        background-color: rgba(34, 139, 34, 1); /* Fond vert opaque au survol */
+    }
+
+    .group:hover .group-hover\:block {
+        display: block;
+    }
+
+    .custom-nav {
+        z-index: 1500;
+    }
+
+    .custom-dropdown {
+        z-index: 1500;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* Fond blanc transparent au survol */
+        border-radius: 4px;
+    }
+
+    .menu-icon {
+        margin-right: 8px;
+    }
+</style>
+    <div class="flex flex-col lg:flex-row">
+        
+    <div class="w-full mt-16 lg:w-1/4 lg:min-h-screen bg-white shadow-md overflow-y-auto">
+        <button id="sidebar-toggle"
+                class="lg:hidden w-full flex items-center justify-between p-4 text-gray-600 hover:bg-gray-50">
+            <span>Taxonomie</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <div id="taxonomy-tree-container" class="hidden lg:block p-4">
+            <label for="taxonSearch"></label>
+            <div class="search-container">
+                <input type="text" id="taxonSearch" class="w-full mb-4 pl-10" aria-label="Search taxon">
+                <i class="fas fa-search search-icon" aria-hidden="true"></i>
+            </div>
+            <div id="taxonomy-tree">
+                <!-- The taxonomic tree will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+        <div class="w-full">
+            
+    <div class="flex-1 p-4">
+        <div class="container mx-auto px-4 md:px-6 py-4 md:py-8">
+            
+            <div class="mt-16">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution géographique</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution géographique des occurrences du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="h-96">
+    <div id="distribution_mapMap" class="w-full h-full"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 mt-4">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Informations générales</h2>
+        
+    </div>
+    <div class="p-4">
+        
+<!-- Information panel content -->
+<div class="space-y-2 md:space-y-3">
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Taxon</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            Pleioluma azou 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Famille</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            Sapotaceae 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Genre</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            Pleioluma 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Rang</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            
+            
+            
+            
+            Espèce
+            
+            
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Nombre d'occurrences</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            57 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Catégorie UICN</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            
+            
+            
+            
+            En danger
+            
+            
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0"></span>
+        <span class="font-medium text-sm md:text-base">
+            
+            <a href="https://endemia.nc/flore/fiche4854" target="_blank"
+                class="text-green-600 hover:text-green-800 underline">
+                Fiche Endemia
+                <i class="fas fa-external-link-alt ml-1"></i>
+            </a>
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0"></span>
+        <span class="font-medium text-sm md:text-base">
+            
+            <a href="http://publish.plantnet-project.org/project/florical_fr/collection/florical/taxons/details/24129" target="_blank"
+                class="text-green-600 hover:text-green-800 underline">
+                Florical
+                <i class="fas fa-external-link-alt ml-1"></i>
+            </a>
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Images</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            
+            
+            
+            <div class="flex flex-col gap-2 items-end">
+                <div id="images-images_8" class="flex flex-wrap gap-2 justify-end">
+                    <div id="loading-images-images_8" class="text-center w-full">
+                        <div
+                            class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-green-500">
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">Chargement des images...</span>
+                    </div>
+                </div>
+                <button onclick="toggleImages('images_8')" id="toggle-images_8"
+                    class="w-6 h-6 rounded-full bg-green-100 hover:bg-green-200 flex items-center justify-center transition-colors duration-200 hidden"
+                    title="Afficher plus d'images">
+                    <i class="fas fa-plus text-green-600" id="icon-images_8"></i>
+                </button>
+            </div>
+
+            
+            <dialog id="imageModal">
+                <div class="relative w-full h-full flex items-center justify-center p-4">
+                    <div class="relative bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-hidden">
+                        <!-- Le loader sera inséré ici par le JavaScript -->
+                        <img id="modalImage" src="" alt="" class="max-h-[80vh] w-auto">
+                        <div class="absolute bottom-0 w-full bg-black bg-opacity-50 text-white p-2">
+                            <p id="modalCaption" class="text-center"></p>
+                        </div>
+                        <button onclick="closeModal()"
+                            class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </dialog>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const imagesContainer = document.getElementById('images-images_8');
+                    const loadingElement = document.getElementById('loading-images-images_8');
+                    const toggleButton = document.getElementById('toggle-images_8');
+
+                    try {
+                        // Retrieve the JSON string from Jinja2
+                        const imagesRawDataString = "[]";
+                // Clean escaped characters and convert to valid JSON
+                const cleanedJsonString = imagesRawDataString
+                    .replace(/\\u0027/g, "'") // Replace \u0027 with '
+                    .replace(/'/g, '"');      // Replace ' with " for valid JSON
+                const imagesRawData = JSON.parse(cleanedJsonString);
+                const images = [];
+
+                // Retrieve the image mapping defined in the configuration
+                    const imageMapping = {"author": "auteur", "date": "datmaj", "thumbnail": "small_thumb", "url": "big_thumb"} || {
+                        url: "url",
+                        thumbnail: "small_thumb",
+                        author: "auteur",
+                        date: "datmaj"
+                    };
+
+                // Process the image array with the custom mapping
+                    if (Array.isArray(imagesRawData)) {
+                        imagesRawData.forEach(img => {
+                            // Retrieve values based on the mapping
+                            const url = img[imageMapping.url] || '';
+                            const thumbnail = img[imageMapping.thumbnail] || url || '';
+                            const author = img[imageMapping.author] || '';
+                            const date = img[imageMapping.date] || '';
+
+                            // Check if at least one URL is available
+                            if (url || thumbnail) {
+                                images.push({
+                                    url: url,
+                                    thumbnail: thumbnail,
+                                    author: author,
+                                    date: date
+                                });
+                            }
+                        });
+                    }
+
+                // Remove the loading indicator
+                if (loadingElement) {
+                    loadingElement.remove();
+                }
+
+                // Display the images
+                if (images.length > 0) {
+                        images.forEach((image, index) => {
+                            const imgUrl = image.url;
+                            const thumbUrl = image.thumbnail;
+                            const author = image.author || '';
+                            const date = image.date || '';
+
+                        const imageButton = document.createElement('button');
+                        imageButton.className = `relative group ${index >= 5 ? 'hidden' : ''} border-0 p-0 bg-transparent cursor-pointer`;
+                        imageButton.title = author ? `Photo: ${author}` : 'Photo';
+                        imageButton.onclick = function () { openModal(imgUrl, author, date); };
+
+                        const img = document.createElement('img');
+                        img.src = thumbUrl;
+                        img.alt = author ? `Photo par ${author}` : 'Photo';
+                        img.className = 'w-20 h-20 object-cover rounded transition-transform duration-200 group-hover:scale-105';
+                        img.dataset.errorHandled = 'false'; // Flag to avoid infinite loop
+                        img.onerror = function () {
+                            if (this.dataset.errorHandled === 'false') {
+                                // Use a valid public URL as a fallback
+                                this.src = 'https://via.placeholder.com/150?text=Image+non+disponible';
+                                this.dataset.errorHandled = 'true'; // Mark as handled
+                            }
+                        };
+
+                        const overlay = document.createElement('div');
+                        overlay.className = 'absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 rounded transition-all duration-200';
+
+                        imageButton.appendChild(img);
+                        imageButton.appendChild(overlay);
+
+                        if (author) {
+                            const attribution = document.createElement('div');
+                            attribution.className = 'absolute bottom-0 right-0 bg-black bg-opacity-50 text-white text-[10px] p-1 rounded-bl rounded-tr opacity-0 group-hover:opacity-100 transition-opacity duration-200';
+                            attribution.textContent = `© ${author}`;
+                            imageButton.appendChild(attribution);
+                        }
+
+                        imagesContainer.appendChild(imageButton);
+                    });
+
+                    if (images.length > 5) {
+                        toggleButton.classList.remove('hidden');
+                    }
+                } else {
+                    const noImages = document.createElement('p');
+                    noImages.className = 'text-gray-500 italic';
+                    noImages.textContent = 'Aucune image disponible';
+                    imagesContainer.appendChild(noImages);
+                }
+                                        } catch (error) {
+                    console.error('Erreur lors du traitement des images:', error);
+                    if (loadingElement) {
+                        loadingElement.remove();
+                    }
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'text-red-500 italic';
+                    errorMsg.textContent = 'Erreur lors du chargement des images';
+                    imagesContainer.appendChild(errorMsg);
+                }
+                                    });
+
+                function openModal(imgSrc, author, date) {
+                        const modal = document.getElementById('imageModal');
+                        const modalImg = document.getElementById('modalImage');
+                        const modalCaption = document.getElementById('modalCaption');
+
+                        // Add a loader and hide the previous image
+                        modalImg.style.display = 'none';
+
+                        // Create or get the loading element
+                        let loader = document.getElementById('modalLoader');
+                        if (!loader) {
+                            loader = document.createElement('div');
+                            loader.id = 'modalLoader';
+                            loader.className = 'flex justify-center items-center p-8';
+                            loader.innerHTML = '<div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div><span class="ml-2 text-gray-500">Chargement...</span>';
+                            modalImg.parentNode.insertBefore(loader, modalImg);
+                        } else {
+                            loader.style.display = 'flex';
+                        }
+
+                        // Reset the image source
+                        modalImg.src = '';
+                        modalCaption.textContent = '';
+                        modal.showModal();
+
+                        // Load the new image
+                        const newImg = new Image();
+                        newImg.onload = function () {
+                            // Once the image is loaded, hide the loader and display the image
+                            if (loader) loader.style.display = 'none';
+                            modalCaption.textContent = author ? `© ${author} ${date ? `(${date})` : ''}` : '';
+                            modalImg.src = imgSrc;
+                            modalImg.style.display = 'block';
+                        };
+
+                        newImg.onerror = function () {
+                            // In case of loading error
+                            if (loader) loader.style.display = 'none';
+                            modalImg.src = 'https://via.placeholder.com/400?text=Image+non+disponible';
+                            modalImg.style.display = 'block';
+                        };
+
+                        newImg.src = imgSrc;
+
+                        modal.addEventListener('click', function (event) {
+                            if (event.target === modal) {
+                                closeModal();
+                            }
+                        });
+                    }
+
+                    function closeModal() {
+                        const modal = document.getElementById('imageModal');
+                        modal.close();
+                    }
+
+                function toggleImages(id) {
+                    const container = document.getElementById('images-' + id);
+                    const button = document.getElementById('toggle-' + id);
+                    const icon = document.getElementById('icon-' + id);
+                    const images = container.querySelectorAll('button');
+                    const isExpanded = icon.classList.contains('fa-minus');
+
+                    images.forEach((img, index) => {
+                        if (index >= 5) {
+                            img.classList.toggle('hidden');
+                        }
+                    });
+
+                    icon.classList.toggle('fa-plus');
+                    icon.classList.toggle('fa-minus');
+                    button.title = isExpanded ? "Afficher plus d'images" : "Afficher moins d'images";
+                }
+            </script>
+            
+            
+            
+        </span>
+    </div>
+    
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Sous-taxons principaux</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Principaux sous-taxons (espèce, sous-espèce)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="top_speciesChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution diamétrique (DBH)</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Répartition des occurrences par classe de diamètre
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="dbh_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Phénologie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Phénologie des états fertiles (fleur, fruit) du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="phenology_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution substrat</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution des occurrences par substrat (= fréquence du taxon par substrat)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="distribution_substratChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Milieu de vie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Fréquence des occurrences du taxon et de ses sous-taxons par milieu de vie
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="holdridge_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Répartition pluviométrie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution pluviométrique des occurrences du taxon (= fréquence par classe de pluviométrie)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="rainfall_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Répartition altitudinale</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution altitudinale des occurrences du taxon (= fréquence par classe d'altitude)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="elevation_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Stratification</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Répartition des occurrences par strate
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="strata_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Hauteur maximale</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Hauteur maximale atteint par le taxon et ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="height_maxGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Diamètre maximal (DBH)</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Diamètre maximal atteint par le taxon et ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="dbh_maxGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Densité de bois</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Densité de bois moyenne mesuré avec une Tarière de Pressler
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="wood_densityGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Épaisseur d'écorce</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Epaisseur moyenne de l'écorce mesurée à la jauge à écorce
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="bark_thicknessGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Surface foliaire spécifique</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Surface foliaire spécifique du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="leaf_slaGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Surface foliaire</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Surface foliaire du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="leaf_areaGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Épaisseur des feuilles</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Epaisseur moyenne des feuilles du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="leaf_thicknessGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    <footer class="bg-green-700 text-white p-4 mt-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white p-2 w-3/5 rounded-lg shadow-md flex justify-center">
+                    <a class='logo' href="https://www.province-nord.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="pn" src="../files/pn_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.province-sud.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/ps_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://endemia.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/endemia_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://amap.cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="amap" src="../files/amap_100.png"></figure>
+                    </a>
+                    <a class='logo' href="http://publish.plantnet-project.org/project/nou" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="herbarium" src="../files/herbarium_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://iac.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="iac" src="../files/iac_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://nouvelle-caledonie.ird.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ird" src="../files/ird_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="cirad" src="../files/cirad_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.ofb.gouv.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ofb" src="../files/ofb_100.png"></figure>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>Niamoto - Portail de la forêt de Nouvelle-Calédonie</p>
+                <a class="inline-block py-2 px-4 text-white no-underline" href="https://github.com/niamoto/niamoto" target="_blank">
+                    <span class="fab fa-github fa-lg" aria-hidden="true"></span> Github
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/vendor/chart/4.4.2_chart.js"></script>
+    <script src="../js/vendor/d3/7.8.5_d3.js"></script>
+    <script src="../js/vendor/jquery/3.6.0_jquery.js"></script>
+    <script src="../js/vendor/lodash/4.17.21_lodash.min.js"></script>
+    <script src="../js/vendor/raphael/2.3.0_raphael.js"></script>
+    <script src="../js/vendor/justgage/1.6.1_justgage.js"></script>
+    <script src="../js/vendor/leaflet/1.9.4_leaflet.js"></script>
+    <script src="../js/vendor/leaflet/1.5.3_leaflet.markercluster.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const buttonContainer = document.getElementById('buttonContainer');
+
+            // Only proceed if the button container exists
+            if (buttonContainer) {
+                const buttonContainerOffset = buttonContainer.offsetTop;
+                const navHeight = 60; // Adjust this value to match your navigation height
+
+                window.onscroll = () => {
+                    if (window.pageYOffset > buttonContainerOffset - navHeight) {
+                        buttonContainer.classList.add('fixed');
+                    } else {
+                        buttonContainer.classList.remove('fixed');
+                    }
+                };
+
+                // Initial check in case the page is loaded scrolled
+                window.onscroll();
+            }
+        });
+    </script>
+    
+    <script>
+        // =====================================
+        // Constants & Initial Setup
+        // =====================================
+        const taxon = {"authors": "(P.Royen) Swenson \u0026 Munzinger", "bark_thickness": {"max_value": 80, "mean": null, "units": "mm"}, "dbh_distribution": {"bins": [10, 20, 30, 40, 50, 75, 100, 200, 300, 400, 500], "counts": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0], "percentages": [100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, "dbh_max": {"max": 19.9, "max_value": 500, "units": "cm"}, "distribution_map": {"features": [{"geometry": {"coordinates": [166.96460054138817, -22.276472070269556], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96397762126503, -22.272106972167894], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.95958780374755, -22.27191783584524], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96604931071562, -22.276170078875374], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9695897917973, -22.280844693658715], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9419199, -22.346665], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.792291, -22.1668713], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8864183, -22.1537698], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.978981, -22.2666668], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8734904, -22.1621753], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.829239, -22.2020994], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [167.0159226, -22.2850008], "type": "Point"}, "properties": {"count": 3}, "type": "Feature"}, {"geometry": {"coordinates": [166.5930556, -22.1597222], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.93261719, -22.2674427], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.860533, -22.2007221], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9528526, -22.2698698], "type": "Point"}, "properties": {"count": 3}, "type": "Feature"}, {"geometry": {"coordinates": [166.9366738, -22.3499925], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.8941650390625, -22.28333282470703], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.9645687760676, -22.275320647705428], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96008907841983, -22.273722522535973], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.97637363444798, -22.277890279068384], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96815291094026, -22.276346496188722], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96834647561576, -22.28074195184833], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96707138418964, -22.274298886653888], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96971224020854, -22.27918571549782], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.97631252560336, -22.281655689199283], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96353100877246, -22.27612584304315], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.97514145732112, -22.283378934579083], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9720839059596, -22.277177627065207], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9700264640747, -22.280355575734472], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9713883445352, -22.279220483616566], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96291447845647, -22.273083955756455], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96171522153523, -22.274836811874763], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96382943570433, -22.274010591286277], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.97811857521114, -22.277760654585695], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96171862568886, -22.27393667079574], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96852419683384, -22.279670458231347], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96747168968247, -22.2773731027713], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.97146678737246, -22.277056212888787], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.97820653477228, -22.282556838637838], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.967690252129, -22.27549374168691], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9811353296173, -22.275779531624], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.932613, -22.267442], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.978845965276, -22.2787550400991], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9917987493471, -22.2899406258639], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.982863713156, -22.2831386755629], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9125, -22.1630556], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [167.0, -22.2833333], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.93861389160156, -22.349721908569336], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8931427001953, -22.164600372314453], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}], "type": "FeatureCollection"}, "distribution_substrat": {"num": 0, "num_percent": 0.0, "um": 57, "um_percent": 100.0}, "elevation_distribution": {"bins": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1700], "counts": [6, 41, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0], "percentages": [12.24, 83.67, 4.08, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, "full_name": "Pleioluma azou", "general_info": {"endemia_url": {"value": "https://endemia.nc/flore/fiche4854"}, "endemic": {"value": "True"}, "id_florical": {"value": "24129"}, "image_url": {"value": null}, "images": {"value": "[]"}, "name": {"value": "Pleioluma azou"}, "occurrences_count": {"value": 57}, "parent_family": {"value": "Sapotaceae"}, "parent_genus": {"value": "Pleioluma"}, "rank": {"value": "species"}, "redlist_cat": {"value": "EN"}, "taxon_type": {"value": "species"}}, "height_max": {"max": 6.0, "max_value": 40, "units": "m"}, "holdridge_distribution": {"categories": [1, 2, 3], "counts": [0, 1, 53], "labels": ["Sec", "Humide", "Tr\u00e8s humide"], "percentages": [0.0, 1.85, 98.15]}, "id": 1242, "leaf_area": {"max_value": 1500, "mean": null, "units": "cm2"}, "leaf_sla": {"max_value": 50, "mean": null, "units": "g/m2"}, "leaf_thickness": {"max_value": 800, "mean": null, "units": "\u00b5m"}, "level": 2, "lft": 3067, "metadata": {"auto_generated": false, "endemia_url": "https://endemia.nc/flore/fiche4854", "endemic": true, "id_endemia": 4854, "id_florical": 24129, "id_taxonref": 15663, "images": [], "parent_family": "Sapotaceae", "parent_genus": "Pleioluma", "protected": false, "protected_provnord": false, "protected_provsud": false, "redlist": true, "redlist_cat": "EN", "taxon_type": "species", "taxonref": "Pleioluma azou (P.Royen) Swenson \u0026 Munzinger"}, "parent_id": 324, "phenology": {"phenology_data": {"description": "Custom formula", "formula": "{\u0027raw\u0027: phenology_raw, \u0027peaks\u0027: phenology_peaks, \u0027periods\u0027: phenology_periods}", "value": {"peaks": {"fleur": {"count": 3, "heights": [100.0, 33.33, 100.0], "max": 100.0, "mean": 26.388333333333332, "min": 0.0, "std": 36.929717219183914, "threshold": 30.0, "value": [1, 3, 10]}, "fruit": {"count": 2, "heights": [100.0, 66.67], "max": 100.0, "mean": 18.055833333333336, "min": 0.0, "std": 32.955438968990975, "threshold": 30.0, "value": [7, 9]}}, "periods": {"min_duration": 1, "series_count": 2, "threshold": 0.0, "value": {"fleur": {"activity_percentage": 41.66666666666667, "count": 3, "periods": [{"duration": 1, "end": 1, "end_label": "Fev", "max_value": 100.0, "mean_value": 100.0, "start": 1, "start_label": "Fev"}, {"duration": 1, "end": 3, "end_label": "Avr", "max_value": 33.33, "mean_value": 33.33, "start": 3, "start_label": "Avr"}, {"duration": 3, "end": 11, "end_label": "Dec", "max_value": 100.0, "mean_value": 61.10999999999999, "start": 9, "start_label": "Oct"}], "total_active_duration": 5}, "fruit": {"activity_percentage": 25.0, "count": 3, "periods": [{"duration": 1, "end": 7, "end_label": "Aou", "max_value": 100.0, "mean_value": 100.0, "start": 7, "start_label": "Aou"}, {"duration": 1, "end": 9, "end_label": "Oct", "max_value": 66.67, "mean_value": 66.67, "start": 9, "start_label": "Oct"}, {"duration": 1, "end": 11, "end_label": "Dec", "max_value": 50.0, "mean_value": 50.0, "start": 11, "start_label": "Dec"}], "total_active_duration": 3}}}, "raw": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [0.0, 100.0, 0, 33.33, 0.0, 0, 0.0, 0.0, 0, 33.33, 100.0, 50.0], "fruit": [0.0, 0.0, 0, 0.0, 0.0, 0, 0.0, 100.0, 0, 66.67, 0.0, 50.0]}}}, "variables": {"phenology_peaks": {"fleur": {"count": 3, "heights": [100.0, 33.33, 100.0], "max": 100.0, "mean": 26.388333333333332, "min": 0.0, "std": 36.929717219183914, "threshold": 30.0, "value": [1, 3, 10]}, "fruit": {"count": 2, "heights": [100.0, 66.67], "max": 100.0, "mean": 18.055833333333336, "min": 0.0, "std": 32.955438968990975, "threshold": 30.0, "value": [7, 9]}}, "phenology_periods": {"min_duration": 1, "series_count": 2, "threshold": 0.0, "value": {"fleur": {"activity_percentage": 41.66666666666667, "count": 3, "periods": [{"duration": 1, "end": 1, "end_label": "Fev", "max_value": 100.0, "mean_value": 100.0, "start": 1, "start_label": "Fev"}, {"duration": 1, "end": 3, "end_label": "Avr", "max_value": 33.33, "mean_value": 33.33, "start": 3, "start_label": "Avr"}, {"duration": 3, "end": 11, "end_label": "Dec", "max_value": 100.0, "mean_value": 61.10999999999999, "start": 9, "start_label": "Oct"}], "total_active_duration": 5}, "fruit": {"activity_percentage": 25.0, "count": 3, "periods": [{"duration": 1, "end": 7, "end_label": "Aou", "max_value": 100.0, "mean_value": 100.0, "start": 7, "start_label": "Aou"}, {"duration": 1, "end": 9, "end_label": "Oct", "max_value": 66.67, "mean_value": 66.67, "start": 9, "start_label": "Oct"}, {"duration": 1, "end": 11, "end_label": "Dec", "max_value": 50.0, "mean_value": 50.0, "start": 11, "start_label": "Dec"}], "total_active_duration": 3}}}, "phenology_raw": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [0.0, 100.0, 0, 33.33, 0.0, 0, 0.0, 0.0, 0, 33.33, 100.0, 50.0], "fruit": [0.0, 0.0, 0, 0.0, 0.0, 0, 0.0, 100.0, 0, 66.67, 0.0, 50.0]}}}}, "phenology_peaks": {"fleur": {"count": 3, "heights": [100.0, 33.33, 100.0], "max": 100.0, "mean": 26.388333333333332, "min": 0.0, "std": 36.929717219183914, "threshold": 30.0, "value": [1, 3, 10]}, "fruit": {"count": 2, "heights": [100.0, 66.67], "max": 100.0, "mean": 18.055833333333336, "min": 0.0, "std": 32.955438968990975, "threshold": 30.0, "value": [7, 9]}}, "phenology_periods": {"min_duration": 1, "series_count": 2, "threshold": 0.0, "value": {"fleur": {"activity_percentage": 41.66666666666667, "count": 3, "periods": [{"duration": 1, "end": 1, "end_label": "Fev", "max_value": 100.0, "mean_value": 100.0, "start": 1, "start_label": "Fev"}, {"duration": 1, "end": 3, "end_label": "Avr", "max_value": 33.33, "mean_value": 33.33, "start": 3, "start_label": "Avr"}, {"duration": 3, "end": 11, "end_label": "Dec", "max_value": 100.0, "mean_value": 61.10999999999999, "start": 9, "start_label": "Oct"}], "total_active_duration": 5}, "fruit": {"activity_percentage": 25.0, "count": 3, "periods": [{"duration": 1, "end": 7, "end_label": "Aou", "max_value": 100.0, "mean_value": 100.0, "start": 7, "start_label": "Aou"}, {"duration": 1, "end": 9, "end_label": "Oct", "max_value": 66.67, "mean_value": 66.67, "start": 9, "start_label": "Oct"}, {"duration": 1, "end": 11, "end_label": "Dec", "max_value": 50.0, "mean_value": 50.0, "start": 11, "start_label": "Dec"}], "total_active_duration": 3}}}, "phenology_raw": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [0.0, 100.0, 0, 33.33, 0.0, 0, 0.0, 0.0, 0, 33.33, 100.0, 50.0], "fruit": [0.0, 0.0, 0, 0.0, 0.0, 0, 0.0, 100.0, 0, 66.67, 0.0, 50.0]}}}, "phenology_distribution": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [0.0, 100.0, 0, 33.33, 0.0, 0, 0.0, 0.0, 0, 33.33, 100.0, 50.0], "fruit": [0.0, 0.0, 0, 0.0, 0.0, 0, 0.0, 100.0, 0, 66.67, 0.0, 50.0]}}, "rainfall_distribution": {"bins": [1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000], "counts": [0, 0, 3, 48, 6, 0, 0, 0], "percentages": [0.0, 0.0, 5.26, 84.21, 10.53, 0.0, 0.0, 0.0]}, "rank_name": "species", "rght": 3068, "strata_distribution": {"categories": [1, 2, 3, 4], "counts": [0, 0, 0, 0], "labels": ["Sous-bois", "Sous-Canop\u00e9e", "Canop\u00e9e", "Emergent"]}, "taxon_id": 1242, "top_species": {"counts": [57], "tops": ["Pleioluma azou"]}, "wood_density": {"max_value": 1.2, "mean": null, "units": "g/cm3"}};
+        const mapping = {"group_by": "taxon", "widgets": {"bark_thickness": {"description": "Epaisseur moyenne de l\u0027\u00e9corce mesur\u00e9e \u00e0 la jauge \u00e0 \u00e9corce", "options": {"max": 80, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 16]}, {"color": "#fe6a00", "range": [16, 32]}, {"color": "#e8dd0f", "range": [32, 48]}, {"color": "#81e042", "range": [48, 64]}, {"color": "#049f50", "range": [64, 80]}], "units": "mm"}, "source": "bark_thickness", "title": "\u00c9paisseur d\u0027\u00e9corce", "type": "gauge", "value_key": "mean"}, "dbh_distribution": {"datasets": [{"backgroundColor": "#4CAF50", "data_key": "percentages", "label": "Occurrences"}], "description": "R\u00e9partition des occurrences par classe de diam\u00e8tre", "labels_key": "bins", "options": {"scales": {"x": {"title": {"display": true, "text": "Classe de diam\u00e8tre (cm)"}}, "y": {"title": {"display": true, "text": "Fr\u00e9quence (%)"}}}}, "source": "dbh_distribution", "title": "Distribution diam\u00e9trique (DBH)", "type": "bar_chart"}, "dbh_max": {"description": "Diam\u00e8tre maximal atteint par le taxon et ses sous-taxons", "options": {"max": 500, "min": 0, "sectors": [{"color": "#f02828", "range": [1, 101]}, {"color": "#fe6a00", "range": [101, 200]}, {"color": "#e8dd0f", "range": [200, 300]}, {"color": "#81e042", "range": [300, 400]}, {"color": "#049f50", "range": [400, 500]}], "units": "m"}, "source": "dbh_max", "title": "Diam\u00e8tre maximal (DBH)", "type": "gauge", "value_key": "max"}, "distribution_map": {"description": "Distribution g\u00e9ographique des occurrences du taxon et de ses sous-taxons", "layers": [{"id": "occurrences", "source": "coordinates", "style": {"color": "#1fb99d", "fillColor": "#00716b", "fillOpacity": 0.5, "radius": 2000, "weight": 1}}], "layout": "full_width", "source": "distribution_map", "title": "Distribution g\u00e9ographique", "type": "map_panel"}, "distribution_substrat": {"customPlugin": "percentagePlugin", "datasets": [{"backgroundColor": ["#e1a553", "#a97742"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["um_percent", "num_percent"], "label": "Distribution substrat"}], "description": "Distribution des occurrences par substrat (= fr\u00e9quence du taxon par substrat)", "labels": ["Ultramafique (UM)", "non-Ultramafique (NUM)"], "options": {"cutout": "50%", "layout": {"padding": {"top": 20}}, "plugins": {"legend": {"align": "center", "display": true, "labels": {"boxWidth": 30, "color": "#666666", "font": {"size": 12}, "padding": 20, "usePointStyle": false}, "position": "top"}}}, "source": "distribution_substrat", "title": "Distribution substrat", "type": "doughnut_chart"}, "elevation_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "data_key": "counts", "label": "Occurrences"}], "description": "Distribution altitudinale des occurrences du taxon (= fr\u00e9quence par classe d\u0027altitude)", "labels_key": "bins", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Occurrences"}}, "y": {"reverse": true, "title": {"display": true, "text": "Altitude (m)"}}}}, "source": "elevation_distribution", "title": "R\u00e9partition altitudinale", "type": "bar_chart"}, "general_info": {"fields": [{"label": "Taxon", "source": "name"}, {"label": "Famille", "source": "parent_family"}, {"label": "Genre", "source": "parent_genus"}, {"format": "map", "label": "Rang", "mapping": {"family": "Famille", "genus": "Genre", "species": "Esp\u00e8ce", "subspecies": "Sous-esp\u00e8ce"}, "source": "rank"}, {"format": "number", "label": "Nombre d\u0027occurrences", "source": "occurrences_count"}, {"format": "map", "label": "Cat\u00e9gorie UICN", "mapping": {"CR": "En danger critique", "DD": "Donn\u00e9es insuffisantes", "EN": "En danger", "LC": "Pr\u00e9occupation mineure", "NE": "Non \u00e9valu\u00e9", "NT": "Quasi menac\u00e9", "VU": "Vuln\u00e9rable"}, "source": "redlist_cat"}, {"display_text": "Fiche Endemia", "format": "link", "source": "endemia_url"}, {"base_url": "http://publish.plantnet-project.org/project/florical_fr/collection/florical/taxons/details/", "display_text": "Florical", "format": "link", "source": "id_florical"}, {"format": "image", "image_mapping": {"author": "auteur", "date": "datmaj", "thumbnail": "small_thumb", "url": "big_thumb"}, "label": "Images", "source": "images"}], "layout": "grid", "title": "Informations g\u00e9n\u00e9rales", "type": "info_panel"}, "height_max": {"description": "Hauteur maximale atteint par le taxon et ses sous-taxons", "options": {"max": 40, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 10]}, {"color": "#fe6a00", "range": [10, 18]}, {"color": "#e8dd0f", "range": [18, 25]}, {"color": "#81e042", "range": [25, 33]}, {"color": "#049f50", "range": [33, 40]}], "units": "m"}, "source": "height_max", "title": "Hauteur maximale", "type": "gauge", "value_key": "max"}, "holdridge_distribution": {"customPlugin": "percentagePlugin", "datasets": [{"backgroundColor": "#8B0000", "data_key": "percentages[0]", "label": "sec", "stack": "Stack 0"}, {"backgroundColor": "#FFEB3B", "data_key": "percentages[1]", "label": "humide", "stack": "Stack 0"}, {"backgroundColor": "#1E88E5", "data_key": "percentages[2]", "label": "Tr\u00e8s humide", "stack": "Stack 0"}], "description": "Fr\u00e9quence des occurrences du taxon et de ses sous-taxons par milieu de vie", "labels": [""], "options": {"datalabels": {"align": "center", "anchor": "center", "color": "#000000", "display": true, "font": {"weight": "bold"}, "formatter": "function(value) { return value + \u0027%\u0027; }"}, "indexAxis": "x", "scales": {"x": {"grid": {"display": false}, "stacked": true}, "y": {"max": 100, "min": 0, "stacked": true, "ticks": {"callback": "function(value) { return value + \u0027%\u0027; }"}, "title": {"display": true, "text": "Proportion (%)"}}}}, "source": "holdridge_distribution", "title": "Milieu de vie", "type": "bar_chart"}, "leaf_area": {"description": "Surface foliaire du taxon et de ses sous-taxons", "options": {"max": 1500, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 300]}, {"color": "#fe6a00", "range": [300, 600]}, {"color": "#e8dd0f", "range": [600, 900]}, {"color": "#81e042", "range": [900, 1200]}, {"color": "#049f50", "range": [1200, 1500]}], "units": "cm\u00b2"}, "source": "leaf_area", "title": "Surface foliaire", "type": "gauge", "value_key": "mean"}, "leaf_sla": {"description": "Surface foliaire sp\u00e9cifique du taxon et de ses sous-taxons", "options": {"max": 50, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 10]}, {"color": "#fe6a00", "range": [10, 20]}, {"color": "#e8dd0f", "range": [20, 30]}, {"color": "#81e042", "range": [30, 40]}, {"color": "#049f50", "range": [40, 50]}], "units": "m\u00b2\u00b7kg\u207b\u00b9"}, "source": "leaf_sla", "title": "Surface foliaire sp\u00e9cifique", "type": "gauge", "value_key": "mean"}, "leaf_thickness": {"description": "Epaisseur moyenne des feuilles du taxon et de ses sous-taxons", "options": {"max": 800, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 160]}, {"color": "#fe6a00", "range": [160, 320]}, {"color": "#e8dd0f", "range": [320, 480]}, {"color": "#81e042", "range": [480, 640]}, {"color": "#049f50", "range": [640, 800]}], "units": "\u00b5m"}, "source": "leaf_thickness", "title": "\u00c9paisseur des feuilles", "type": "gauge", "value_key": "mean"}, "phenology_distribution": {"datasets": [{"backgroundColor": "#FFD700", "borderColor": "#FFD700", "borderWidth": 1, "data_key": "month_data.fleur", "label": "Fleur"}, {"backgroundColor": "#DC143C", "borderColor": "#DC143C", "borderWidth": 1, "data_key": "month_data.fruit", "label": "Fruit"}], "description": "Ph\u00e9nologie des \u00e9tats fertiles (fleur, fruit) du taxon et de ses sous-taxons", "labels_key": "labels", "options": {"maintainAspectRatio": false, "plugins": {"legend": {"labels": {"boxWidth": 15, "padding": 20}, "position": "bottom"}}, "responsive": true, "scales": {"x": {"grid": {"display": false}}, "y": {"beginAtZero": true, "max": 50, "title": {"display": true, "text": "Fr\u00e9quence (%)"}}}}, "source": "phenology_distribution", "title": "Ph\u00e9nologie", "type": "bar_chart"}, "rainfall_distribution": {"datasets": [{"backgroundColor": "#2196F3", "data_key": "counts", "label": "Occurrences"}], "description": "Distribution pluviom\u00e9trique des occurrences du taxon (= fr\u00e9quence par classe de pluviom\u00e9trie)", "labels_key": "bins", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Occurrences"}}, "y": {"reverse": true, "title": {"display": true, "text": "Pluviom\u00e9trie (mm/an)"}}}}, "source": "rainfall_distribution", "title": "R\u00e9partition pluviom\u00e9trie", "type": "bar_chart"}, "strata_distribution": {"datasets": [{"backgroundColor": ["#90A4AE", "#66BB6A", "#43A047", "#2E7D32"], "borderWidth": 1, "data_key": "counts", "label": "Occurrences"}], "description": "R\u00e9partition des occurrences par strate", "labels_key": "labels", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Nombre d\u0027occurrences"}}, "y": {"reverse": true, "title": {"display": true}}}}, "source": "strata_distribution", "title": "Stratification", "type": "bar_chart"}, "top_species": {"datasets": [{"data_key": "counts", "generateColors": true, "label": "Occurrences"}], "description": "Principaux sous-taxons (esp\u00e8ce, sous-esp\u00e8ce)", "labels_key": "tops", "options": {"indexAxis": "y", "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "responsive": true, "scales": {"x": {"beginAtZero": true, "grid": {"display": true, "drawBorder": true, "drawOnChartArea": true, "drawTicks": true}, "ticks": {"stepSize": 5}, "title": {"display": true, "text": "Nombre d\u0027occurrences"}}, "y": {"grid": {"display": false}}}}, "sortData": true, "source": "top_species", "title": "Sous-taxons principaux", "type": "bar_chart"}, "wood_density": {"description": "Densit\u00e9 de bois moyenne mesur\u00e9 avec une Tari\u00e8re de Pressler", "options": {"max": 1.2, "min": 0, "sectors": [{"color": "#f02828", "range": [0.0, 0.24]}, {"color": "#fe6a00", "range": [0.24, 0.48]}, {"color": "#e8dd0f", "range": [0.48, 0.72]}, {"color": "#81e042", "range": [0.72, 0.96]}, {"color": "#049f50", "range": [0.96, 1.2]}], "units": "g/cm\u00b3"}, "source": "wood_density", "title": "Densit\u00e9 de bois", "type": "gauge", "value_key": "mean"}}};
+
+        // =====================================
+        // Core Initialization
+        // =====================================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize sidebar
+            initializeSidebar();
+
+            // Initialize tree
+            const treeContainer = document.getElementById('taxonomy-tree');
+            if (treeContainer) {
+                createTree(treeContainer, taxonomyData);
+            }
+
+            // Initialize all widgets
+            initializeWidgets(mapping.widgets, taxon);
+        });
+
+        // =====================================
+        // Sidebar Management
+        // =====================================
+        function initializeSidebar() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const taxonomyTree = document.getElementById('taxonomy-tree-container');
+
+            if (sidebarToggle && taxonomyTree) {
+                sidebarToggle.addEventListener('click', function () {
+                    taxonomyTree.classList.toggle('hidden');
+                    this.classList.toggle('menu-open');
+
+                    const svg = this.querySelector('svg');
+                    if (this.classList.contains('menu-open')) {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+                    } else {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+
+                // Close menu on outside click for mobile
+                document.addEventListener('click', function (e) {
+                    if (!sidebarToggle.contains(e.target) &&
+                        !taxonomyTree.contains(e.target) &&
+                        !taxonomyTree.classList.contains('hidden') &&
+                        window.innerWidth < 1024) {
+                        taxonomyTree.classList.add('hidden');
+                        sidebarToggle.classList.remove('menu-open');
+                        const svg = sidebarToggle.querySelector('svg');
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+            }
+        }
+
+        // =====================================
+        // Widget Management
+        // =====================================
+        function initializeWidgets(widgets, stats) {
+            // Mapping des types vers leurs fonctions d'initialisation
+            const initializerMap = {
+                'bar_chart': initChart,
+                'line_chart': initChart,
+                'pie_chart': initChart,
+                'doughnut_chart': initChart,
+                'gauge': initChart,
+                'map_panel': initMap
+            };
+
+            Object.entries(widgets)
+                .filter(([_, config]) => config.type in initializerMap)  // Ignore unsupported types
+                .forEach(([widgetKey, config]) => {
+                    // Automatically generate the widget ID if not specified
+                    const suffix = config.type.includes('chart') ? 'Chart' :
+                        config.type === 'gauge' ? 'Gauge' : 'Map';
+                    const widgetId = config.id || `${widgetKey}${suffix}`;
+
+                    // For maps, we directly pass stats
+                    if (config.type === 'map_panel') {
+                        initializerMap[config.type](widgetId, stats, config);
+                        return;
+                    }
+
+                    // For other widgets, we check the source in stats
+                    const data = _.get(stats, config.source);
+                    if (!data) return;  // Skip if no data
+
+                    // Initialize the widget with the appropriate function
+                    initializerMap[config.type](widgetId, data, config);
+                });
+        }
+
+
+        // =====================================
+        // Tree Management
+        // =====================================
+        function getBaseUrl() {
+            const pathArray = window.location.pathname.split('/');
+            pathArray.pop();
+            return pathArray.join('/') + '/';
+        }
+
+        function openCurrentNode($ul, currentId) {
+                const $currentLink = $ul.find(`a[data-id='${currentId}']`);
+                if ($currentLink.length > 0) {
+                    // Open all parents as you already do
+                    $currentLink.parents('ul').each(function () {
+                        $(this).show();
+                        $(this).siblings('span').text('▾');
+                    });
+
+                    // Wait a short moment to ensure the nodes are properly opened
+                    setTimeout(() => {
+                        // Scroll to the selected element
+                        const container = document.getElementById('taxonomy-tree-container');
+                        const element = $currentLink[0];
+
+                        if (container && element) {
+                            // Calculate the scroll position to center the element if possible
+                            const elementRect = element.getBoundingClientRect();
+                            const containerRect = container.getBoundingClientRect();
+                            const offset = elementRect.top - containerRect.top - (containerRect.height / 2) + (elementRect.height / 2);
+
+                            // Perform scrolling with smooth animation
+                            container.scrollTo({
+                                top: container.scrollTop + offset,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 100); // A short delay to ensure the DOM is updated
+                }
+            }
+
+        function createTree(container, taxonomyData) {
+            const baseUrl = getBaseUrl();
+
+            function createList(data) {
+                const $ul = $('<ul></ul>');
+                $.each(data, function (i, item) {
+                    const $li = $('<li></li>');
+                    const $a = $('<a></a>', {
+                        'href': `${baseUrl}${item.id}.html`,
+                        'text': item.name,
+                        'data-id': item.id
+                    });
+
+                    if (item.id == taxonId) {
+                        $a.css({
+                            'font-weight': 'bold',
+                        });
+                    }
+
+                    if (item.children && item.children.length > 0) {
+                        const $span = $('<span>▸</span>').css({
+                            'cursor': 'pointer',
+                            'margin-right': '5px'
+                        });
+
+                        const $childUl = createList(item.children).hide();
+                        $span.click(function (event) {
+                            event.stopPropagation();
+                            $childUl.toggle();
+                            $(this).text($childUl.is(":visible") ? '▾' : '▸');
+                        });
+
+                        $li.append($span).append($a).append($childUl);
+                    } else {
+                        $li.append($a);
+                    }
+                    $ul.append($li);
+                });
+                return $ul;
+            }
+
+            const $tree = createList(taxonomyData);
+            $(container).append($tree);
+            openCurrentNode($tree, taxonId);
+        }
+
+
+        // =====================================
+        // Map Management
+        // =====================================
+        function initMap(mapId, data, mapConfig) {
+                const mapContainer = document.getElementById(mapId);
+                if (!mapContainer) return;
+
+                // Base configuration
+                const defaultZoom = 7;
+                const maxZoom = 12;
+
+                // Base layers with backup options
+                const baseLayers = {
+                    "Satellite": L.tileLayer.wms("https://carto10.gouv.nc/arcgis/services/fond_imagerie/MapServer/WMSServer", {
+                        layers: '0',
+                        format: 'image/png',
+                        transparent: true,
+                        attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                        maxZoom: maxZoom,
+                        timeout: 5000
+                    }),
+                    "Carte": L.tileLayer.wms('https://carto.gouv.nc/arcgis/services/fond_cartographie/MapServer/WMSServer', {
+                        layers: '0',
+                        format: 'image/png',
+                        transparent: true,
+                        attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                        maxZoom: maxZoom,
+                        timeout: 5000
+                    }),
+                    "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        maxZoom: maxZoom
+                    }),
+                    "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                        maxZoom: maxZoom
+                    })
+                };
+
+                // Create map with Satellite as default layer
+                const map = L.map(mapId, {
+                    layers: [baseLayers["Satellite"]],
+                    zoom: defaultZoom,
+                    maxZoom: maxZoom,
+                    scrollWheelZoom: false
+                });
+
+                // Add layer control
+                L.control.layers(baseLayers).addTo(map);
+                map.attributionControl.setPrefix(false);
+
+                // Handle layer fallback
+                let primaryLayerAvailable = false;
+
+                baseLayers["Satellite"].on('load', function () {
+                    primaryLayerAvailable = true;
+                });
+
+                setTimeout(function () {
+                    if (!primaryLayerAvailable) {
+                        map.removeLayer(baseLayers["Satellite"]);
+                        map.addLayer(baseLayers["ESRI Satellite"]);
+                    }
+                }, 3000);
+
+                // Determine the data source based on mapConfig
+                const dataSource = mapConfig.source;
+
+                // Create a marker cluster group with custom options for better performance
+                const markers = L.markerClusterGroup({
+                    maxClusterRadius: 30, // Smaller radius makes more, smaller clusters
+                    spiderfyOnMaxZoom: true,
+                    showCoverageOnHover: false,
+                    zoomToBoundsOnClick: true,
+                    disableClusteringAtZoom: 12, // Disable clustering at max zoom
+                    chunkedLoading: true, // Load markers in chunks to avoid freezing
+                    chunkProgress: updateProgressBar // Optional progress callback
+                });
+
+                // Process and add markers
+                setTimeout(() => {
+                    processMarkers(data, dataSource, mapConfig, markers, map);
+                }, 100); // Small delay to allow UI to render first
+
+                // Add empty cluster layer to map immediately (will be populated)
+                map.addLayer(markers);
+
+                // Add a loading indicator
+                const loadingIndicator = L.control({ position: 'topright' });
+                loadingIndicator.onAdd = function (map) {
+                    this._div = L.DomUtil.create('div', 'loading-indicator');
+                    this._div.innerHTML = '<div class="spinner"></div> Loading points...';
+                    return this._div;
+                };
+                loadingIndicator.addTo(map);
+
+                function updateProgressBar(processed, total, elapsed) {
+                    if (processed === total) {
+                        // Hide loading indicator when complete
+                        loadingIndicator.getContainer().style.display = 'none';
+                    }
+                }
+            }
+
+            // Separate function to process markers to avoid blocking the UI
+            function processMarkers(data, dataSource, mapConfig, markers, map) {
+                // Check if the data is in GeoJSON standard format
+                if (data && data[dataSource] && data[dataSource].type === "FeatureCollection") {
+                    const geoJsonData = data[dataSource];
+
+                    if (geoJsonData.features && geoJsonData.features.length > 0) {
+                        // Sample large datasets (optional)
+                        let features = geoJsonData.features;
+                        if (features.length > 2000) {
+                            // Sample only first 2000 points to avoid browser freezing
+                            features = features.slice(0, 2000);
+                            console.warn(`Map showing only 2000 points out of ${geoJsonData.features.length}`);
+                        }
+
+                        // Process in batches to avoid freezing the UI
+                        processBatch(features, 0, 100, markers, mapConfig, map);
+                    }
+                }
+                // Keep compatibility with the old format
+                else if (data && data[dataSource]) {
+                    const coordinatesSource = mapConfig.layers[0].source;
+
+                    if (data[dataSource][coordinatesSource]) {
+                        // Sample large datasets (optional)
+                        let points = data[dataSource][coordinatesSource];
+                        if (points.length > 2000) {
+                            points = points.slice(0, 2000);
+                            console.warn(`Map showing only 2000 points out of ${data[dataSource][coordinatesSource].length}`);
+                        }
+
+                        // Process in batches to avoid freezing the UI
+                        processLegacyBatch(points, 0, 100, markers, mapConfig, map);
+                    }
+                }
+            }
+
+            // Process a batch of GeoJSON features
+            function processBatch(features, startIndex, batchSize, markers, mapConfig, map) {
+                const endIndex = Math.min(startIndex + batchSize, features.length);
+                const bounds = [];
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const feature = features[i];
+                    if (feature.geometry && feature.geometry.type === "Point") {
+                        const coords = feature.geometry.coordinates;
+                        const latLng = [coords[1], coords[0]];
+
+                        // Create circle marker instead of standard marker for better performance
+                        const marker = L.circleMarker(latLng, {
+                            ...mapConfig.layers[0].style,
+                            radius: 5 // Smaller radius for better performance
+                        });
+
+                        // Add popup only on click to improve performance
+                        if (feature.properties) {
+                            marker.on('click', function () {
+                                const popupContent = Object.entries(feature.properties)
+                                    .map(([key, value]) => `${key}: ${value}`)
+                                    .join('<br>');
+
+                                marker.bindPopup(popupContent || "Occurrence").openPopup();
+                            });
+                        }
+
+                        markers.addLayer(marker);
+                        bounds.push(latLng);
+                    }
+                }
+
+                // Process next batch or fit bounds
+                if (endIndex < features.length) {
+                    setTimeout(() => {
+                        processBatch(features, endIndex, batchSize, markers, mapConfig, map);
+                    }, 10); // Small timeout to allow UI to update
+                } else {
+                    // All features processed, fit bounds if needed
+                    if (bounds.length > 0) {
+                        map.fitBounds(L.latLngBounds(bounds), {
+                            maxZoom: 12,
+                            padding: [50, 50]
+                        });
+                    }
+                }
+            }
+
+            // Process a batch of legacy format points
+            function processLegacyBatch(points, startIndex, batchSize, markers, mapConfig, map) {
+                const endIndex = Math.min(startIndex + batchSize, points.length);
+                const bounds = [];
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const point = points[i];
+                    const latLng = [point.coordinates[1], point.coordinates[0]];
+
+                    const marker = L.circleMarker(latLng, {
+                        ...mapConfig.layers[0].style,
+                        radius: 5 // Smaller radius for better performance
+                    });
+
+                    // Add popup only on click
+                    marker.on('click', function () {
+                        marker.bindPopup(`Occurrences: ${point.count || 1}`).openPopup();
+                    });
+
+                    markers.addLayer(marker);
+                    bounds.push(latLng);
+                }
+
+                // Process next batch or fit bounds
+                if (endIndex < points.length) {
+                    setTimeout(() => {
+                        processLegacyBatch(points, endIndex, batchSize, markers, mapConfig, map);
+                    }, 10);
+                } else {
+                    // All points processed, fit bounds if needed
+                    if (bounds.length > 0) {
+                        map.fitBounds(L.latLngBounds(bounds), {
+                            maxZoom: 12,
+                            padding: [50, 50]
+                        });
+                    }
+                }
+            }
+
+        // =====================================
+        // Chart Type Management & Data Processing
+        // =====================================
+        /**
+         * Maps widget types to Chart.js chart types
+         * @param {string} widgetType - Type from widget configuration
+         * @returns {string} Corresponding Chart.js type
+         */
+        function getChartTypeFromWidgetType(widgetType) {
+            const typeMapping = {
+                'doughnut_chart': 'doughnut',
+                'pie_chart': 'pie',
+                'bar_chart': 'bar',
+                'line_chart': 'line',
+                'stacked_bar_chart': 'bar',
+                'gauge': 'gauge'
+            };
+            return typeMapping[widgetType] || 'bar'; //
+        }
+
+        /**
+         * Prepares data for chart rendering, including sorting and transformation
+         * @param {Object} config - Widget configuration
+         * @param {Object} data - Raw data for the chart
+         * @returns {Object} Formatted data for Chart.js
+         */
+        function prepareChartData(config, data) {
+            const datasets = [];
+            let labels = [];
+
+            if (!config.datasets || !Array.isArray(config.datasets)) {
+                console.warn('No datasets configuration provided');
+                return {labels: [], datasets: []};
+            }
+
+            // Get and sort data if needed
+            let sortedData = data;
+            let sortedIndices = null;
+            if (config.sortBy) {
+                const values = _.get(data, config.sortBy, []);
+                sortedIndices = values.map((v, i) => i);
+                sortedIndices.sort((a, b) => values[a] - values[b]);
+
+                // Create new sorted data object
+                sortedData = Object.keys(data).reduce((acc, key) => {
+                    if (Array.isArray(data[key])) {
+                        acc[key] = sortedIndices.map(i => data[key][i]);
+                    } else {
+                        acc[key] = data[key];
+                    }
+                    return acc;
+                }, {});
+            }
+
+            // Get labels before dataset processing
+            labels = config.labels_key ?
+                _.get(sortedData, config.labels_key, []).map(v => v.toString()) :
+                config.labels ? config.labels :
+                    [];
+
+            config.datasets.forEach((datasetConfig) => {
+                const dataset = {
+                    label: datasetConfig.label,
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: datasetConfig.borderWidth ?? 1,
+                    fill: datasetConfig.fill ?? false,
+                    tension: datasetConfig.tension ?? 0,
+                    stack: datasetConfig.stack,
+                    pointRadius: datasetConfig.pointRadius ?? undefined,
+                    pointHoverRadius: datasetConfig.pointHoverRadius ?? undefined,
+                    pointHoverBackgroundColor: datasetConfig.pointHoverBackgroundColor ?? undefined,
+                };
+
+                // Process data
+                dataset.data = processDataset(datasetConfig, sortedData, config.type);
+
+                // Transform data if needed
+                if (datasetConfig.transformData) {
+                    dataset.data = dataset.data.map((value, index) =>
+                        transformDataValue(value, datasetConfig.transformData, index, sortedData)
+                    );
+                }
+
+                // Process colors after data is loaded
+                processColors(dataset, datasetConfig, labels);
+
+                datasets.push(dataset);
+            });
+
+            return {labels, datasets};
+        }
+
+        /**
+         * Prepares chart options by merging defaults with configuration
+         * Handles scales, plugins, and callbacks configuration
+         * @param {Object} config - Widget configuration
+         * @returns {Object} Complete Chart.js options
+         */
+        function prepareChartOptions(config) {
+            // Default options restent les mêmes
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: false,
+                            boxWidth: 15,
+                        },
+                    },
+                    title: {
+                        display: false,
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                },
+                scales: {},
+            };
+
+            // Merge custom options with defaults
+            const options = _.merge({}, defaultOptions, config.options);
+
+            // Handle scales configuration
+            if (config.options && config.options.scales) {
+                Object.keys(options.scales || {}).forEach(scaleKey => {
+                    const scale = options.scales[scaleKey];
+                    if (scale.ticks && scale.ticks.callback) {
+                        const callbackName = scale.ticks.callback;
+                        if (typeof window[callbackName] === 'function') {
+                            scale.ticks.callback = window[callbackName];
+                        }
+                    }
+                });
+            }
+
+            // Handle stacked charts
+            if (config.type === 'stacked_bar_chart' || (config.options && config.options.stacked)) {
+                if (options.scales.x) options.scales.x.stacked = true;
+                if (options.scales.y) options.scales.y.stacked = true;
+            }
+
+            // Process plugin callbacks
+            if (options.plugins) {
+                for (const pluginKey in options.plugins) {
+                    const plugin = options.plugins[pluginKey];
+                    if (plugin.callbacks) {
+                        for (const callbackKey in plugin.callbacks) {
+                            const callbackName = plugin.callbacks[callbackKey];
+                            if (typeof callbackName === 'string' && typeof window[callbackName] === 'function') {
+                                plugin.callbacks[callbackKey] = window[callbackName];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return options;
+        }
+
+        /**
+         * Process dataset values according to chart type
+         */
+        function processDataset(datasetConfig, data, chartType) {
+            let processedData = [];
+
+            if (datasetConfig.data_keys && Array.isArray(datasetConfig.data_keys)) {
+                processedData = datasetConfig.data_keys.map(key => {
+                    const value = parseFloat(_.get(data, key, 0)) || 0;
+                    return formatValue(value, chartType);
+                });
+            } else if (datasetConfig.data_key) {
+                const values = _.get(data, datasetConfig.data_key, []);
+                processedData = Array.isArray(values) ?
+                    values.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(values) || 0, chartType)];
+            } else if (datasetConfig.data) {
+                processedData = Array.isArray(datasetConfig.data) ?
+                    datasetConfig.data.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(datasetConfig.data) || 0, chartType)];
+            }
+
+            return processedData;
+        }
+
+        /**
+         * Process colors for chart datasets
+         */
+        function processColors(dataset, datasetConfig, labels) {
+            if (datasetConfig.generateColors) {
+                // Génère autant de couleurs que de données
+                dataset.backgroundColor = generateColors(dataset.data.length);
+                dataset.borderColor = dataset.backgroundColor;
+                return;
+            }
+
+            if (datasetConfig.color_mapping && labels) {
+                dataset.backgroundColor = Array.isArray(dataset.data) ?
+                    dataset.data.map((_, index) => {
+                        const label = labels[index];
+                        return datasetConfig.color_mapping[label] || '#000000';
+                    }) :
+                    datasetConfig.color_mapping[labels[0]] || '#000000';
+
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else if (datasetConfig.backgroundColors) {
+                dataset.backgroundColor = datasetConfig.backgroundColors;
+                dataset.borderColor = datasetConfig.borderColor || datasetConfig.backgroundColors;
+            } else if (datasetConfig.backgroundColor) {
+                dataset.backgroundColor = datasetConfig.backgroundColor;
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else {
+                dataset.backgroundColor = '#000000';
+                dataset.borderColor = '#000000';
+            }
+        }
+
+        function generateColors(count, defaultColor) {
+            if (defaultColor) {
+                return Array(count).fill(defaultColor);
+            }
+
+            // Function to convert HSL to RGB
+            function hslToRgb(h, s, l) {
+                let r, g, b;
+
+                if (s === 0) {
+                    r = g = b = l; // achromatic
+                } else {
+                    const hue2rgb = (p, q, t) => {
+                        if (t < 0) t += 1;
+                        if (t > 1) t -= 1;
+                        if (t < 1 / 6) return p + (q - p) * 6 * t;
+                        if (t < 1 / 2) return q;
+                        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                        return p;
+                    };
+
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1 / 3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1 / 3);
+                }
+
+                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+            }
+
+            // Function to convert RGB to Hex
+            function rgbToHex(r, g, b) {
+                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
+
+            // Generate harmonious colors
+            return Array.from({length: count}, (_, i) => {
+                // Use golden ratio to spread hues evenly
+                const hue = (i * 0.618033988749895) % 1;
+
+                // Vary saturation slightly
+                const saturation = 0.5 + (i % 3) * 0.1;
+
+                // Vary lightness to create contrast
+                const lightness = 0.4 + (i % 2) * 0.2;
+
+                const [r, g, b] = hslToRgb(hue, saturation, lightness);
+                return rgbToHex(r, g, b);
+            });
+        }
+
+        /**
+         * Initialize chart widgets including gauges
+         * Handles both Chart.js charts and JustGage gauges
+         */
+        function initChart(widgetId, data, config) {
+            const ctx = document.getElementById(widgetId);
+            if (!ctx) return;
+
+            const chartType = getChartTypeFromWidgetType(config.type);
+
+            if (chartType === 'gauge') {
+                const rawValue = _.get(data, config.value_key);
+
+                if (rawValue === null || rawValue === undefined || isNaN(rawValue)) {
+                    if (ctx) {
+                        ctx.className = 'flex items-center justify-center h-64';
+                        ctx.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    }
+                    return;
+                }
+
+                const value = parseFloat(rawValue.toFixed(1));
+
+                const gaugeOptions = {
+                    id: widgetId,
+                    value: value,
+                    min: config.options.min,
+                    max: config.options.max,
+                    label: config.options.units,
+                    title: config.title,
+                    gaugeColor: "#eee",
+                    levelColors: config.options.sectors.map(s => s.color),
+                    decimals: 1,
+                    gaugeWidthScale: 0.6,
+                    counter: true,
+                    pointer: true,
+                    pointerOptions: {
+                        toplength: -15,
+                        bottomlength: 10,
+                        bottomwidth: 12,
+                        color: '#8E8E93',
+                        stroke: '#fff',
+                        stroke_width: 3,
+                        stroke_linecap: 'round'
+                    },
+                    // Default options that don't need to be in config
+                    showMinMax: false,
+                    donut: false,
+                    relativeGaugeSize: true,
+                    // Font colors that don't need to be in config
+                    titleFontColor: "#333",
+                    valueFontColor: "#333",
+                    labelFontColor: "#666"
+                };
+
+                const gauge = new JustGage(gaugeOptions);
+
+                // Add value text below
+                const valueText = document.createElement('p');
+                valueText.className = 'text-center mt-5 text-lg text-gray-700';
+                ctx.parentNode.appendChild(valueText);
+
+                return;
+            }
+
+            // Pour les autres types de graphiques...
+            const chartData = prepareChartData(config, data);
+
+            // Vérifier si les données sont vides
+            let hasData = false;
+
+            if (chartData && chartData.datasets) {
+                // Vérifier si au moins un dataset contient des données
+                hasData = chartData.datasets.some(dataset => {
+                    // Vérifier si le dataset a des données et qu'elles ne sont pas toutes nulles/0
+                    return dataset.data &&
+                           dataset.data.length > 0 &&
+                           dataset.data.some(value => value !== null && value !== undefined && value !== 0);
+                });
+            }
+
+            // Si aucune donnée n'est disponible, afficher un message
+            if (!hasData) {
+                if (ctx) {
+                    // Remplacer le canvas par un div avec le message
+                    const container = ctx.parentNode;
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'flex items-center justify-center h-64';
+                    messageDiv.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    container.replaceChild(messageDiv, ctx);
+                }
+                return;
+            }
+
+            const chartOptions = prepareChartOptions(config);
+            const plugins = [];
+
+            if (config.customPlugin && typeof window[config.customPlugin] === 'object') {
+                plugins.push(window[config.customPlugin]);
+            }
+
+            new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: chartOptions,
+                plugins: plugins,
+            });
+        }
+
+        // =====================================
+        // Value Formatters
+        // =====================================
+        // Various formatters for different data types
+        window.formatLogValue = function (value) {
+            return value.toString();
+        };
+        window.formatSurfaceValue = function (value) {
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(0) + 'k';
+            }
+            return value;
+        };
+        window.formatPercentage = function (value) {
+            return value.toFixed(0) + '%';
+        };
+        window.formatForestTypeTooltip = function (context) {
+            return context.dataset.label + ': ' + context.raw.toFixed(1) + '%';
+        };
+        window.formatTooltipLabel = function (context) {
+            return `${context.label}: ${context.parsed}%`;
+        };
+        window.formatForestTypeElevationTooltip = function (context) {
+            const value = Math.round(context.raw);  // ou .toFixed(0) pour aucune décimale
+            return context.dataset.label + ': ' + value + '%';
+        };
+        window.formatAbsoluteValue = function (value) {
+            // Si c'est zéro, on l'affiche au centre
+            if (value === 0) return '0';
+            // Pour les autres valeurs, on affiche la valeur absolue
+            return Math.abs(value).toString();
+        };
+
+        window.formatForestCoverTooltip = function (context) {
+            const label = context.dataset.label;
+            const value = Math.abs(context.raw).toFixed(1);
+            return `${label}: ${value}%`;
+        };
+
+        function transformDataValue(value, transform, valueIndex, allData) {
+            if (!transform) return value;
+
+            switch (transform) {
+                case 'negateValues':
+                    return isNaN(value) ? 0 : -value;
+                case 'toPercentage':
+                    return isNaN(value) ? 0 : value * 100;
+                case 'stackedPercentage':
+                    const total = ['secondaire', 'mature', 'coeur'].reduce((sum, key) =>
+                        sum + (allData[key] ? allData[key][valueIndex] : 0), 0);
+                    return total === 0 ? 0 : (value / total * 100);
+                default:
+                    return value;
+            }
+        }
+
+        function formatValue(value, chartType) {
+            switch (chartType) {
+                case 'doughnut_chart':
+                case 'pie_chart':
+                    return Number(value);
+                default:
+                    return value;
+            }
+        }
+
+        // =====================================
+        // Custom Plugins
+        // =====================================
+        /**
+         * Custom plugin for drawing labels on doughnut charts
+         */
+        window.customLabels = {
+            id: 'customLabels',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = '11px system-ui';
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center';
+
+                const datasets = chart.data.datasets;
+                const meta = chart.getDatasetMeta(0);
+                const centerX = meta.data[0].x;
+                const centerY = meta.data[0].y;
+
+                datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    const percentage = dataset.data[0];
+                    const element = meta.data[0];
+
+                    const percentageAngle = -Math.PI + 0.2;
+                    const radius = (element.innerRadius + element.outerRadius) / 2;
+                    const x = centerX + Math.cos(percentageAngle) * radius;
+                    const y = centerY + Math.sin(percentageAngle) * radius;
+
+                    ctx.fillText(percentage.toFixed(1) + '%', x, y);
+
+                    // Affichage du label
+                    ctx.fillText(dataset.label, centerX, centerY + element.outerRadius - 10);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        /**
+         * Custom plugin for drawing percentage labels on forest type charts
+         */
+        window.forestTypeLabelsPlugin = {
+            id: 'text',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                chart.data.datasets.forEach(function (dataset, i) {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach(function (element, index) {
+                        const value = dataset.data[index];
+                        const position = element.getCenterPoint();
+
+                        // Draw value
+                        ctx.save();
+                        ctx.fillStyle = '#000000';
+                        ctx.font = '12px system-ui';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(value.toFixed(1) + '%', position.x, position.y);
+                        ctx.restore();
+                    });
+                });
+            }
+        };
+
+        /**
+             * Custom plugin for drawing percentage labels on taxonomic distribution chart
+             */
+            window.percentagePlugin = {
+                id: 'percentagePlugin',
+                afterDraw: function (chart) {
+                    const ctx = chart.ctx;
+
+                    // Vérifier si c'est un graphique circulaire ou en barres
+                    if (chart.config.type === 'doughnut' || chart.config.type === 'pie') {
+                        // Code original pour les graphiques circulaires
+                        chart.data.datasets.forEach(function (dataset, i) {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach(function (element, index) {
+                                // Ne pas afficher si la valeur est trop petite
+                                const value = dataset.data[index];
+                                if (value < 2) return; // Skip small values
+
+                                // Calcul de la position pour l'étiquette
+                                const angle = element.startAngle + (element.endAngle - element.startAngle) / 2;
+                                const radius = (element.innerRadius + element.outerRadius) / 2;
+                                const x = element.x + Math.cos(angle) * radius * 0.7;
+                                const y = element.y + Math.sin(angle) * radius * 0.7;
+
+                                // Dessiner le pourcentage
+                                ctx.save();
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.font = 'bold 14px system-ui';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+
+                                // Ajouter un contour noir pour améliorer la lisibilité
+                                ctx.strokeStyle = '#000000';
+                                ctx.lineWidth = 3;
+                                ctx.lineJoin = 'round';
+                                ctx.strokeText(value.toFixed(1) + '%', x, y);
+                                ctx.fillText(value.toFixed(1) + '%', x, y);
+
+                                ctx.restore();
+                            });
+                        });
+                    } else if (chart.config.type === 'bar') {
+                        // Nouveau code pour les graphiques en barres
+                        chart.data.datasets.forEach(function (dataset, i) {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach(function (element, index) {
+                                const value = dataset.data[index];
+                                if (value < 2) return; // Skip small values
+
+                                // Obtenir les dimensions et la position de la barre
+                                const { x, y, width, height } = element.getProps(['x', 'y', 'width', 'height']);
+
+                                // Calculer le centre de la barre
+                                let centerX, centerY;
+
+                                // Vérifier si c'est un graphique horizontal ou vertical
+                                if (chart.options.indexAxis === 'y') {
+                                    // Graphique horizontal
+                                    centerX = x + width / 2;
+                                    centerY = y;
+                                } else {
+                                    // Graphique vertical
+                                    centerX = x;
+                                    centerY = y + height / 2;
+                                }
+
+                                // Dessiner le pourcentage
+                                ctx.save();
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.font = 'bold 14px system-ui';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+
+                                ctx.strokeStyle = '#000000';
+                                ctx.lineWidth = 3;
+                                ctx.lineJoin = 'round';
+                                ctx.strokeText(value.toFixed(1) + '%', centerX, centerY);
+                                ctx.fillText(value.toFixed(1) + '%', centerX, centerY);
+                                ctx.restore();
+                            });
+                        });
+                    }
+                }
+            };
+    </script>
+
+</body>
+</html>

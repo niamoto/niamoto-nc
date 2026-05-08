@@ -1,0 +1,1386 @@
+{
+    "id": 540,
+    "full_name": "Beauprea balansae",
+    "authors": "Brongn. & Gris",
+    "rank_name": "species",
+    "metadata": {
+        "auto_generated": false,
+        "taxon_type": "species",
+        "parent_family": "Proteaceae",
+        "parent_genus": "Beauprea",
+        "id_taxonref": 2120,
+        "taxonref": "Beauprea balansae Brongn. & Gris",
+        "id_endemia": 4469,
+        "id_florical": 3718,
+        "endemia_url": "https://endemia.nc/flore/fiche4469",
+        "endemic": true,
+        "protected": false,
+        "protected_provnord": false,
+        "protected_provsud": false,
+        "redlist": true,
+        "image_small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg",
+        "image_big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg",
+        "image_auteur": "Herve Vandrot",
+        "images": [
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg",
+                "auteur": "Herve Vandrot",
+                "section": "flore",
+                "datmaj": "2023-10-26 10:26:08"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg",
+                "auteur": "Herve VV",
+                "section": "flore",
+                "datmaj": "2021-10-20 08:35:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg",
+                "auteur": "Daniel & Ir\u00e8ne L\u00e9tocart",
+                "section": "flore",
+                "datmaj": "2013-05-17 15:36:57"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg",
+                "auteur": "Jean-Louis Ruiz",
+                "section": "flore",
+                "datmaj": "2002-10-22 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg",
+                "auteur": "Jean-Louis Ruiz",
+                "section": "flore",
+                "datmaj": "2002-10-22 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg",
+                "auteur": "Jean-Louis Ruiz",
+                "section": "flore",
+                "datmaj": "2002-10-22 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg",
+                "auteur": "Jean-Louis Ruiz",
+                "section": "flore",
+                "datmaj": "2002-10-22 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg",
+                "auteur": "Jean-Louis Ruiz",
+                "section": "flore",
+                "datmaj": "2002-10-22 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg",
+                "auteur": "Jean-Louis Ruiz",
+                "section": "flore",
+                "datmaj": "2002-10-22 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg",
+                "auteur": "Daniel & Ir\u00e8ne L\u00e9tocart",
+                "section": "flore",
+                "datmaj": "2007-01-09 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg",
+                "auteur": "Daniel & Ir\u00e8ne L\u00e9tocart",
+                "section": "flore",
+                "datmaj": "2007-01-09 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg",
+                "auteur": "Daniel & Ir\u00e8ne L\u00e9tocart",
+                "section": "flore",
+                "datmaj": "2013-05-17 15:38:51"
+            }
+        ]
+    },
+    "lft": 2445,
+    "rght": 2446,
+    "level": 2,
+    "parent_id": 137,
+    "taxon_id": 540,
+    "general_info": {
+        "name": {
+            "value": "Beauprea balansae"
+        },
+        "rank": {
+            "value": "species"
+        },
+        "taxon_type": {
+            "value": "species"
+        },
+        "parent_family": {
+            "value": "Proteaceae"
+        },
+        "parent_genus": {
+            "value": "Beauprea"
+        },
+        "occurrences_count": {
+            "value": 48
+        },
+        "endemic": {
+            "value": "True"
+        },
+        "id_florical": {
+            "value": "3718"
+        },
+        "redlist_cat": {
+            "value": null
+        },
+        "endemia_url": {
+            "value": "https://endemia.nc/flore/fiche4469"
+        },
+        "image_url": {
+            "value": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg"
+        },
+        "images": {
+            "value": "[{'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/7/768a47cf08c5b03d7f18e6ac3b6ae6cf.jpeg', 'auteur': 'Herve Vandrot', 'section': 'flore', 'datmaj': '2023-10-26 10:26:08'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/c17fab684c6adbf0eb5933bc0db477e9.jpeg', 'auteur': 'Herve VV', 'section': 'flore', 'datmaj': '2021-10-20 08:35:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/56d66f93d3e3bb73133e723975a856b0.jpg', 'auteur': 'Daniel & Ir\u00e8ne L\u00e9tocart', 'section': 'flore', 'datmaj': '2013-05-17 15:36:57'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/6/66e407983b854078672133329313886f.jpg', 'auteur': 'Jean-Louis Ruiz', 'section': 'flore', 'datmaj': '2002-10-22 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/2/2b0c5a3f5ee96229e76dadfc4feb41e3.jpg', 'auteur': 'Jean-Louis Ruiz', 'section': 'flore', 'datmaj': '2002-10-22 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/f/f1d53f4e4d4c136a4d06f6c0e3f56b9a.jpg', 'auteur': 'Jean-Louis Ruiz', 'section': 'flore', 'datmaj': '2002-10-22 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/7/7a7aa69bc570ba288da00e20fc5339b5.jpg', 'auteur': 'Jean-Louis Ruiz', 'section': 'flore', 'datmaj': '2002-10-22 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/9/9d1521fcb0e02ef931762097b230d0f3.jpg', 'auteur': 'Jean-Louis Ruiz', 'section': 'flore', 'datmaj': '2002-10-22 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/8/8d169d4efe7d1b77314f2dc226a17b16.jpg', 'auteur': 'Jean-Louis Ruiz', 'section': 'flore', 'datmaj': '2002-10-22 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/cb18cd13abd4a823f33236dfac716628.jpg', 'auteur': 'Daniel & Ir\u00e8ne L\u00e9tocart', 'section': 'flore', 'datmaj': '2007-01-09 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/resolve/mid_thumb/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/cbbce2102572f984d272f07b2dd77620.jpg', 'auteur': 'Daniel & Ir\u00e8ne L\u00e9tocart', 'section': 'flore', 'datmaj': '2007-01-09 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/0/0559571a68d51037397c2155c8060685.jpg', 'auteur': 'Daniel & Ir\u00e8ne L\u00e9tocart', 'section': 'flore', 'datmaj': '2013-05-17 15:38:51'}]"
+        }
+    },
+    "distribution_map": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.8840859,
+                        -21.5037493
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.4631195,
+                        -22.0355682
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.684573364258,
+                        -21.3607633272807
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9528526,
+                        -22.2698698
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.3729746,
+                        -21.4194153
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.8265199570132,
+                        -20.9979465599429
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.8344052,
+                        -20.9972296
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.8259205,
+                        -21.0125548
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.9627208,
+                        -21.5236466
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.76061205409238,
+                        -21.418863297346736
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.525206,
+                        -20.4073358
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.859987,
+                        -21.4986485
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.7461325713229,
+                        -20.9514033260193
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.75422046263927,
+                        -21.42016437842488
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.7968688383455,
+                        -20.9910637322005
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.8621230390383,
+                        -21.472710210275775
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.02069708564196,
+                        -21.170152629200924
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.76491097748894,
+                        -21.413489996715683
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.8025548018352,
+                        -21.006082664299
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.75939839627816,
+                        -21.41787877544223
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.7435886110011,
+                        -20.9606562215596
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.811093391679,
+                        -20.990018759613
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.02095467735322,
+                        -21.1704009472956
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.8041256905923,
+                        -20.9892101193937
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.8032920220367,
+                        -20.9962477806338
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.666,
+                        -21.531
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.8353616666205,
+                        -20.9959442770916
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.959,
+                        -21.527
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.707,
+                        -21.339
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.696,
+                        -21.316
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.7593983962782,
+                        -21.4178787754422
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.72641906568722,
+                        -21.31862588197163
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.7649109774889,
+                        -21.4134899967157
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.356,
+                        -21.445
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.7542204626393,
+                        -21.4201643784249
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.8621230390383,
+                        -21.4727102102758
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.881,
+                        -21.507
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.7606120540924,
+                        -21.4188632973467
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.86,
+                        -21.497
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.70545419964415,
+                        -21.337644907154413
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.020697085642,
+                        -21.1701526292009
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.68995666503906,
+                        -21.446456909179688
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            }
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Beauprea balansae"
+        ],
+        "counts": [
+            48
+        ]
+    },
+    "distribution_substrat": {
+        "um": 44,
+        "num": 4,
+        "um_percent": 91.67,
+        "num_percent": 8.33
+    },
+    "phenology": {
+        "phenology_raw": {
+            "month_data": {
+                "fleur": [
+                    0,
+                    0.0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    100.0,
+                    0.0,
+                    25.0
+                ],
+                "fruit": [
+                    0,
+                    100.0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.0,
+                    100.0,
+                    50.0
+                ]
+            },
+            "labels": [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Avr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aou",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ]
+        },
+        "phenology_peaks": {
+            "fleur": {
+                "value": [
+                    9
+                ],
+                "count": 1,
+                "heights": [
+                    100.0
+                ],
+                "threshold": 30.0,
+                "mean": 10.416666666666666,
+                "std": 27.873100333874273,
+                "min": 0.0,
+                "max": 100.0
+            },
+            "fruit": {
+                "value": [
+                    1,
+                    10
+                ],
+                "count": 2,
+                "heights": [
+                    100.0,
+                    100.0
+                ],
+                "threshold": 30.0,
+                "mean": 20.833333333333332,
+                "std": 37.960139913101244,
+                "min": 0.0,
+                "max": 100.0
+            }
+        },
+        "phenology_periods": {
+            "value": {
+                "fleur": {
+                    "periods": [
+                        {
+                            "start": 9,
+                            "end": 9,
+                            "duration": 1,
+                            "start_label": "Oct",
+                            "end_label": "Oct",
+                            "mean_value": 100.0,
+                            "max_value": 100.0
+                        },
+                        {
+                            "start": 11,
+                            "end": 11,
+                            "duration": 1,
+                            "start_label": "Dec",
+                            "end_label": "Dec",
+                            "mean_value": 25.0,
+                            "max_value": 25.0
+                        }
+                    ],
+                    "count": 2,
+                    "total_active_duration": 2,
+                    "activity_percentage": 16.666666666666664
+                },
+                "fruit": {
+                    "periods": [
+                        {
+                            "start": 1,
+                            "end": 1,
+                            "duration": 1,
+                            "start_label": "Fev",
+                            "end_label": "Fev",
+                            "mean_value": 100.0,
+                            "max_value": 100.0
+                        },
+                        {
+                            "start": 10,
+                            "end": 11,
+                            "duration": 2,
+                            "start_label": "Nov",
+                            "end_label": "Dec",
+                            "mean_value": 75.0,
+                            "max_value": 100.0
+                        }
+                    ],
+                    "count": 2,
+                    "total_active_duration": 3,
+                    "activity_percentage": 25.0
+                }
+            },
+            "series_count": 2,
+            "threshold": 0.0,
+            "min_duration": 1
+        },
+        "phenology_data": {
+            "value": {
+                "raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            100.0,
+                            0.0,
+                            25.0
+                        ],
+                        "fruit": [
+                            0,
+                            100.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            100.0,
+                            50.0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "peaks": {
+                    "fleur": {
+                        "value": [
+                            9
+                        ],
+                        "count": 1,
+                        "heights": [
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 10.416666666666666,
+                        "std": 27.873100333874273,
+                        "min": 0.0,
+                        "max": 100.0
+                    },
+                    "fruit": {
+                        "value": [
+                            1,
+                            10
+                        ],
+                        "count": 2,
+                        "heights": [
+                            100.0,
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 20.833333333333332,
+                        "std": 37.960139913101244,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [
+                                {
+                                    "start": 9,
+                                    "end": 9,
+                                    "duration": 1,
+                                    "start_label": "Oct",
+                                    "end_label": "Oct",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 25.0,
+                                    "max_value": 25.0
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 2,
+                            "activity_percentage": 16.666666666666664
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 1,
+                                    "end": 1,
+                                    "duration": 1,
+                                    "start_label": "Fev",
+                                    "end_label": "Fev",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 10,
+                                    "end": 11,
+                                    "duration": 2,
+                                    "start_label": "Nov",
+                                    "end_label": "Dec",
+                                    "mean_value": 75.0,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 3,
+                            "activity_percentage": 25.0
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            },
+            "formula": "{'raw': phenology_raw, 'peaks': phenology_peaks, 'periods': phenology_periods}",
+            "description": "Custom formula",
+            "variables": {
+                "phenology_raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            100.0,
+                            0.0,
+                            25.0
+                        ],
+                        "fruit": [
+                            0,
+                            100.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            100.0,
+                            50.0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "phenology_peaks": {
+                    "fleur": {
+                        "value": [
+                            9
+                        ],
+                        "count": 1,
+                        "heights": [
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 10.416666666666666,
+                        "std": 27.873100333874273,
+                        "min": 0.0,
+                        "max": 100.0
+                    },
+                    "fruit": {
+                        "value": [
+                            1,
+                            10
+                        ],
+                        "count": 2,
+                        "heights": [
+                            100.0,
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 20.833333333333332,
+                        "std": 37.960139913101244,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "phenology_periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [
+                                {
+                                    "start": 9,
+                                    "end": 9,
+                                    "duration": 1,
+                                    "start_label": "Oct",
+                                    "end_label": "Oct",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 25.0,
+                                    "max_value": 25.0
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 2,
+                            "activity_percentage": 16.666666666666664
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 1,
+                                    "end": 1,
+                                    "duration": 1,
+                                    "start_label": "Fev",
+                                    "end_label": "Fev",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 10,
+                                    "end": 11,
+                                    "duration": 2,
+                                    "start_label": "Nov",
+                                    "end_label": "Dec",
+                                    "mean_value": 75.0,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 3,
+                            "activity_percentage": 25.0
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            }
+        }
+    },
+    "phenology_distribution": {
+        "month_data": {
+            "fleur": [
+                0,
+                0.0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                100.0,
+                0.0,
+                25.0
+            ],
+            "fruit": [
+                0,
+                100.0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0,
+                100.0,
+                50.0
+            ]
+        },
+        "labels": [
+            "Jan",
+            "Fev",
+            "Mar",
+            "Avr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aou",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            200,
+            300,
+            400,
+            500
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    "dbh_max": {
+        "max": null,
+        "units": "cm",
+        "max_value": 500
+    },
+    "height_max": {
+        "max": 4.0,
+        "units": "m",
+        "max_value": 40
+    },
+    "elevation_distribution": {
+        "bins": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            1000,
+            1100,
+            1200,
+            1700
+        ],
+        "counts": [
+            1,
+            1,
+            2,
+            6,
+            7,
+            8,
+            5,
+            8,
+            4,
+            2,
+            0,
+            0
+        ],
+        "percentages": [
+            2.27,
+            2.27,
+            4.55,
+            13.64,
+            15.91,
+            18.18,
+            11.36,
+            18.18,
+            9.09,
+            4.55,
+            0.0,
+            0.0
+        ]
+    },
+    "wood_density": {
+        "mean": null,
+        "units": "g/cm3",
+        "max_value": 1.2
+    },
+    "rainfall_distribution": {
+        "bins": [
+            1000,
+            1500,
+            2000,
+            2500,
+            3000,
+            3500,
+            4000,
+            4500,
+            5000
+        ],
+        "counts": [
+            0,
+            16,
+            24,
+            7,
+            1,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            0.0,
+            33.33,
+            50.0,
+            14.58,
+            2.08,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "holdridge_distribution": {
+        "categories": [
+            1,
+            2,
+            3
+        ],
+        "counts": [
+            0,
+            42,
+            6
+        ],
+        "labels": [
+            "Sec",
+            "Humide",
+            "Tr\u00e8s humide"
+        ],
+        "percentages": [
+            0.0,
+            87.5,
+            12.5
+        ]
+    },
+    "strata_distribution": {
+        "categories": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0
+        ],
+        "labels": [
+            "Sous-bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ]
+    },
+    "bark_thickness": {
+        "mean": null,
+        "units": "mm",
+        "max_value": 80
+    },
+    "leaf_sla": {
+        "mean": null,
+        "units": "g/m2",
+        "max_value": 50
+    },
+    "leaf_area": {
+        "mean": null,
+        "units": "cm2",
+        "max_value": 1500
+    },
+    "leaf_thickness": {
+        "mean": null,
+        "units": "\u00b5m",
+        "max_value": 800
+    }
+}

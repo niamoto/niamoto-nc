@@ -1,0 +1,232 @@
+{
+    "id": 3,
+    "locality": "Arago",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.4765625,
+            -21.24147606
+        ]
+    },
+    "plot_id": 3,
+    "general_info": {
+        "plot_name": {
+            "value": "Arago"
+        },
+        "elevation": {
+            "value": "485",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2670",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "42"
+        },
+        "nb_species": {
+            "value": "111"
+        },
+        "occurrences_count": {
+            "value": "1395"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.4765625,
+                        -21.24147606
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Arecaceae",
+            "Sapindaceae",
+            "Rubiaceae",
+            "Calophyllaceae",
+            "Sapotaceae",
+            "Clusiaceae",
+            "Meliaceae",
+            "Lauraceae",
+            "Nothofagaceae",
+            "Myrtaceae"
+        ],
+        "counts": [
+            203.0,
+            137.0,
+            83.0,
+            82.0,
+            70.0,
+            70.0,
+            63.0,
+            56.0,
+            55.0,
+            52.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Calophyllum caledonicum",
+            "Cyphokentia macrostachya",
+            "Burretiokentia vieillardii",
+            "Chambeyronia macrocarpa",
+            "Nothofagus aequilateralis",
+            "Storthocalyx corymbosus",
+            "Cupaniopsis macrocarpa",
+            "Plerandra gabriellae",
+            "Didymocheton rufescens",
+            "Hedycarya cupulata"
+        ],
+        "counts": [
+            82.0,
+            75.0,
+            66.0,
+            62.0,
+            55.0,
+            54.0,
+            44.0,
+            43.0,
+            38.0,
+            33.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            1067.0,
+            203.0,
+            69.0,
+            37.0,
+            10.0,
+            3.0,
+            6.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            258,
+            595,
+            489,
+            53
+        ],
+        "percentages": [
+            18.49,
+            42.65,
+            35.05,
+            3.8
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            30,
+            0,
+            203,
+            1158
+        ],
+        "percentages": [
+            2.16,
+            0.0,
+            14.59,
+            83.25
+        ]
+    },
+    "species_level": {
+        "value": "0.9792",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1395,
+            88
+        ],
+        "percentages": [
+            94.07,
+            5.93
+        ],
+        "arbres_vivants": {
+            "value": 1395,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 88,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "12.6",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6649199042340046",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "48",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 111,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "4.04",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.86",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.98",
+        "units": ""
+    },
+    "biomass": {
+        "value": "370.876461813298",
+        "units": "t/ha"
+    }
+}

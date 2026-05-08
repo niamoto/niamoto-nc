@@ -1,0 +1,1891 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Niamoto - Forêt de Saille</title>
+
+    <script src="../js/vendor/topojson/3.1.0_topojson.js"></script>
+    <script src="../js/shape_list.js"></script>
+
+    
+
+
+
+    <style>
+        /* Sidebar styles */
+        #shape-sidebar {
+            height: 100vh;
+            overflow-y: auto;
+            padding-top: 1rem;
+        }
+
+        #shape-tree {
+            transition: all 0.3s ease-in-out;
+        }
+
+        @media (max-width: 1024px) {
+            #shape-tree:not(.hidden) {
+                animation: slideDown 0.3s ease-in-out;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #shape-tree ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .shape-type-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #343a40;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.2s, color 0.2s;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .shape-type-link:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .shape-type-link::before {
+            content: '\25B6';
+            margin-right: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .shape-type-link.open::before {
+            transform: rotate(90deg);
+        }
+
+        .shape-link {
+            display: block;
+            padding: 8px 15px 8px 45px;
+            color: #495057;
+            transition: background-color 0.2s, color 0.2s;
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+
+        .shape-link:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .current-shape {
+            background-color: #007bff;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .badge {
+            background-color: #6c757d;
+            color: white;
+            padding: 3px 7px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: auto;
+        }
+
+        /* Map styles */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chart styles */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        /* Info panel styles */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f8f9fa;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .tooltip-content {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-100%);
+            background-color: #ffffff;
+            color: #333333;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: normal;
+            width: 20rem;
+            z-index: 9999;
+            display: none;
+        }
+
+        .group:hover .tooltip-content {
+            display: block;
+        }
+
+
+        @media (max-width: 768px) {
+            #shape-sidebar {
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="../js/vendor/tailwindcss/2.2.19_dist_tailwind.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.9.4_leaflet.css">
+    <link rel="stylesheet" href="../css/font-awesome/6.6.0_all.min.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.css" />
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.Default.css" />
+
+
+    <style>
+        ul {
+            list-style-type: none;
+        }
+
+        .loader-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .button-container {
+            transition: all 0.3s ease;
+        }
+        .button-container.fixed {
+            position: fixed;
+            top: 63px; /* Adjust this value to match the height of your navigation menu */
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bg p-0 fixed w-full top-0 shadow-md z-50 custom-nav">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <a id="home-link" class="inline-flex items-center py-2 px-4 text-white no-underline" href="#" data-link="index.html">
+                <span class="site-title">Niamoto</span>
+            </a>
+        </div>
+
+        <div class="block lg:hidden">
+            <button id="nav-toggle"
+                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0zm0 6h20v2H0zm0 6h20v2H0z" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
+            <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="index.html">
+                        <i class="fas fa-home menu-icon"></i>Accueil
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#introduction">Introduction</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#project">Projet</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#objective">Objectifs</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#context">Contexte</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#flora">Flore</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="methodology.html">
+                        <i class="fas fa-flask menu-icon"></i>Méthodologie
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#methodes">Nos méthodes</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#faq">FAQ</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="trees.html">
+                        <i class="fas fa-leaf menu-icon"></i>Arbres
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#learnTaxon">Étudier les
+                arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#taxon">Les arbres de
+                Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="plots.html">
+                        <i class="fas fa-map-marked-alt menu-icon"></i>Peuplements
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#learnPlot">Étudier les
+                            peuplements forestiers</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#plot">Les
+                peuplements forestiers de Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="forests.html">
+                        <i class="fas fa-tree menu-icon"></i>Forêt
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#learnForest">Étudier la
+                forêt</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#forestNC">La forêt de Nouvelle-Calédonie</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#">
+                        <i class="fas fa-database menu-icon"></i>Accéder aux données
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="taxon/index.html">Arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plot/index.html">Peuplements</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="shape/index.html">Forêt</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="resources.html">
+                        <i class="fas fa-book menu-icon"></i>Ressources
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#equipe">L'équipe</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#productions">Productions</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    document.getElementById('nav-toggle').onclick = () =>
+        document.getElementById('nav-content').classList.toggle('hidden');
+
+    // Function to adjust the navigation links based on page depth
+        function adjustNavLinks(depth) {
+            document.querySelectorAll('a[data-link]').forEach(link => {
+                link.href = depth + link.getAttribute('data-link');
+            });
+        }
+
+        // Adjust the navigation links based on the depth
+        adjustNavLinks("../");
+
+</script>
+
+<style>
+    .site-title {
+        font-family: 'Arial Black', sans-serif; /* Custom font for a bold effect */
+        font-size: 2rem; /* Increased font size */
+        text-transform: uppercase; /* Uppercase letters for visibility */
+        letter-spacing: 2px; /* Spacing between letters */
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Text shadow for better visibility */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .site-title:hover {
+        color: #ffdd57; /* Change color on hover */
+    }
+
+    .text-contour {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .nav-bg {
+        background-color: rgba(34, 139, 34, 0.8); /* Fond vert semi-transparent */
+        transition: background-color 0.3s;
+    }
+
+    .nav-bg:hover {
+        background-color: rgba(34, 139, 34, 1); /* Fond vert opaque au survol */
+    }
+
+    .group:hover .group-hover\:block {
+        display: block;
+    }
+
+    .custom-nav {
+        z-index: 1500;
+    }
+
+    .custom-dropdown {
+        z-index: 1500;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* Fond blanc transparent au survol */
+        border-radius: 4px;
+    }
+
+    .menu-icon {
+        margin-right: 8px;
+    }
+</style>
+    <div class="flex flex-col lg:flex-row">
+        
+    <!-- Sidebar -->
+    <div class="w-full mt-16 lg:w-1/4 lg:min-h-screen bg-white shadow-md overflow-y-auto">
+        <!-- Menu button for mobile -->
+        <button id="sidebar-toggle"
+                class="lg:hidden w-full flex items-center justify-between p-4 text-gray-600 hover:bg-gray-50">
+            <span>Catégories</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <!-- Sidebar content -->
+        <div id="shape-tree" class="hidden lg:block p-4">
+            <!-- The shape list will be loaded here -->
+        </div>
+    </div>
+
+        <div class="w-full">
+            
+    <div class="flex-1 p-4">
+        <!-- Overview Map -->
+        <div class="mt-16">
+            <div class="map-container" id="allShapesMap"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 md:px-6">
+            
+            <div class="mt-16">
+                
+            </div>
+
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 mt-4">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Informations générales</h2>
+        
+    </div>
+    <div class="p-4">
+        
+<!-- Information panel content -->
+<div class="space-y-2 md:space-y-3">
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Surface totale</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            1 099 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Surface forêt</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            705 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Forêt sur mine</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            132 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Forêt en réserve</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            693 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Forêt sur captage (PPE)</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            601 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Altitude médiane</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            664 m
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Altitude maximale</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            1 211 m
+            
+        </span>
+    </div>
+    
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution de la forêt</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution de la forêt dans l'emprise sélectionnée
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="h-96">
+    <div id="map_panelMap" class="w-full h-full"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Couverture forestière</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                La couverture forestière (= superficie de forêt / superficie disponible) est un indicateur de l'importance de la forêt dans le paysage.
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_coverChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Occupation du sol</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Superficie occupée par le substrat, les milieux de vie de Holdridge, les limites administratives et la forêt dans l'emprise sélectionnée
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="land_useChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution altitudinale</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution altitudinale de la forêt dans l'emprise
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="elevation_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Forêt et milieux de vie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution de la forêt selon les milieux de vie de Holdridge
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="holdridge_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Types forestiers</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Répartition de la forêt selon les trois types de forêt
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_typesChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Couverture forestière par altitude</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution altitudinale de la couverture forestière en fonction du substrat
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_cover_by_elevationChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Types forestiers par altitude</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution des types de forêts selon l'altitude
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_types_by_elevationChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Fragmentation</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                La taille effective de maillage représente la probabilité que deux points appartiennent au même fragment de forêt
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="fragmentationGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Fragments forestiers</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Aire cumulée de chaque fragment forestier classé du plus petit au plus grand
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="fragmentation_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    <footer class="bg-green-700 text-white p-4 mt-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white p-2 w-3/5 rounded-lg shadow-md flex justify-center">
+                    <a class='logo' href="https://www.province-nord.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="pn" src="../files/pn_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.province-sud.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/ps_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://endemia.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/endemia_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://amap.cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="amap" src="../files/amap_100.png"></figure>
+                    </a>
+                    <a class='logo' href="http://publish.plantnet-project.org/project/nou" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="herbarium" src="../files/herbarium_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://iac.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="iac" src="../files/iac_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://nouvelle-caledonie.ird.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ird" src="../files/ird_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="cirad" src="../files/cirad_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.ofb.gouv.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ofb" src="../files/ofb_100.png"></figure>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>Niamoto - Portail de la forêt de Nouvelle-Calédonie</p>
+                <a class="inline-block py-2 px-4 text-white no-underline" href="https://github.com/niamoto/niamoto" target="_blank">
+                    <span class="fab fa-github fa-lg" aria-hidden="true"></span> Github
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/vendor/chart/4.4.2_chart.js"></script>
+    <script src="../js/vendor/d3/7.8.5_d3.js"></script>
+    <script src="../js/vendor/jquery/3.6.0_jquery.js"></script>
+    <script src="../js/vendor/lodash/4.17.21_lodash.min.js"></script>
+    <script src="../js/vendor/raphael/2.3.0_raphael.js"></script>
+    <script src="../js/vendor/justgage/1.6.1_justgage.js"></script>
+    <script src="../js/vendor/leaflet/1.9.4_leaflet.js"></script>
+    <script src="../js/vendor/leaflet/1.5.3_leaflet.markercluster.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const buttonContainer = document.getElementById('buttonContainer');
+
+            // Only proceed if the button container exists
+            if (buttonContainer) {
+                const buttonContainerOffset = buttonContainer.offsetTop;
+                const navHeight = 60; // Adjust this value to match your navigation height
+
+                window.onscroll = () => {
+                    if (window.pageYOffset > buttonContainerOffset - navHeight) {
+                        buttonContainer.classList.add('fixed');
+                    } else {
+                        buttonContainer.classList.remove('fixed');
+                    }
+                };
+
+                // Initial check in case the page is loaded scrolled
+                window.onscroll();
+            }
+        });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gestion du toggle du menu mobile
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const shapeTree = document.getElementById('shape-tree');
+
+            if (sidebarToggle && shapeTree) {
+                sidebarToggle.addEventListener('click', function () {
+                    // Toggle la classe hidden sur le shape-tree
+                    shapeTree.classList.toggle('hidden');
+
+                    // Toggle une classe pour indiquer l'état ouvert/fermé
+                    this.classList.toggle('menu-open');
+
+                    // Change l'icône si besoin
+                    const svg = this.querySelector('svg');
+                    if (this.classList.contains('menu-open')) {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+                    } else {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+
+                // Fermer le menu au clic en dehors
+                document.addEventListener('click', function (e) {
+                    if (!sidebarToggle.contains(e.target) &&
+                        !shapeTree.contains(e.target) &&
+                        !shapeTree.classList.contains('hidden') &&
+                        window.innerWidth < 1024) {
+                        shapeTree.classList.add('hidden');
+                        sidebarToggle.classList.remove('menu-open');
+                        const svg = sidebarToggle.querySelector('svg');
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+            }
+        });
+
+        // =====================================
+        // Constants & Initial Setup
+        // =====================================
+        const shape = {"elevation_distribution": {"elevation": {"classes": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700], "complement": [0.0, 0.09382607576767299, 6.4727993815955, 14.545195162532139, 32.11810788182791, 60.609952551133475, 95.267235319348, 126.22803529901063, 47.03441313923024, 6.615156186208424, 4.886144509946092, 0.1229445130748168, 0.0032353819230249714, 0.0, 0.0, 0.0, 0.0], "subset": [0.0, 22.865756525264914, 33.90439760642728, 71.75116702755572, 109.59793644868364, 107.23251335986284, 63.86642339815376, 84.36675683459836, 78.84743629401672, 68.59726957579474, 33.11592324348711, 29.962025791726408, 0.7884743629401672, 0.0, 0.0, 0.0, 0.0]}}, "forest_cover": {"emprise": {"forest": 0.6414600873131954, "non_forest": 0.3585399126868045}, "num": {"forest": 0.0, "non_forest": 0.0}, "um": {"forest": 0.6414600873131954, "non_forest": 0.3585399126868045}}, "forest_cover_by_elevation": {"class_name": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700], "series": {"forest_num": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "forest_um": [0.0, 99.59134241506874, 83.96917105584237, 83.14506568597531, 77.33629383069587, 63.88878570023287, 40.13382455532622, 40.06117909177593, 62.636064411993075, 91.20470305379996, 87.14242461318524, 99.59134241506898, 99.59134241506854, 0.0, 0.0, 0.0, 0.0], "hors_foret_num": [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0], "hors_foret_um": [100.0, 0.40865758493126236, 16.030828944157633, 16.85493431402469, 22.663706169304135, 36.11121429976713, 59.86617544467378, 59.93882090822407, 37.363935588006925, 8.79529694620004, 12.857575386814759, 0.4086575849310208, 0.4086575849314613, 100.0, 100.0, 100.0, 100.0]}}, "forest_types": {"categories": ["For\u00eat coeur", "For\u00eat mature", "For\u00eat secondaire"], "values": [0.0322649064405126, 0.6892856688828067, 0.2784494246766805]}, "forest_types_by_elevation": {"altitudes": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700], "coeur": [0.0, 0.0, 0.0, 11.3717030433003, 11.3717030433003, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "mature": [0.0, 20.662613253961535, 23.84147683149408, 41.87426188036981, 64.12630692309762, 61.19312386750146, 33.37806756409171, 58.808976184352055, 70.7297146000991, 56.42482850120265, 24.636192725877216, 29.404488092176027, 0.7884743629401672, 0.0, 0.0, 0.0, 0.0], "secondaire": [0.0, 2.2031432713033783, 10.062920774933204, 18.50520210388561, 34.099926482285746, 46.03938949236139, 30.48835583406205, 25.557780650246304, 8.117721693917622, 12.172441074592086, 8.479730517609894, 0.5575376995503809, 0.0, 0.0, 0.0, 0.0, 0.0]}, "fragmentation": {"meff": {"units": "km\u00b2", "value": 130.621761929772}}, "fragmentation_distribution": {"sizes": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 600, 700, 800, 900, 1000, 1500, 2000, 5000, 10000, 20000, 30000], "values": [0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 0.0077015524913546, 1.0, 1.0, 1.0, 1.9999999999999971, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]}, "general_info": {"elevation_max": {"units": "m", "value": 1211.0}, "elevation_median": {"units": "m", "value": 663.5}, "forest_area_ha": {"units": "ha", "value": 704.896080468511}, "forest_mining_ha": {"units": "ha", "value": 131.938719146553}, "forest_ppe_ha": {"units": "ha", "value": 600.845653795122}, "forest_reserve_ha": {"units": "ha", "value": 692.570582548644}, "land_area_ha": {"units": "ha", "value": 1098.89312587011}, "rainfall": {"max": 3310.0, "min": 2160.0, "units": "mm/an"}}, "geography": {"forest_cover_coords": {"arcs": [[[65148, 10257], [-423, 578], [341, -178], [82, -400]], [[807, 40182], [-43, 425], [167, -791], [-246, -745], [122, 1111]], [[0, 45056], [448, -241], [-204, -1234], [-244, 1475]], [[7479, 26036], [-1678, -676], [-2017, 536], [-3259, 2421], [824, 4097], [-270, 1569], [273, 205], [394, -299], [316, -2015], [205, -285], [482, -63], [223, 348], [222, 1013], [-18, 632], [-557, 3259], [520, 348], [723, -126], [409, 253], [129, 1076], [-259, 253], [-501, -127], [-223, 475], [74, 285], [594, 949], [315, 32], [223, -285], [705, 253], [190, 724], [-285, 760], [55, 538], [909, 1518], [761, -63], [296, 538], [-185, 790], [148, 1297], [-204, 822], [-445, 823], [-130, 1866], [-315, 284], [-315, -474], [-260, 158], [-519, 1139], [-37, 759], [-390, 664], [-74, 917], [-686, 1170], [-279, 1265], [-964, 1360], [111, 728], [983, 1170], [520, 1328], [0, 822], [-371, 1519], [-75, 1391], [204, 886], [779, 1549], [130, 759], [-55, 1360], [519, 285], [482, 1044], [464, -63], [222, -3416], [-352, -728], [-1131, -1391], [-279, -1234], [38, -411], [500, -791], [-167, -2087], [223, -727], [853, -1582], [853, -632], [400, -604], [435, -92], [93, 443], [-223, 506], [-18, 980], [-371, 1392], [315, 569], [835, 443], [333, 822], [-148, 1961], [-427, 1075], [186, 981], [185, 95], [631, -2119], [612, -4523], [427, -253], [185, 221], [334, 1202], [0, 1170], [705, -221], [259, 158], [19, 380], [-427, 822], [-723, 2878], [19, 1676], [148, 506], [1131, 222], [687, -886], [1706, -980], [1525, -1662], [1206, -1834], [74, -823], [-167, -1423], [222, -1107], [-18, -2467], [686, -1108], [779, -1834], [650, -823], [148, -632], [779, -1455], [-148, -538], [-520, -348], [37, -1550], [316, -1297], [-427, -1803], [-965, -2119], [-148, -2246], [-1094, -1423], [-427, -1740], [-501, -1107], [-167, -3005], [186, -791], [482, -63], [167, 348], [501, 2942], [259, 569], [390, 95], [93, -380], [-278, -2056], [166, -1138], [817, -918], [445, -253], [167, 253], [111, 570], [-260, 696], [-37, 727], [1021, 1898], [500, 1708], [-37, 3100], [167, 506], [408, 443], [0, 2435], [112, 507], [241, 31], [334, -538], [-223, -4080], [371, -569], [686, -443], [130, -696], [-426, -1740], [-149, -1866], [-334, -886], [-37, -854], [334, -474], [1002, -380], [835, 190], [371, 316], [352, 2056], [390, 380], [241, -95], [630, -1993], [761, -1739], [-37, -1013], [-297, -1360], [353, -253], [1011, 734], [1094, -126], [130, 538], [-241, 949], [-37, 2056], [-297, 601], [-631, 569], [353, 664], [-112, 475], [-2578, 2657], [-445, 980], [334, 63], [742, -759], [853, -474], [1039, 474], [92, 317], [-241, 632], [-853, 380], [-594, 885], [19, 1803], [173, 580], [-99, 591], [204, 917], [-352, 538], [-1540, 854], [-1354, 1265], [-111, 443], [371, 284], [111, 570], [445, 126], [594, -158], [259, -727], [223, -127], [1206, 190], [1280, -475], [185, -506], [-222, -885], [167, -538], [-56, -1012], [482, -823], [1299, -158], [1168, 949], [1002, 0], [352, 411], [93, 886], [-315, 822], [-1113, 380], [-724, 1328], [-1317, 285], [-111, 253], [111, 823], [-92, 442], [-1317, 1424], [-668, 253], [-538, 569], [-204, 854], [55, 791], [409, 538], [797, 63], [204, 221], [37, 475], [-129, 253], [-742, 316], [-2078, -949], [-501, 32], [-130, 253], [-278, 2056], [74, 538], [390, 253], [872, -159], [644, 176], [172, 742], [-204, 759], [-427, 506], [-501, 1676], [-593, 665], [241, 253], [1521, -918], [-315, 1329], [-1206, 1360], [-223, 569], [334, 633], [686, -95], [334, 538], [483, 31], [148, 317], [-315, 1581], [-594, 1392], [19, 474], [185, 32], [408, -569], [575, -1613], [483, -601], [445, -1013], [649, -2340], [-56, -1139], [-241, -981], [260, -1107], [2003, -4270], [408, -31], [130, 790], [-111, 2847], [-1076, 1803], [-204, 633], [93, 537], [593, 159], [204, 601], [-482, 1202], [-594, 790], [-500, 1455], [-130, 1329], [297, 1012], [-38, 727], [-241, 918], [-352, 411], [297, 822], [-93, 348], [-668, 886], [260, 1075], [-149, 1392], [-1001, 1455], [-816, 1835], [-1521, 2056], [-149, 601], [74, 221], [297, 0], [742, -1234], [1781, -2245], [222, -190], [724, 63], [575, -727], [315, -3764], [241, -1266], [-92, -1550], [1447, -1992], [519, -2183], [371, -885], [482, -412], [390, 159], [352, -317], [260, -1233], [63, -1878], [994, -2392], [19, -507], [-705, -601], [-278, -537], [-260, -3511], [297, -823], [556, -442], [520, -823], [37, -1265], [-464, -3321], [74, -759], [427, -412], [519, 1487], [649, 822], [204, 32], [594, -664], [390, -32], [241, 538], [-93, 2309], [501, 1234], [-464, 980], [-74, 1645], [-278, 1075], [18, 981], [538, 1676], [538, 1012], [594, 190], [482, -158], [185, 601], [-797, 1170], [-316, 1392], [-204, 222], [-742, -159], [-74, 222], [557, 1139], [241, 980], [-520, 1518], [835, 981], [-630, 1202], [-167, 1423], [-501, 791], [426, 1012], [-538, 1107], [19, 1297], [-241, 1075], [-742, 1139], [-557, 1898], [-964, 411], [-853, -538], [-390, 127], [204, 1360], [798, 791], [278, 601], [130, 1139], [-112, 759], [-482, 727], [-1595, 32], [-445, 601], [667, 506], [1280, 474], [520, 791], [185, -158], [297, -1771], [668, -1519], [18, -411], [353, -664], [575, -127], [427, -442], [834, -3954], [649, -823], [260, -3194], [-260, -3163], [242, -412], [593, 380], [223, 854], [-408, 3005], [-37, 1328], [185, 1392], [-204, 791], [631, 1044], [352, 2056], [-1224, 2783], [-37, 728], [241, 411], [19, 411], [-576, 2119], [-1335, 3163], [-37, 348], [130, 158], [983, -537], [501, 411], [222, -158], [-222, -1487], [37, -1360], [259, -917], [446, -696], [204, -1170], [185, -127], [631, 1234], [445, 316], [260, 696], [148, 3637], [149, 633], [204, 285], [519, 31], [594, -1360], [129, -1233], [-816, -1740], [-371, -2151], [-18, -1487], [-538, -1170], [-464, -2372], [464, -1993], [111, -1170], [-185, -728], [-56, -1265], [-575, -601], [-149, -1012], [130, -823], [390, -854], [55, -1581], [167, -190], [353, 316], [352, 1519], [687, 1676], [445, -32], [1204, -937], [799, 431], [649, 1867], [279, 1360], [1001, 1328], [483, 1265], [1317, 918], [983, 1550], [519, 253], [594, 1138], [1243, 601], [500, 570], [427, -506], [278, -32], [-1150, -696], [-241, -1392], [390, -348], [612, -63], [334, -538], [-93, -411], [-853, -379], [-167, -285], [-186, -1803], [-853, -1613], [-93, -2183], [-612, -3352], [-519, -665], [-1095, -601], [-130, -379], [0, -348], [538, -981], [-111, -727], [-464, -64], [-575, 507], [-575, -253], [-426, -696], [-56, -759], [-278, -570], [18, -759], [501, -759], [315, -1139], [37, -1012], [-556, -1866], [482, -3195], [-315, -1866], [-1132, -2436], [-278, -2245], [-779, -1139], [-2300, -2056], [-241, -696], [-260, -1803], [-610, -1094], [-1242, -1423], [-687, -506], [-1836, -285], [-872, -664], [-908, -1328], [-1688, -4143], [-1057, -1139], [-56, -221], [297, -253], [890, -190], [538, 411], [797, 63], [928, 1360], [-501, 1044], [56, 696], [1131, 790], [390, 538], [649, 253], [1150, -95], [853, -727], [1502, 253], [56, -569], [-334, -1613], [148, -1613], [297, -759], [594, -253], [222, 158], [204, 632], [-463, 1645], [-75, 2435], [-185, 917], [185, 696], [279, -411], [333, -1423], [612, -1107], [93, -1518], [631, -411], [575, 189], [148, 601], [-93, 348], [-649, 1550], [-278, 1233], [-797, 1392], [-38, 822], [279, 1613], [-297, 2847], [408, -475], [315, -1644], [427, -1171], [-149, -1676], [167, -696], [204, -253], [204, 64], [501, 632], [241, -316], [-241, -2783], [297, -981], [408, -253], [705, 633], [167, 854], [-37, 1138], [742, 1455], [148, 1898], [-204, 1265], [278, 284], [946, -474], [148, 822], [446, 506], [111, 918], [-297, 1201], [-111, 791], [93, 221], [426, 159], [315, -253], [687, -2309], [167, -95], [927, 1107], [241, -348], [-1, -835], [130, -222], [371, 127], [575, 1581], [37, 1993], [-371, 917], [-37, 1013], [-724, 822], [-129, 601], [426, 158], [612, -759], [186, 0], [18, 886], [-204, 759], [-612, 759], [-55, 885], [333, 443], [279, -31], [686, -1044], [538, -316], [167, 189], [167, 1613], [408, 570], [-278, 885], [371, 190], [463, -284], [538, 348], [-241, 854], [-1298, 1138], [204, 506], [686, 0], [631, 380], [185, 727], [56, 1455], [-130, 1234], [-445, 253], [-724, -569], [-519, 126], [-315, 570], [0, 695], [1372, 2626], [56, 1929], [204, 380], [835, 379], [0, 854], [519, 696], [19, 2309], [426, 1202], [167, 1613], [446, 570], [111, 1297], [297, 506], [556, 253], [519, 1075], [279, 222], [575, -95], [371, -348], [612, -32], [56, -221], [18, -222], [-742, -885], [-148, -791], [538, -1898], [426, -95], [149, -285], [92, -2783], [297, -1297], [-93, -1328], [316, -601], [408, 158], [278, 1518], [686, 854], [316, 1898], [389, 569], [-575, 1677], [56, 474], [315, 538], [724, -32], [37, 348], [-371, 1107], [148, 1329], [186, 348], [389, 63], [761, 791], [1632, 949], [835, -443], [297, -918], [371, -442], [2671, -32], [1428, 316], [538, -189], [464, -538], [222, -1265], [-352, -3100], [93, -380], [185, -221], [687, 0], [927, 569], [631, -95], [1461, -1359], [899, -82], [292, -899], [631, -544], [1427, 1359], [1465, -63], [1224, 885], [1724, 0], [1799, 949], [733, -460], [49, -829], [-204, -1202], [75, -443], [222, -127], [483, 63], [723, 1139], [519, 158], [501, -664], [260, -1234], [278, -537], [649, -633], [1113, 63], [957, 1139], [1824, -1187], [2271, -522], [1030, -4755], [241, -5473], [611, -2124], [-253, -2909], [909, -6566], [-35, -4190], [-959, -2567], [-1370, -1974], [-842, -2472], [-921, -909], [880, -2289], [-85, -1170], [732, -1715], [-3051, -1147], [-254, -1064], [-2960, -2447], [-3447, -6795], [-3059, -2322], [-549, -1216], [-242, -1360], [-1787, -3221], [-4494, -5500], [-2245, -3228], [-575, -1455], [-464, 127], [-816, 1866], [-798, 1203], [-446, 95], [-446, -468], [-647, 1057], [-1433, 1203], [-56, 386], [-520, 285], [-445, 696], [-538, 316], [-330, 802], [35, 753], [-296, 1020], [-844, -52], [-476, 451], [-18, 190], [334, 253], [760, 0], [186, 601], [649, 633], [-315, 759], [-75, 1360], [-259, 348], [-575, -253], [-112, -696], [260, -1139], [-445, -569], [-613, 348], [-463, 1076], [-947, -159], [-222, 190], [-149, 665], [-445, 316], [-352, -253], [-19, -475], [-297, -316], [-612, 569], [-323, 1017], [-289, 217], [-1986, -316], [-927, 253], [-1429, 1044], [-1632, -918], [-501, 159], [-947, 949], [-315, 31], [-264, -307], [-1646, 2528], [-1590, 4362], [-900, 5397], [-1168, 3437], [-1625, 3183], [-2821, -1633], [-996, -1783], [-1174, -158], [-2394, -1987], [-2486, 1699], [-3292, -78], [-1684, -2658], [-2311, -1602], [-3781, 592], [-4488, -1581], [-3489, 2032], [-2824, -185], [-3350, -1184], [-2111, 1831], [-706, 9], [-1559, -1502]], [[70558, 11417], [-390, 411], [-612, -380], [-371, -854], [872, -3512], [167, -1360], [167, -190], [334, 380], [167, 1076], [-390, 2119], [185, 1297], [-129, 1013]], [[15323, 53256], [-93, 727], [-928, 854], [-167, -253], [130, -1740], [223, -506], [222, 32], [613, 886]], [[9480, 40352], [278, -538], [316, 95], [166, 538], [-296, 601], [55, 442], [742, 158], [-37, 538], [-482, 380], [-408, -285], [-371, -1139], [37, -790]], [[9485, 36494], [-241, 569], [-1225, 443], [-464, 443], [-408, -126], [-75, -349], [260, -506], [854, -569], [1020, -222], [279, 317]], [[6571, 36747], [-742, 2025], [-371, -32], [-111, -316], [167, -1930], [408, -665], [1614, -1329], [538, -1202], [297, -127], [464, 253], [56, 886], [-204, 412], [-2116, 2025]], [[30120, 49416], [501, 949], [371, 317], [0, 759], [-538, 854], [-891, 443], [-742, -222], [-333, -949], [74, -411], [593, -1139], [965, -601]], [[55700, 46538], [-334, 664], [-204, 1012], [-316, 285], [-241, 886], [-222, 189], [-186, -284], [260, -3859], [-278, -2657], [241, -348], [1076, 854], [352, 696], [464, -63], [538, 1075], [93, 411], [-112, 411], [-315, 190], [-297, -221], [-519, -1012], [-167, 31], [167, 1740]], [[71022, 42932], [890, 127], [631, 822], [649, 443], [1132, -411], [500, 949], [390, 347], [56, 380], [-427, 1139], [130, 1107], [-204, 538], [-334, 316], [0, 632], [315, 317], [260, -158], [964, -1234], [409, 63], [408, 696], [74, 1613], [-909, 1961], [-130, 601], [74, 1360], [-241, 1614], [-408, 537], [-278, 981], [-575, 949], [-501, -317], [-204, -948], [-1206, -1171], [-890, -1233], [-501, -222], [-334, 190], [-556, -696], [-1503, -6041], [-575, -1171], [74, -1075], [186, -285], [816, -284], [983, -1392], [241, -728], [594, -316]], [[15674, 82495], [0, -2119], [-130, -285], [-556, -31], [-278, 284], [-495, 2083], [810, 1111], [445, -253], [204, -790]], [[48807, 89563], [37, -696], [612, -506], [74, -285], [-222, -1106], [-223, -538], [-1113, -95], [0, 1265], [612, 1803], [223, 158]], [[46285, 87159], [-102, 1246], [-776, 2202], [16, 686], [-216, 1017], [215, 740], [677, -1906], [204, 0], [278, 696], [327, -334], [-371, -1437], [322, -2182], [-92, -2469], [-215, -839], [-484, -551], [-544, 923], [68, 794], [655, 1035], [38, 379]], [[47698, 96143], [181, 1547], [817, 2056], [352, 253], [630, -569], [112, -917], [-482, -3100], [408, -189], [1446, 1992], [223, -1265], [-1057, -2087], [-408, -475], [-1670, -790], [-612, -1423], [-148, 95], [-93, 853], [482, 3005], [-181, 1014]]], "bbox": [166.20294547597862, -21.68439075823562, 166.2538446, -21.65454117890785], "objects": {"data": {"geometries": [{"arcs": [[[0]], [[1]], [[2]], [[3], [4], [5], [6], [7], [8], [9], [10], [11]], [[12]], [[13]], [[14]], [[15]]], "id": "feature_0", "properties": {}, "type": "MultiPolygon"}], "type": "GeometryCollection"}}, "transform": {"scale": [5.08996330177147e-07, 2.984987782654848e-07], "translate": [166.20294547597862, -21.68439075823562]}, "type": "Topology"}, "shape_coords": {"arcs": [[[61946, 13225], [-2042, -425], [-5010, 1348], [-1077, 2333], [-1420, 1908], [-1585, 4112], [-897, 5087], [-1163, 3239], [-1620, 3001], [-2811, -1539], [-992, -1681], [-1170, -149], [-2385, -1873], [-2478, 1602], [-3280, -74], [-1678, -2506], [-2303, -1510], [-3768, 559], [-4472, -1491], [-3476, 1915], [-2814, -174], [-3339, -1116], [-2104, 1726], [-690, -1], [-1567, -1406], [-1628, -648], [-2237, 562], [-3105, 2041], [862, 4057], [-847, 4669], [307, 2653], [-1157, 6612], [469, 2451], [88, 4944], [1190, 2974], [252, 1238], [-295, 1798], [1501, 5927], [754, 9170], [1074, 2302], [1350, -17], [1718, 1084], [937, 1328], [1681, 534], [1954, 1596], [604, 1476], [939, 591], [2209, 152], [1935, -705], [2087, 262], [929, -937], [651, -2236], [357, 450], [217, 4114], [1660, 508], [873, 1258], [1805, 873], [859, 946], [2264, 3838], [97, 1002], [3062, 7022], [3444, -1703], [1308, 623], [1368, -704], [841, 90], [1624, -1089], [2717, 421], [1054, 827], [2582, -702], [1422, 1115], [1296, -1434], [107, -943], [774, -942], [1629, -3708], [-60, -2036], [689, -4333], [882, -2385], [1135, -1736], [1761, -527], [1839, -1499], [5747, 278], [3342, -752], [2877, -1281], [2202, -1659], [266, -745], [978, -247], [1154, -3251], [1427, -1732], [1038, -90], [761, 1181], [2560, 596], [7515, 783], [2398, -1673], [393, -1532], [627, -824], [2289, -1409], [2263, -492], [1026, -4483], [241, -5158], [608, -2003], [-252, -2741], [906, -6190], [-34, -3950], [-956, -2420], [-1366, -1860], [-838, -2330], [-919, -858], [878, -2157], [-85, -1103], [729, -1617], [-3040, -1081], [-253, -1003], [-2950, -2307], [-3434, -6405], [-3049, -2189], [-720, -2535], [-1849, -2929], [-4555, -5429], [-1269, -1890], [-643, -2295], [-1487, -1552], [-765, 310], [-287, 2003], [-1886, 2911], [-1659, 1318], [-1173, 64], [-528, 1073], [84, 1732], [-295, 961], [-2167, -126], [-241, 1121], [-951, 999], [-2345, 859]]], "bbox": [166.2027652, -21.684887, 166.2538446, -21.653220999999995], "objects": {"data": {"geometries": [{"arcs": [[0]], "id": "feature_0", "properties": {}, "type": "Polygon"}], "type": "GeometryCollection"}}, "transform": {"scale": [5.107991079912831e-07, 3.1666316663171487e-07], "translate": [166.2027652, -21.684887]}, "type": "Topology"}}, "holdridge": {"forest": {"humide": 0.2850933721391981, "sec": 0.0, "tres_humide": 0.3563667151739972}, "non_forest": {"humide": 0.0225989355531098, "sec": 0.0, "tres_humide": 0.3359409771336947}}, "id": 36, "land_use": {"categories": ["NUM", "UM", "Sec", "Humide", "Tr\u00e8s Humide", "R\u00e9serve", "PPE", "Concessions", "For\u00eat"], "values": [0.0, 1098.89312587011, 0.0, 338.120961806188, 760.772164063922, 1077.12406519992, 887.927840880142, 311.783672424855, 704.896080468511]}, "name": "For\u00eat de Saille", "shape_id": 36, "type": "protected_areas"};
+        const mapping = {"group_by": "shape", "widgets": {"elevation_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "data_key": "subset", "label": "For\u00eat", "stack": "Stack 0"}, {"backgroundColor": "#F4E4BC", "data_key": "complement", "label": "Hors-for\u00eat", "stack": "Stack 0"}], "description": "Distribution altitudinale de la for\u00eat dans l\u0027emprise", "labels_key": "classes", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Superficie (ha)"}}, "y": {"reverse": true, "title": {"display": true, "text": "Altitude (m)"}}}}, "source": "elevation_distribution.elevation", "title": "Distribution altitudinale", "type": "bar_chart"}, "forest_cover": {"customPlugin": "customLabels", "datasets": [{"backgroundColors": ["#2E7D32", "#F4E4BC"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["emprise.forest", "emprise.non_forest"], "label": "Emprise", "transformData": "toPercentage"}, {"backgroundColors": ["#2E7D32", "#C5A98B"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["num.forest", "num.non_forest"], "label": "NUM", "transformData": "toPercentage"}, {"backgroundColors": ["#2E7D32", "#8B7355"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["um.forest", "um.non_forest"], "label": "UM", "transformData": "toPercentage"}], "description": "La couverture foresti\u00e8re (= superficie de for\u00eat / superficie disponible) est un indicateur de l\u0027importance de la for\u00eat dans le paysage.", "labels": ["For\u00eat", "Hors-for\u00eat"], "options": {"cutout": "20%", "plugins": {"legend": {"display": false}, "tooltip": {"enabled": false}}, "rotation": -90}, "source": "forest_cover", "title": "Couverture foresti\u00e8re", "type": "doughnut_chart"}, "forest_cover_by_elevation": {"datasets": [{"backgroundColor": "#90EE90", "data_key": "series.forest_um", "label": "For\u00eat (UM)", "stack": "Stack 0", "transformData": "negateValues"}, {"backgroundColor": "#2E7D32", "data_key": "series.forest_num", "label": "For\u00eat (NUM)", "stack": "Stack 0"}], "description": "Distribution altitudinale de la couverture foresti\u00e8re en fonction du substrat", "labels_key": "class_name", "options": {"indexAxis": "y", "maintainAspectRatio": false, "plugins": {"legend": {"align": "center", "labels": {"boxWidth": 10, "padding": 15}, "position": "bottom"}, "title": {"align": "center", "display": true, "position": "top", "text": "Couverture (%)"}, "tooltip": {"callbacks": {"label": "formatForestCoverTooltip"}, "intersect": false, "mode": "y"}}, "responsive": true, "scales": {"x": {"border": {"display": false}, "grid": {"borderDash": [5, 5], "drawTicks": false, "lineWidth": 1}, "max": 100, "min": -100, "position": "top", "stacked": true, "ticks": {"autoSkip": false, "callback": "formatAbsoluteValue", "maxRotation": 0, "stepSize": 20}}, "y": {"border": {"display": false}, "grid": {"borderDash": [5, 5], "display": true, "drawTicks": false, "lineWidth": 1}, "position": "left", "reverse": true, "stacked": true, "ticks": {"font": {"size": 12}}, "title": {"display": true, "font": {"size": 12}, "text": "Altitude (m)"}}}}, "source": "forest_cover_by_elevation", "title": "Couverture foresti\u00e8re par altitude", "type": "bar_chart"}, "forest_types": {"customPlugin": "forestTypeLabelsPlugin", "datasets": [{"backgroundColor": ["#2E7D32", "#7CB342", "#C5E1A5"], "borderColor": "#ffffff", "borderWidth": 2, "data_key": "values", "label": "Types de for\u00eat", "transformData": "toPercentage"}], "description": "R\u00e9partition de la for\u00eat selon les trois types de for\u00eat", "labels_key": "categories", "options": {"cutout": "60%", "plugins": {"legend": {"labels": {"boxWidth": 15, "font": {"size": 12}, "padding": 20, "usePointStyle": false}, "position": "bottom"}, "tooltip": {"callbacks": {"label": "formatForestTypeTooltip"}}}}, "source": "forest_types", "title": "Types forestiers", "type": "doughnut_chart"}, "forest_types_by_elevation": {"datasets": [{"backgroundColor": "#C5E1A5", "borderColor": "#C5E1A5", "data_key": "secondaire", "fill": true, "label": "For\u00eat secondaire", "pointHoverBackgroundColor": "#ffffff", "pointHoverRadius": 5, "pointRadius": 0, "pointStyle": "circle", "stack": "Stack 0", "tension": 0.4, "transformData": "stackedPercentage"}, {"backgroundColor": "#7CB342", "borderColor": "#7CB342", "data_key": "mature", "fill": true, "label": "For\u00eat mature", "pointHoverBackgroundColor": "#ffffff", "pointHoverRadius": 5, "pointRadius": 0, "pointStyle": "circle", "stack": "Stack 0", "tension": 0.4, "transformData": "stackedPercentage"}, {"backgroundColor": "#2E7D32", "borderColor": "#2E7D32", "data_key": "coeur", "fill": true, "label": "For\u00eat de coeur", "pointHoverBackgroundColor": "#ffffff", "pointHoverRadius": 5, "pointRadius": 0, "pointStyle": "circle", "stack": "Stack 0", "tension": 0.4, "transformData": "stackedPercentage"}], "description": "Distribution des types de for\u00eats selon l\u0027altitude", "labels_key": "altitudes", "options": {"interaction": {"axis": "x", "intersect": false, "mode": "nearest"}, "maintainAspectRatio": false, "plugins": {"legend": {"labels": {"boxWidth": 15, "padding": 20, "usePointStyle": false}, "position": "bottom"}, "tooltip": {"callbacks": {"label": "formatForestTypeElevationTooltip"}, "intersect": false, "mode": "index"}}, "responsive": true, "scales": {"x": {"grid": {"display": false}, "ticks": {"maxRotation": 0}, "title": {"display": true, "font": {"size": 12}, "text": "Altitude (m)"}}, "y": {"grid": {"borderDash": [2, 2], "color": "#e5e5e5"}, "max": 100, "min": 0, "stacked": true, "ticks": {"callback": "formatPercentage"}, "title": {"display": true, "font": {"size": 12}, "text": "Fr\u00e9quence (%)"}}}}, "sortBy": "altitudes", "source": "forest_types_by_elevation", "title": "Types forestiers par altitude", "type": "line_chart"}, "fragmentation": {"description": "La taille effective de maillage repr\u00e9sente la probabilit\u00e9 que deux points appartiennent au m\u00eame fragment de for\u00eat", "options": {"max": 1000, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 200]}, {"color": "#fe6a00", "range": [200, 400]}, {"color": "#e8dd0f", "range": [400, 600]}, {"color": "#81e042", "range": [600, 800]}, {"color": "#049f50", "range": [800, 1000]}], "units": "km\u00b2"}, "source": "fragmentation.meff", "title": "Fragmentation", "type": "gauge", "value_key": "value"}, "fragmentation_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "borderColor": "#2E7D32", "borderWidth": 2, "data_key": "values", "fill": true, "label": "Aire Cumul\u00e9e", "pointRadius": 0, "tension": 0.3, "transformData": "toPercentage"}], "description": "Aire cumul\u00e9e de chaque fragment forestier class\u00e9 du plus petit au plus grand", "labels_key": "sizes", "options": {"plugins": {"legend": {"labels": {"boxWidth": 15, "padding": 20, "usePointStyle": false}, "position": "bottom"}}, "scales": {"x": {"grid": {"display": false}, "title": {"display": true, "text": "Surface (ha)"}, "type": "logarithmic"}, "y": {"beginAtZero": true, "grid": {"borderDash": [2, 2], "color": "#e5e5e5"}, "max": 100, "min": 0, "ticks": {"callback": "formatPercentage"}, "title": {"display": true, "text": "Fr\u00e9quence (%)"}}}}, "sortBy": "sizes", "sortData": true, "source": "fragmentation_distribution", "title": "Fragments forestiers", "type": "line_chart"}, "general_info": {"fields": [{"format": "number", "label": "Surface totale", "source": "land_area_ha"}, {"format": "number", "label": "Surface for\u00eat", "source": "forest_area_ha"}, {"format": "number", "label": "For\u00eat sur mine", "source": "forest_mining_ha"}, {"format": "number", "label": "For\u00eat en r\u00e9serve", "source": "forest_reserve_ha"}, {"format": "number", "label": "For\u00eat sur captage (PPE)", "source": "forest_ppe_ha"}, {"format": "range", "label": "Pluviom\u00e9trie", "source": "rainfall"}, {"format": "number", "label": "Altitude m\u00e9diane", "source": "elevation_median"}, {"format": "number", "label": "Altitude maximale", "source": "elevation_max"}], "layout": "grid", "title": "Informations g\u00e9n\u00e9rales", "type": "info_panel"}, "holdridge_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "data_keys": ["forest.sec", "forest.humide", "forest.tres_humide"], "label": "For\u00eat", "stack": "Stack 0", "transformData": "toPercentage"}, {"backgroundColor": "#F4E4BC", "data_keys": ["non_forest.sec", "non_forest.humide", "non_forest.tres_humide"], "label": "Hors-for\u00eat", "stack": "Stack 0", "transformData": "toPercentage"}], "description": "Distribution de la for\u00eat selon les milieux de vie de Holdridge", "labels": ["Sec", "Humide", "Tr\u00e8s humide"], "options": {"indexAxis": "x", "scales": {"x": {"title": {"display": true, "text": "Type de milieu"}}, "y": {"title": {"display": true, "text": "Proportion (%)"}}}}, "source": "holdridge", "title": "For\u00eat et milieux de vie", "type": "bar_chart"}, "land_use": {"datasets": [{"color_mapping": {"Concessions": "#E57373", "For\u00eat": "#2E7D32", "Humide": "#FFEB3B", "NUM": "#8B4513", "PPE": "#90CAF9", "R\u00e9serve": "#4CAF50", "Sec": "#8B0000", "Tr\u00e8s Humide": "#1E88E5", "UM": "#CD853F"}, "data_key": "values", "label": "Occupation du sol"}], "description": "Superficie occup\u00e9e par le substrat, les milieux de vie de Holdridge, les limites administratives et la for\u00eat dans l\u0027emprise s\u00e9lectionn\u00e9e", "labels_key": "categories", "options": {"indexAxis": "x", "scales": {"x": {"title": {"display": true, "text": ""}}, "y": {"ticks": {"callback": "formatSurfaceValue"}, "title": {"display": true, "text": "Superficie (ha)"}}}}, "source": "land_use", "title": "Occupation du sol", "type": "bar_chart"}, "map_panel": {"description": "Distribution de la for\u00eat dans l\u0027emprise s\u00e9lectionn\u00e9e", "layers": [{"id": "shape", "source": "geography.shape_coords", "style": {"color": "#1fb99d", "fillOpacity": 0, "weight": 2}}, {"id": "forest", "source": "geography.forest_cover_coords", "style": {"color": "#228b22", "fillColor": "#228b22cc", "fillOpacity": 0.8, "weight": 0.3}}], "source": "geography", "title": "Distribution de la for\u00eat", "type": "map_panel"}}};
+        const currentShapeType = "protected_areas";
+        const currentShapeId = 36;
+        let maps = {};  // Store map instances
+
+        // =====================================
+        // Core Initialization
+        // =====================================
+        /**
+         * Initialize all components when DOM is loaded
+         * - Maps initialization
+         * - Shape tree creation
+         * - Widgets initialization
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+
+
+            // Initialize maps
+            if (mapping.widgets.map_panel) {
+                initShapeMaps(mapping, shape);
+            }
+
+            // Initialize tree
+            createShapeTree(document.getElementById('shape-tree'), shapeTypes);
+
+            // Initialize charts based on widget configuration
+            initializeWidgets(mapping.widgets, shape);
+        });
+
+        // =====================================
+        // Chart Type Management & Data Processing
+        // =====================================
+        /**
+         * Maps widget types to Chart.js chart types
+         * @param {string} widgetType - Type from widget configuration
+         * @returns {string} Corresponding Chart.js type
+         */
+        function getChartTypeFromWidgetType(widgetType) {
+            const typeMapping = {
+                'doughnut_chart': 'doughnut',
+                'pie_chart': 'pie',
+                'bar_chart': 'bar',
+                'line_chart': 'line',
+                'stacked_bar_chart': 'bar',
+                'gauge': 'gauge'
+            };
+            return typeMapping[widgetType] || 'bar'; //
+        }
+
+        /**
+         * Prepares data for chart rendering, including sorting and transformation
+         * @param {Object} config - Widget configuration
+         * @param {Object} data - Raw data for the chart
+         * @returns {Object} Formatted data for Chart.js
+         */
+        function prepareChartData(config, data) {
+            const datasets = [];
+            let labels = [];
+
+            if (!config.datasets || !Array.isArray(config.datasets)) {
+                console.warn('No datasets configuration provided');
+                return {labels: [], datasets: []};
+            }
+
+            // Get and sort data if needed
+            let sortedData = data;
+            let sortedIndices = null;
+            if (config.sortBy) {
+                const values = _.get(data, config.sortBy, []);
+                sortedIndices = values.map((v, i) => i);
+                sortedIndices.sort((a, b) => values[a] - values[b]);
+
+                // Create new sorted data object
+                sortedData = Object.keys(data).reduce((acc, key) => {
+                    if (Array.isArray(data[key])) {
+                        acc[key] = sortedIndices.map(i => data[key][i]);
+                    } else {
+                        acc[key] = data[key];
+                    }
+                    return acc;
+                }, {});
+            }
+
+            // Get labels before dataset processing
+            labels = config.labels_key ?
+                _.get(sortedData, config.labels_key, []).map(v => v.toString()) :
+                config.labels ? config.labels :
+                    [];
+
+            config.datasets.forEach((datasetConfig) => {
+                const dataset = {
+                    label: datasetConfig.label,
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: datasetConfig.borderWidth ?? 1,
+                    fill: datasetConfig.fill ?? false,
+                    tension: datasetConfig.tension ?? 0,
+                    stack: datasetConfig.stack,
+                    pointRadius: datasetConfig.pointRadius ?? undefined,
+                    pointHoverRadius: datasetConfig.pointHoverRadius ?? undefined,
+                    pointHoverBackgroundColor: datasetConfig.pointHoverBackgroundColor ?? undefined,
+                };
+
+                // Process data
+                dataset.data = processDataset(datasetConfig, sortedData, config.type);
+
+                // Transform data if needed
+                if (datasetConfig.transformData) {
+                    dataset.data = dataset.data.map((value, index) =>
+                        transformDataValue(value, datasetConfig.transformData, index, sortedData)
+                    );
+                }
+
+                // Process colors after data is loaded
+                processColors(dataset, datasetConfig, labels);
+
+                datasets.push(dataset);
+            });
+
+            return {labels, datasets};
+        }
+
+        /**
+         * Prepares chart options by merging defaults with configuration
+         * Handles scales, plugins, and callbacks configuration
+         * @param {Object} config - Widget configuration
+         * @returns {Object} Complete Chart.js options
+         */
+        function prepareChartOptions(config) {
+            // Default options restent les mêmes
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: false,
+                            boxWidth: 15,
+                        },
+                    },
+                    title: {
+                        display: false,
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                },
+                scales: {},
+            };
+
+            // Merge custom options with defaults
+            const options = _.merge({}, defaultOptions, config.options);
+
+            // Handle scales configuration
+            if (config.options && config.options.scales) {
+                Object.keys(options.scales || {}).forEach(scaleKey => {
+                    const scale = options.scales[scaleKey];
+                    if (scale.ticks && scale.ticks.callback) {
+                        const callbackName = scale.ticks.callback;
+                        if (typeof window[callbackName] === 'function') {
+                            scale.ticks.callback = window[callbackName];
+                        }
+                    }
+                });
+            }
+
+            // Handle stacked charts
+            if (config.type === 'stacked_bar_chart' || (config.options && config.options.stacked)) {
+                if (options.scales.x) options.scales.x.stacked = true;
+                if (options.scales.y) options.scales.y.stacked = true;
+            }
+
+            // Process plugin callbacks
+            if (options.plugins) {
+                for (const pluginKey in options.plugins) {
+                    const plugin = options.plugins[pluginKey];
+                    if (plugin.callbacks) {
+                        for (const callbackKey in plugin.callbacks) {
+                            const callbackName = plugin.callbacks[callbackKey];
+                            if (typeof callbackName === 'string' && typeof window[callbackName] === 'function') {
+                                plugin.callbacks[callbackKey] = window[callbackName];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return options;
+        }
+
+        /**
+         * Process dataset values according to chart type
+         */
+        function processDataset(datasetConfig, data, chartType) {
+            let processedData = [];
+
+            if (datasetConfig.data_keys && Array.isArray(datasetConfig.data_keys)) {
+                processedData = datasetConfig.data_keys.map(key => {
+                    const value = parseFloat(_.get(data, key, 0)) || 0;
+                    return formatValue(value, chartType);
+                });
+            } else if (datasetConfig.data_key) {
+                const values = _.get(data, datasetConfig.data_key, []);
+                processedData = Array.isArray(values) ?
+                    values.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(values) || 0, chartType)];
+            } else if (datasetConfig.data) {
+                processedData = Array.isArray(datasetConfig.data) ?
+                    datasetConfig.data.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(datasetConfig.data) || 0, chartType)];
+            }
+
+            return processedData;
+        }
+
+        /**
+         * Process colors for chart datasets
+         */
+        function processColors(dataset, datasetConfig, labels) {
+            if (datasetConfig.color_mapping && labels) {
+                // Pour le color_mapping, on utilise les labels pour mapper les couleurs
+                dataset.backgroundColor = Array.isArray(dataset.data) ?
+                    dataset.data.map((_, index) => {
+                        const label = labels[index];
+                        return datasetConfig.color_mapping[label] || '#000000';
+                    }) :
+                    datasetConfig.color_mapping[labels[0]] || '#000000';
+
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else if (datasetConfig.backgroundColors) {
+                dataset.backgroundColor = datasetConfig.backgroundColors;
+                dataset.borderColor = datasetConfig.borderColor || datasetConfig.backgroundColors;
+            } else if (datasetConfig.backgroundColor) {
+                dataset.backgroundColor = datasetConfig.backgroundColor;
+                dataset.borderColor = datasetConfig.borderColor || datasetConfig.backgroundColor;
+            } else {
+                dataset.backgroundColor = '#000000';
+                dataset.borderColor = '#000000';
+            }
+        }
+
+        // =====================================
+        // Widget Initialization
+        // =====================================
+        /**
+         * Main widgets initialization router
+         * Handles different widget types initialization
+         */
+        function initializeWidgets(widgets, stats) {
+            // Mapping des types vers leurs fonctions d'initialisation
+            const initializerMap = {
+                'bar_chart': initChart,
+                'line_chart': initChart,
+                'pie_chart': initChart,
+                'doughnut_chart': initChart,
+                'gauge': initChart,
+                'map_panel': initMapFromConfig
+            };
+
+            Object.entries(widgets)
+                .filter(([_, config]) => config.type in initializerMap)  // Ignore les types non gérés
+                .forEach(([widgetKey, config]) => {
+                    // Génère l'ID du widget automatiquement si non spécifié
+                    const suffix = config.type.includes('chart') ? 'Chart' :
+                        config.type === 'gauge' ? 'Gauge' : 'Map';
+                    const widgetId = config.id || `${widgetKey}${suffix}`;
+
+                    // Pour les cartes, on passe directement stats
+                    if (config.type === 'map_panel') {
+                        initializerMap[config.type](widgetId, stats, config);
+                        return;
+                    }
+
+                    // Pour les autres widgets, on vérifie la source dans stats
+                    const data = _.get(stats, config.source);
+                    if (!data) return;  // Skip si pas de données
+
+                    // Initialise le widget avec la fonction appropriée
+                    initializerMap[config.type](widgetId, data, config);
+                });
+        }
+
+        /**
+         * Initialize chart widgets including gauges
+         * Handles both Chart.js charts and JustGage gauges
+         */
+        function initChart(widgetId, data, config) {
+            const ctx = document.getElementById(widgetId);
+            if (!ctx) return;
+
+            const chartType = getChartTypeFromWidgetType(config.type);
+
+            if (chartType === 'gauge') {
+                const value = parseFloat(_.get(data, config.value_key, 0).toFixed(1));
+
+                const gaugeOptions = {
+                    id: widgetId,
+                    value: value,
+                    min: config.options.min,
+                    max: config.options.max,
+                    label: config.options.units,
+                    title: config.title,
+                    gaugeColor: "#eee",
+                    levelColors: config.options.sectors.map(s => s.color),
+                    decimals: 1,
+                    gaugeWidthScale: 0.6,
+                    counter: true,
+                    pointer: true,
+                    pointerOptions: {
+                        toplength: 8,
+                        bottomlength: -20,
+                        bottomwidth: 6,
+                        color: '#8e8e93'
+                    },
+                    // Default options that don't need to be in config
+                    showMinMax: false,
+                    donut: false,
+                    relativeGaugeSize: true,
+                    // Font colors that don't need to be in config
+                    titleFontColor: "#333",
+                    valueFontColor: "#333",
+                    labelFontColor: "#666"
+                };
+
+                const gauge = new JustGage(gaugeOptions);
+
+                // Add value text below
+                const valueText = document.createElement('p');
+                valueText.textContent = `Taille effective de maillage: ${value} ${config.options.units}`;
+                valueText.className = 'text-center mt-5 text-lg text-gray-700';
+                ctx.parentNode.appendChild(valueText);
+
+                return;
+            }
+
+            // Pour les autres types de graphiques...
+            const chartData = prepareChartData(config, data);
+
+            // Vérifier si les données sont vides
+            let hasData = false;
+
+            if (chartData && chartData.datasets) {
+                // Vérifier si au moins un dataset contient des données
+                hasData = chartData.datasets.some(dataset => {
+                    // Vérifier si le dataset a des données et qu'elles ne sont pas toutes nulles/0
+                    return dataset.data &&
+                           dataset.data.length > 0 &&
+                           dataset.data.some(value => value !== null && value !== undefined && value !== 0);
+                });
+            }
+
+            // Si aucune donnée n'est disponible, afficher un message
+            if (!hasData) {
+                if (ctx) {
+                    // Remplacer le canvas par un div avec le message
+                    const container = ctx.parentNode;
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'flex items-center justify-center h-64';
+                    messageDiv.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    container.replaceChild(messageDiv, ctx);
+                }
+                return;
+            }
+
+            const chartOptions = prepareChartOptions(config);
+            const plugins = [];
+
+            if (config.customPlugin && typeof window[config.customPlugin] === 'object') {
+                plugins.push(window[config.customPlugin]);
+            }
+
+            new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: chartOptions,
+                plugins: plugins,
+            });
+        }
+
+        // =====================================
+        // Map Management
+        // =====================================
+        /**
+         * Initialize maps based on configuration
+         */
+        function initShapeMaps(mapping, shape) {
+            if (mapping.widgets.map_panel) {
+                // Initialize main map with widget config
+                //initMapFromConfig('map_panelMap', shape, mapping.widgets.map_panel);
+
+                // Initialize overview map
+                initOverviewMap('allShapesMap', shape, mapping.widgets.map_panel);
+            }
+        }
+
+        /**
+         * Initialize main map with configured layers
+         */
+        function initMapFromConfig(mapId, shape, mapConfig) {
+            const mapContainer = document.getElementById(mapId);
+            if (!mapContainer || maps[mapId]) return;
+
+            // Base configuration
+            const defaultZoom = 7;
+
+            // Base layers with backup options
+            const baseLayers = {
+                "Satellite": L.tileLayer.wms("https://carto10.gouv.nc/arcgis/services/fond_imagerie/MapServer/WMSServer", {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                "Carte": L.tileLayer.wms('https://carto.gouv.nc/arcgis/services/fond_cartographie/MapServer/WMSServer', {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                // Backup map sources (global)
+                "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }),
+                // Alternative satellite imagery
+                "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                })
+            };
+
+            // Tracker to check if primary map sources are available
+            let primaryLayerAvailable = false;
+            let primaryLayersLoaded = 0;
+            const totalPrimaryLayers = 2; // Number of primary layers (Satellite and Carte)
+
+            // Function to check layer availability
+            function checkLayersAvailability() {
+                if (primaryLayersLoaded >= totalPrimaryLayers && !primaryLayerAvailable) {
+                    // No primary map source is available, switch to ESRI Satellite
+                    console.log("Primary map sources are unavailable, using ESRI Satellite");
+                    map.removeLayer(baseLayers["Satellite"]); // Remove default layer
+                    map.addLayer(baseLayers["ESRI Satellite"]); // Add backup layer
+                }
+            }
+
+            // Create map with Satellite as default layer
+            const map = L.map(mapId, {
+                layers: [baseLayers["Satellite"]],
+                zoom: defaultZoom,
+                scrollWheelZoom: false
+            });
+
+            // Add layer control
+            L.control.layers(baseLayers).addTo(map);
+            map.attributionControl.setPrefix(false);
+
+            // Set a timeout to automatically switch to backup layer if primary layers don't load quickly
+            let mapLoadTimeout = setTimeout(function() {
+                if (!primaryLayerAvailable) {
+                    console.log("Map load timeout reached, switching to backup layer");
+                    map.removeLayer(baseLayers["Satellite"]);
+                    map.addLayer(baseLayers["ESRI Satellite"]);
+                    // Force the primaryLayersLoaded to avoid further checks
+                    primaryLayersLoaded = totalPrimaryLayers;
+                }
+            }, 3000); // 3 seconds timeout
+
+            // Listen for tile loading events on primary layers
+            baseLayers["Satellite"].on('tileerror', function(error) {
+                console.log("Error loading Satellite layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Satellite"].on('load', function() {
+                console.log("Satellite layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            baseLayers["Carte"].on('tileerror', function(error) {
+                console.log("Error loading Carte layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Carte"].on('load', function() {
+                console.log("Carte layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            // Add configured layers
+            const layers = [];
+            mapConfig.layers.forEach(layer => {
+                const sourceData = _.get(shape, layer.source);
+                if (sourceData) {
+                    try {
+                        // Convert TopoJSON to GeoJSON if needed
+                        let geoJson;
+                        if (sourceData.type === 'Topology') {
+                            // Convert TopoJSON to GeoJSON
+                            const geometryKey = Object.keys(sourceData.objects)[0];
+                            geoJson = topojson.feature(sourceData, sourceData.objects[geometryKey]);
+                        } else {
+                            // Already GeoJSON
+                            geoJson = typeof sourceData === 'string' ? JSON.parse(sourceData) : sourceData;
+                        }
+
+                        const geoLayer = L.geoJSON(geoJson, {
+                            style: layer.style
+                        }).addTo(map);
+                        layers.push(geoLayer);
+                    } catch (e) {
+                        console.error(`Error loading layer ${layer.id}:`, e);
+                    }
+                }
+            });
+
+            // Adjust view
+            if (layers.length > 0) {
+                const group = L.featureGroup(layers);
+                map.fitBounds(group.getBounds());
+            }
+
+            maps[mapId] = map;
+        }
+
+        /**
+         * Initialize overview map showing all shapes of same type
+         */
+        function initOverviewMap(mapId, currentShape, mapConfig) {
+            const mapContainer = document.getElementById(mapId);
+            if (!mapContainer || maps[mapId]) return;
+
+            // Base layers with backup options
+            const baseLayers = {
+                "Satellite": L.tileLayer.wms("https://carto10.gouv.nc/arcgis/services/fond_imagerie/MapServer/WMSServer", {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                "Carte": L.tileLayer.wms('https://carto.gouv.nc/arcgis/services/fond_cartographie/MapServer/WMSServer', {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                // Backup map sources (global)
+                "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }),
+                // Alternative satellite imagery
+                "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                })
+            };
+
+            // Tracker to check if primary map sources are available
+            let primaryLayerAvailable = false;
+            let primaryLayersLoaded = 0;
+            const totalPrimaryLayers = 2; // Number of primary layers (Satellite and Carte)
+
+            // Create map with Satellite as default layer
+            const map = L.map(mapId, {
+                layers: [baseLayers["Satellite"]],
+                scrollWheelZoom: false
+            });
+
+            // Add layer control
+            L.control.layers(baseLayers).addTo(map);
+            map.attributionControl.setPrefix(false);
+
+            // Function to check layer availability
+            function checkLayersAvailability() {
+                if (primaryLayersLoaded >= totalPrimaryLayers && !primaryLayerAvailable) {
+                    // No primary map source is available, switch to ESRI Satellite
+                    console.log("Primary map sources are unavailable, using ESRI Satellite");
+                    map.removeLayer(baseLayers["Satellite"]); // Remove default layer
+                    map.addLayer(baseLayers["ESRI Satellite"]); // Add backup layer
+                }
+            }
+
+            // Set a timeout to automatically switch to backup layer if primary layers don't load quickly
+            let mapLoadTimeout = setTimeout(function() {
+                if (!primaryLayerAvailable) {
+                    console.log("Map load timeout reached, switching to backup layer");
+                    map.removeLayer(baseLayers["Satellite"]);
+                    map.addLayer(baseLayers["ESRI Satellite"]);
+                    // Force the primaryLayersLoaded to avoid further checks
+                    primaryLayersLoaded = totalPrimaryLayers;
+                }
+            }, 3000); // 3 seconds timeout
+
+            // Listen for tile loading events on primary layers
+            baseLayers["Satellite"].on('tileerror', function(error) {
+                console.log("Error loading Satellite layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Satellite"].on('load', function() {
+                console.log("Satellite layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            baseLayers["Carte"].on('tileerror', function(error) {
+                console.log("Error loading Carte layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Carte"].on('load', function() {
+                console.log("Carte layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            // Add shapes of same category
+            const group = L.featureGroup();
+            let currentShapeLayer;
+
+            if (shapeTypes) {
+                Object.entries(shapeTypes).forEach(([typeName, typeInfo]) => {
+                    if (typeName === currentShape.type && typeInfo.shapes) {
+                        try {
+                            // Convert TopoJSON to GeoJSON
+                            const features = topojson.feature(
+                                typeInfo.shapes,     // Complete TopoJSON
+                                typeInfo.shapes.objects.data  // Reference to data
+                            );
+
+                            // Process each feature
+                            if (features && features.features && features.features.length > 0) {
+                                features.features.forEach(feature => {
+                                    if (!feature.geometry) return;
+
+                                    const shapeName = feature.properties.name;
+                                    const style = shapeName === currentShape.name ?
+                                        {...mapConfig.layers[0].style, fillOpacity: 0.7} :
+                                        {...mapConfig.layers[0].style, fillOpacity: 0.2};
+
+                                    const layer = L.geoJSON(feature.geometry, {style});
+
+                                    if (shapeName === currentShape.name) {
+                                        currentShapeLayer = layer;
+                                    }
+
+                                    layer.bindTooltip(shapeName, {
+                                        permanent: false,
+                                        direction: 'right',
+                                        className: 'custom-tooltip'
+                                    });
+
+                                    layer.on('click', () => {
+                                        // Trouver l'ID à partir du nom
+                                        const clickedFeature = features.features.find(f => f.properties.name === shapeName);
+                                        if (clickedFeature && clickedFeature.id) {
+                                            window.location.href = `../shape/${clickedFeature.id}.html`;
+                                        }
+                                    });
+
+                                    group.addLayer(layer);
+                                });
+                            }
+                        } catch (error) {
+                            console.error("Error processing features for tree:", error);
+                        }
+                    }
+                });
+            }
+
+            // Vérifier que le groupe a des couches avant de faire fitBounds
+            group.addTo(map);
+            if (group.getLayers().length > 0) {
+                try {
+                    const bounds = group.getBounds();
+                    if (bounds.isValid()) {
+                        map.fitBounds(bounds);
+                    } else {
+                        console.warn("Invalid bounds, setting default view");
+                        map.setView([-21.3, 165.5], 7); // Vue par défaut sur la Nouvelle-Calédonie
+                    }
+                } catch (error) {
+                    console.error("Error fitting bounds:", error);
+                    map.setView([-21.3, 165.5], 7);
+                }
+            }
+
+            if (currentShapeLayer) {
+                currentShapeLayer.bringToFront();
+            }
+        }
+
+        // =====================================
+        // Shape Tree Management
+        // =====================================
+        /**
+         * Creates hierarchical tree view of shapes
+         * Handles shape type grouping and current selection
+         */
+        function createShapeTree(container, shapeTypes) {
+            const $ul = $('<ul class="mb-3"></ul>');
+
+            Object.entries(shapeTypes).forEach(([type, typeInfo]) => {
+                const $li = $('<li></li>');
+                const $typeLink = $('<a href="javascript:void(0)" class="shape-type-link"></a>')
+                    .text(typeInfo.type_label);
+
+                const $childUl = $('<ul style="display:none;"></ul>');
+
+                try {
+                    // Convertir TopoJSON en GeoJSON
+                    const features = topojson.feature(
+                        typeInfo.shapes,
+                        typeInfo.shapes.objects.data
+                    );
+
+                    if (features && features.features) {
+                        // Ajouter le nombre de shapes
+                        $typeLink.append($('<span class="badge"></span>').text(features.features.length));
+
+                        // Trier par nom
+                        const sortedFeatures = [...features.features].sort((a, b) =>
+                            a.properties.name.localeCompare(b.properties.name)
+                        );
+
+                        sortedFeatures.forEach(feature => {
+                            const $shapeLi = $('<li></li>');
+                            const $shapeLink = $('<a></a>')
+                                .attr('href', `../shape/${feature.id}.html`)
+                                .text(feature.properties.name)
+                                .addClass('shape-link');
+
+                            if (feature.id === currentShapeId) {
+                                $shapeLink.addClass('current-shape');
+                            }
+
+                            $shapeLi.append($shapeLink);
+                            $childUl.append($shapeLi);
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error processing features for tree:", error);
+                }
+
+                $typeLink.on('click', function(e) {
+                    e.stopPropagation();
+                    $childUl.slideToggle();
+                    $(this).toggleClass('open');
+                });
+
+                if (type === currentShapeType) {
+                    $childUl.show();
+                    $typeLink.addClass('open');
+                }
+
+                $li.append($typeLink).append($childUl);
+                $ul.append($li);
+            });
+
+            $(container).append($ul);
+        }
+
+
+        // =====================================
+        // Value Formatters
+        // =====================================
+        // Various formatters for different data types
+        window.formatLogValue = function (value) {
+            return value.toString();
+        };
+        window.formatSurfaceValue = function (value) {
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(0) + 'k';
+            }
+            return value;
+        };
+        window.formatPercentage = function (value) {
+            return value.toFixed(0) + '%';
+        };
+        window.formatForestTypeTooltip = function (context) {
+            return context.dataset.label + ': ' + context.raw.toFixed(1) + '%';
+        };
+        window.formatTooltipLabel = function (context) {
+            return `${context.label}: ${context.parsed}%`;
+        };
+        window.formatForestTypeElevationTooltip = function (context) {
+            const value = Math.round(context.raw);  // ou .toFixed(0) pour aucune décimale
+            return context.dataset.label + ': ' + value + '%';
+        };
+        window.formatAbsoluteValue = function (value) {
+            // Si c'est zéro, on l'affiche au centre
+            if (value === 0) return '0';
+            // Pour les autres valeurs, on affiche la valeur absolue
+            return Math.abs(value).toString();
+        };
+
+        window.formatForestCoverTooltip = function (context) {
+            const label = context.dataset.label;
+            const value = Math.abs(context.raw).toFixed(1);
+            return `${label}: ${value}%`;
+        };
+
+        function transformDataValue(value, transform, valueIndex, allData) {
+            if (!transform) return value;
+
+            switch (transform) {
+                case 'negateValues':
+                    return isNaN(value) ? 0 : -value;
+                case 'toPercentage':
+                    return isNaN(value) ? 0 : value * 100;
+                case 'stackedPercentage':
+                    const total = ['secondaire', 'mature', 'coeur'].reduce((sum, key) =>
+                        sum + (allData[key] ? allData[key][valueIndex] : 0), 0);
+                    return total === 0 ? 0 : (value / total * 100);
+                default:
+                    return value;
+            }
+        }
+
+        function formatValue(value, chartType) {
+            switch (chartType) {
+                case 'doughnut_chart':
+                case 'pie_chart':
+                    return Number(value);
+                default:
+                    return value;
+            }
+        }
+
+        // =====================================
+        // Custom Plugins
+        // =====================================
+        /**
+         * Custom plugin for drawing labels on doughnut charts
+         */
+        window.customLabels = {
+            id: 'customLabels',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = '11px system-ui';
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center';
+
+                const datasets = chart.data.datasets;
+                const meta = chart.getDatasetMeta(0);
+                const centerX = meta.data[0].x;
+                const centerY = meta.data[0].y;
+
+                datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    const percentage = dataset.data[0];
+                    const element = meta.data[0];
+
+                    const percentageAngle = -Math.PI + 0.2;
+                    const radius = (element.innerRadius + element.outerRadius) / 2;
+                    const x = centerX + Math.cos(percentageAngle) * radius;
+                    const y = centerY + Math.sin(percentageAngle) * radius;
+
+                    ctx.fillText(percentage.toFixed(1) + '%', x, y);
+
+                    // Affichage du label
+                    ctx.fillText(dataset.label, centerX, centerY + element.outerRadius - 10);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        /**
+         * Custom plugin for drawing percentage labels on forest type charts
+         */
+        window.forestTypeLabelsPlugin = {
+            id: 'text',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                chart.data.datasets.forEach(function (dataset, i) {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach(function (element, index) {
+                        const value = dataset.data[index];
+                        const position = element.getCenterPoint();
+
+                        // Draw value
+                        ctx.save();
+                        ctx.fillStyle = '#000000';
+                        ctx.font = '12px system-ui';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(value.toFixed(1) + '%', position.x, position.y);
+                        ctx.restore();
+                    });
+                });
+            }
+        };
+
+
+    </script>
+
+</body>
+</html>

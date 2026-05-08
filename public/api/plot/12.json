@@ -1,0 +1,232 @@
+{
+    "id": 12,
+    "locality": "For\u00eat Plate P26",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.1116333,
+            -21.13367271
+        ]
+    },
+    "plot_id": 12,
+    "general_info": {
+        "plot_name": {
+            "value": "For\u00eat Plate P26"
+        },
+        "elevation": {
+            "value": "482",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "1740",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "34"
+        },
+        "nb_species": {
+            "value": "66"
+        },
+        "occurrences_count": {
+            "value": "1009"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.1116333,
+                        -21.13367271
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Sapindaceae",
+            "Rutaceae",
+            "Apocynaceae",
+            "Ebenaceae",
+            "Clusiaceae",
+            "Proteaceae",
+            "Salicaceae",
+            "Primulaceae",
+            "Lauraceae",
+            "Euphorbiaceae"
+        ],
+        "counts": [
+            150.0,
+            123.0,
+            95.0,
+            82.0,
+            73.0,
+            53.0,
+            53.0,
+            52.0,
+            52.0,
+            39.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Sarcomelicope follicularis",
+            "Tabernaemontana cerifera",
+            "Diospyros fasciculosa",
+            "Xylosma vincentii",
+            "Myrsine citrifolia",
+            "Garcinia densiflora",
+            "Cupaniopsis sylvatica",
+            "Virotia leptophylla",
+            "Cryptocarya longifolia",
+            "Cupaniopsis petiolulata"
+        ],
+        "counts": [
+            106.0,
+            83.0,
+            73.0,
+            53.0,
+            52.0,
+            51.0,
+            44.0,
+            44.0,
+            35.0,
+            35.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            6.0,
+            715.0,
+            178.0,
+            57.0,
+            28.0,
+            22.0,
+            2.0,
+            1.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            54,
+            346,
+            589,
+            20
+        ],
+        "percentages": [
+            5.35,
+            34.29,
+            58.37,
+            1.98
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            0,
+            5,
+            0,
+            1004
+        ],
+        "percentages": [
+            0.0,
+            0.5,
+            0.0,
+            99.5
+        ]
+    },
+    "species_level": {
+        "value": "0.9742",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1009,
+            66
+        ],
+        "percentages": [
+            93.86,
+            6.14
+        ],
+        "arbres_vivants": {
+            "value": 1009,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 66,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "13.3",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.69668779005203",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "36.9",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 66,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.48",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.83",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.96",
+        "units": ""
+    },
+    "biomass": {
+        "value": "241.713270319026",
+        "units": "t/ha"
+    }
+}

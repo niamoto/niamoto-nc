@@ -1,0 +1,232 @@
+{
+    "id": 22,
+    "locality": "Wekori",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.72529602,
+            -21.3786068
+        ]
+    },
+    "plot_id": 22,
+    "general_info": {
+        "plot_name": {
+            "value": "Wekori"
+        },
+        "elevation": {
+            "value": "62",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2100",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "35"
+        },
+        "nb_species": {
+            "value": "77"
+        },
+        "occurrences_count": {
+            "value": "896"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.72529602,
+                        -21.3786068
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Annonaceae",
+            "Sapindaceae",
+            "Rhizophoraceae",
+            "Apocynaceae",
+            "Lauraceae",
+            "Myrtaceae",
+            "Meliaceae",
+            "Proteaceae",
+            "Cornaceae",
+            "Anacardiaceae"
+        ],
+        "counts": [
+            114.0,
+            102.0,
+            87.0,
+            74.0,
+            69.0,
+            68.0,
+            51.0,
+            48.0,
+            44.0,
+            37.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Xylopia vieillardii",
+            "Crossostylis grandiflora",
+            "Tabernaemontana cerifera",
+            "Cupaniopsis macrocarpa",
+            "Kermadecia rotundifolia",
+            "Alangium vitiense",
+            "Didymocheton rufescens",
+            "Syzygium macranthum",
+            "Cryptocarya odorata",
+            "Endiandra polyneura"
+        ],
+        "counts": [
+            110.0,
+            87.0,
+            71.0,
+            59.0,
+            46.0,
+            44.0,
+            43.0,
+            36.0,
+            35.0,
+            30.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            536.0,
+            194.0,
+            98.0,
+            27.0,
+            35.0,
+            5.0,
+            1.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            151,
+            324,
+            408,
+            13
+        ],
+        "percentages": [
+            16.85,
+            36.16,
+            45.54,
+            1.45
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            896
+        ],
+        "percentages": [
+            0.0,
+            0.0,
+            0.0,
+            100.0
+        ]
+    },
+    "species_level": {
+        "value": "0.981",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            896,
+            51
+        ],
+        "percentages": [
+            94.61,
+            5.39
+        ],
+        "arbres_vivants": {
+            "value": 896,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 51,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "16.7",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6695928448085179",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "43.9",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 77,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.41",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.79",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.95",
+        "units": ""
+    },
+    "biomass": {
+        "value": "324.718828723296",
+        "units": "t/ha"
+    }
+}

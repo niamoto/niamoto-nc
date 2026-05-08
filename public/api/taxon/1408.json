@@ -1,0 +1,908 @@
+{
+    "id": 1408,
+    "full_name": "Soulamea cardioptera",
+    "authors": "Baill.",
+    "rank_name": "species",
+    "metadata": {
+        "auto_generated": false,
+        "taxon_type": "species",
+        "parent_family": "Simaroubaceae",
+        "parent_genus": "Soulamea",
+        "id_taxonref": 5725,
+        "taxonref": "Soulamea cardioptera Baill.",
+        "id_endemia": 4933,
+        "id_florical": 4426,
+        "endemia_url": "https://endemia.nc/flore/fiche4933",
+        "endemic": true,
+        "protected": false,
+        "protected_provnord": false,
+        "protected_provsud": false,
+        "redlist": true,
+        "redlist_cat": "CR",
+        "image_small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg",
+        "image_big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg",
+        "image_auteur": "Herve VV",
+        "images": [
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg",
+                "auteur": "Herve VV",
+                "section": "flore",
+                "datmaj": "2024-12-11 15:40:08"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg",
+                "auteur": "Herve Vandrot",
+                "section": "flore",
+                "datmaj": "2024-12-11 15:40:18"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg",
+                "auteur": "Herve VV",
+                "section": "flore",
+                "datmaj": "2024-12-11 15:40:26"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg",
+                "auteur": "Herve Vandrot",
+                "section": "flore",
+                "datmaj": "2024-12-11 13:45:47"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg",
+                "auteur": "Herve VV",
+                "section": "flore",
+                "datmaj": "2024-12-11 15:40:33"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg",
+                "auteur": "Herve Vandrot",
+                "section": "flore",
+                "datmaj": "2024-12-11 15:40:46"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg",
+                "auteur": "Herve VV",
+                "section": "flore",
+                "datmaj": "2024-12-11 15:40:54"
+            }
+        ]
+    },
+    "lft": 3179,
+    "rght": 3180,
+    "level": 2,
+    "parent_id": 358,
+    "taxon_id": 1408,
+    "general_info": {
+        "name": {
+            "value": "Soulamea cardioptera"
+        },
+        "rank": {
+            "value": "species"
+        },
+        "taxon_type": {
+            "value": "species"
+        },
+        "parent_family": {
+            "value": "Simaroubaceae"
+        },
+        "parent_genus": {
+            "value": "Soulamea"
+        },
+        "occurrences_count": {
+            "value": 11
+        },
+        "endemic": {
+            "value": "True"
+        },
+        "id_florical": {
+            "value": "4426"
+        },
+        "redlist_cat": {
+            "value": "CR"
+        },
+        "endemia_url": {
+            "value": "https://endemia.nc/flore/fiche4933"
+        },
+        "image_url": {
+            "value": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg"
+        },
+        "images": {
+            "value": "[{'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/6/6cdc913a68eb3a02d7651567519848f4.jpeg', 'auteur': 'Herve VV', 'section': 'flore', 'datmaj': '2024-12-11 15:40:08'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/1/1825f7a2efad5c508bb00fd2bca65a5a.jpeg', 'auteur': 'Herve Vandrot', 'section': 'flore', 'datmaj': '2024-12-11 15:40:18'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e411a6f5177d8baa2be449d2bc1b0311.jpeg', 'auteur': 'Herve VV', 'section': 'flore', 'datmaj': '2024-12-11 15:40:26'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/8d071367554b66a014f4f42677e47ba1.jpeg', 'auteur': 'Herve Vandrot', 'section': 'flore', 'datmaj': '2024-12-11 13:45:47'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/c/cc06913ad98d0f9a67d8f472202e2acf.jpeg', 'auteur': 'Herve VV', 'section': 'flore', 'datmaj': '2024-12-11 15:40:33'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/0/096f1b3514a227cc9ec9a853c3b9d827.jpeg', 'auteur': 'Herve Vandrot', 'section': 'flore', 'datmaj': '2024-12-11 15:40:46'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/57d91aa3142ea3e572864098f032a544.jpeg', 'auteur': 'Herve VV', 'section': 'flore', 'datmaj': '2024-12-11 15:40:54'}]"
+        }
+    },
+    "distribution_map": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.1392888,
+                        -21.5886288
+                    ]
+                },
+                "properties": {
+                    "count": 7
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.1294279,
+                        -21.5812421
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.12943885,
+                        -21.58124806
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.14847912,
+                        -21.59335611
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            }
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Soulamea cardioptera"
+        ],
+        "counts": [
+            11
+        ]
+    },
+    "distribution_substrat": {
+        "um": 1,
+        "num": 10,
+        "um_percent": 9.09,
+        "num_percent": 90.91
+    },
+    "phenology": {
+        "phenology_raw": {
+            "month_data": {
+                "fleur": [
+                    100.0,
+                    0,
+                    0,
+                    0.0,
+                    0,
+                    0,
+                    0,
+                    100.0,
+                    0,
+                    50.0,
+                    0.0,
+                    33.33
+                ],
+                "fruit": [
+                    0.0,
+                    0,
+                    0,
+                    100.0,
+                    0,
+                    0,
+                    0,
+                    0.0,
+                    0,
+                    50.0,
+                    100.0,
+                    66.67
+                ]
+            },
+            "labels": [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Avr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aou",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ]
+        },
+        "phenology_peaks": {
+            "fleur": {
+                "value": [
+                    7,
+                    9
+                ],
+                "count": 2,
+                "heights": [
+                    100.0,
+                    50.0
+                ],
+                "threshold": 30.0,
+                "mean": 23.610833333333332,
+                "std": 37.55133318945621,
+                "min": 0.0,
+                "max": 100.0
+            },
+            "fruit": {
+                "value": [
+                    3,
+                    10
+                ],
+                "count": 2,
+                "heights": [
+                    100.0,
+                    100.0
+                ],
+                "threshold": 30.0,
+                "mean": 26.389166666666668,
+                "std": 39.35758238220714,
+                "min": 0.0,
+                "max": 100.0
+            }
+        },
+        "phenology_periods": {
+            "value": {
+                "fleur": {
+                    "periods": [
+                        {
+                            "start": 0,
+                            "end": 0,
+                            "duration": 1,
+                            "start_label": "Jan",
+                            "end_label": "Jan",
+                            "mean_value": 100.0,
+                            "max_value": 100.0
+                        },
+                        {
+                            "start": 7,
+                            "end": 7,
+                            "duration": 1,
+                            "start_label": "Aou",
+                            "end_label": "Aou",
+                            "mean_value": 100.0,
+                            "max_value": 100.0
+                        },
+                        {
+                            "start": 9,
+                            "end": 9,
+                            "duration": 1,
+                            "start_label": "Oct",
+                            "end_label": "Oct",
+                            "mean_value": 50.0,
+                            "max_value": 50.0
+                        },
+                        {
+                            "start": 11,
+                            "end": 11,
+                            "duration": 1,
+                            "start_label": "Dec",
+                            "end_label": "Dec",
+                            "mean_value": 33.33,
+                            "max_value": 33.33
+                        }
+                    ],
+                    "count": 4,
+                    "total_active_duration": 4,
+                    "activity_percentage": 33.33333333333333
+                },
+                "fruit": {
+                    "periods": [
+                        {
+                            "start": 3,
+                            "end": 3,
+                            "duration": 1,
+                            "start_label": "Avr",
+                            "end_label": "Avr",
+                            "mean_value": 100.0,
+                            "max_value": 100.0
+                        },
+                        {
+                            "start": 9,
+                            "end": 11,
+                            "duration": 3,
+                            "start_label": "Oct",
+                            "end_label": "Dec",
+                            "mean_value": 72.22333333333334,
+                            "max_value": 100.0
+                        }
+                    ],
+                    "count": 2,
+                    "total_active_duration": 4,
+                    "activity_percentage": 33.33333333333333
+                }
+            },
+            "series_count": 2,
+            "threshold": 0.0,
+            "min_duration": 1
+        },
+        "phenology_data": {
+            "value": {
+                "raw": {
+                    "month_data": {
+                        "fleur": [
+                            100.0,
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            100.0,
+                            0,
+                            50.0,
+                            0.0,
+                            33.33
+                        ],
+                        "fruit": [
+                            0.0,
+                            0,
+                            0,
+                            100.0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            50.0,
+                            100.0,
+                            66.67
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "peaks": {
+                    "fleur": {
+                        "value": [
+                            7,
+                            9
+                        ],
+                        "count": 2,
+                        "heights": [
+                            100.0,
+                            50.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 23.610833333333332,
+                        "std": 37.55133318945621,
+                        "min": 0.0,
+                        "max": 100.0
+                    },
+                    "fruit": {
+                        "value": [
+                            3,
+                            10
+                        ],
+                        "count": 2,
+                        "heights": [
+                            100.0,
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 26.389166666666668,
+                        "std": 39.35758238220714,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [
+                                {
+                                    "start": 0,
+                                    "end": 0,
+                                    "duration": 1,
+                                    "start_label": "Jan",
+                                    "end_label": "Jan",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 7,
+                                    "end": 7,
+                                    "duration": 1,
+                                    "start_label": "Aou",
+                                    "end_label": "Aou",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 9,
+                                    "end": 9,
+                                    "duration": 1,
+                                    "start_label": "Oct",
+                                    "end_label": "Oct",
+                                    "mean_value": 50.0,
+                                    "max_value": 50.0
+                                },
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 33.33,
+                                    "max_value": 33.33
+                                }
+                            ],
+                            "count": 4,
+                            "total_active_duration": 4,
+                            "activity_percentage": 33.33333333333333
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 3,
+                                    "end": 3,
+                                    "duration": 1,
+                                    "start_label": "Avr",
+                                    "end_label": "Avr",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 9,
+                                    "end": 11,
+                                    "duration": 3,
+                                    "start_label": "Oct",
+                                    "end_label": "Dec",
+                                    "mean_value": 72.22333333333334,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 4,
+                            "activity_percentage": 33.33333333333333
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            },
+            "formula": "{'raw': phenology_raw, 'peaks': phenology_peaks, 'periods': phenology_periods}",
+            "description": "Custom formula",
+            "variables": {
+                "phenology_raw": {
+                    "month_data": {
+                        "fleur": [
+                            100.0,
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            100.0,
+                            0,
+                            50.0,
+                            0.0,
+                            33.33
+                        ],
+                        "fruit": [
+                            0.0,
+                            0,
+                            0,
+                            100.0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            50.0,
+                            100.0,
+                            66.67
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "phenology_peaks": {
+                    "fleur": {
+                        "value": [
+                            7,
+                            9
+                        ],
+                        "count": 2,
+                        "heights": [
+                            100.0,
+                            50.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 23.610833333333332,
+                        "std": 37.55133318945621,
+                        "min": 0.0,
+                        "max": 100.0
+                    },
+                    "fruit": {
+                        "value": [
+                            3,
+                            10
+                        ],
+                        "count": 2,
+                        "heights": [
+                            100.0,
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 26.389166666666668,
+                        "std": 39.35758238220714,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "phenology_periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [
+                                {
+                                    "start": 0,
+                                    "end": 0,
+                                    "duration": 1,
+                                    "start_label": "Jan",
+                                    "end_label": "Jan",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 7,
+                                    "end": 7,
+                                    "duration": 1,
+                                    "start_label": "Aou",
+                                    "end_label": "Aou",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 9,
+                                    "end": 9,
+                                    "duration": 1,
+                                    "start_label": "Oct",
+                                    "end_label": "Oct",
+                                    "mean_value": 50.0,
+                                    "max_value": 50.0
+                                },
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 33.33,
+                                    "max_value": 33.33
+                                }
+                            ],
+                            "count": 4,
+                            "total_active_duration": 4,
+                            "activity_percentage": 33.33333333333333
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 3,
+                                    "end": 3,
+                                    "duration": 1,
+                                    "start_label": "Avr",
+                                    "end_label": "Avr",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 9,
+                                    "end": 11,
+                                    "duration": 3,
+                                    "start_label": "Oct",
+                                    "end_label": "Dec",
+                                    "mean_value": 72.22333333333334,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 4,
+                            "activity_percentage": 33.33333333333333
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            }
+        }
+    },
+    "phenology_distribution": {
+        "month_data": {
+            "fleur": [
+                100.0,
+                0,
+                0,
+                0.0,
+                0,
+                0,
+                0,
+                100.0,
+                0,
+                50.0,
+                0.0,
+                33.33
+            ],
+            "fruit": [
+                0.0,
+                0,
+                0,
+                100.0,
+                0,
+                0,
+                0,
+                0.0,
+                0,
+                50.0,
+                100.0,
+                66.67
+            ]
+        },
+        "labels": [
+            "Jan",
+            "Fev",
+            "Mar",
+            "Avr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aou",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            200,
+            300,
+            400,
+            500
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    "dbh_max": {
+        "max": null,
+        "units": "cm",
+        "max_value": 500
+    },
+    "height_max": {
+        "max": 8.0,
+        "units": "m",
+        "max_value": 40
+    },
+    "elevation_distribution": {
+        "bins": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            1000,
+            1100,
+            1200,
+            1700
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    "wood_density": {
+        "mean": null,
+        "units": "g/cm3",
+        "max_value": 1.2
+    },
+    "rainfall_distribution": {
+        "bins": [
+            1000,
+            1500,
+            2000,
+            2500,
+            3000,
+            3500,
+            4000,
+            4500,
+            5000
+        ],
+        "counts": [
+            0,
+            11,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "holdridge_distribution": {
+        "categories": [
+            1,
+            2,
+            3
+        ],
+        "counts": [
+            0,
+            11,
+            0
+        ],
+        "labels": [
+            "Sec",
+            "Humide",
+            "Tr\u00e8s humide"
+        ],
+        "percentages": [
+            0.0,
+            100.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "categories": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0
+        ],
+        "labels": [
+            "Sous-bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ]
+    },
+    "bark_thickness": {
+        "mean": null,
+        "units": "mm",
+        "max_value": 80
+    },
+    "leaf_sla": {
+        "mean": null,
+        "units": "g/m2",
+        "max_value": 50
+    },
+    "leaf_area": {
+        "mean": null,
+        "units": "cm2",
+        "max_value": 1500
+    },
+    "leaf_thickness": {
+        "mean": null,
+        "units": "\u00b5m",
+        "max_value": 800
+    }
+}

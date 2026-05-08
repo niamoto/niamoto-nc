@@ -1,0 +1,946 @@
+{
+    "id": 599,
+    "full_name": "Chambeyronia oliviformis",
+    "authors": "(Brongn & Gris) Hodel, Barrett, Bellot & Baker",
+    "rank_name": "species",
+    "metadata": {
+        "auto_generated": false,
+        "taxon_type": "species",
+        "parent_family": "Arecaceae",
+        "parent_genus": "Chambeyronia",
+        "id_taxonref": 3898,
+        "taxonref": "Chambeyronia oliviformis (Brongn & Gris) Hodel, Barrett, Bellot & Baker",
+        "id_endemia": 8885,
+        "endemia_url": "https://endemia.nc/flore/fiche8885",
+        "endemic": true,
+        "protected": false,
+        "protected_provnord": false,
+        "protected_provsud": false,
+        "redlist": true,
+        "image_small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg",
+        "image_big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg",
+        "image_auteur": "Bernard Suprin",
+        "images": [
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg",
+                "auteur": "Bernard Suprin",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:09:56"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg",
+                "auteur": "Bernard Suprin",
+                "section": "flore",
+                "datmaj": "2001-10-23 00:00:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg",
+                "auteur": "Bernard Suprin",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:10:46"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg",
+                "auteur": "Daniel & Ir\u00e8ne L\u00e9tocart",
+                "section": "flore",
+                "datmaj": "2011-05-18 08:35:28"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg",
+                "auteur": "Jean-Pierre Canel",
+                "section": "flore",
+                "datmaj": "2022-11-11 18:33:26"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg",
+                "auteur": "Jean-Pierre Canel",
+                "section": "flore",
+                "datmaj": "2011-05-12 08:37:52"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg",
+                "auteur": "Henri L\u00e9v\u00eaque",
+                "section": "flore",
+                "datmaj": "2011-05-12 08:37:11"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg",
+                "auteur": "Maurice Laloum",
+                "section": "flore",
+                "datmaj": "2011-05-18 08:35:48"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg",
+                "auteur": "Bernard Suprin",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:11:41"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:29:34"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:29:46"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:29:56"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:30:51"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2011-05-10 14:01:39"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:24:58"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:25:47"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2010-12-07 10:32:00"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg",
+                "auteur": "Maurice L\u00e9cole",
+                "section": "flore",
+                "datmaj": "2015-11-26 15:50:26"
+            }
+        ]
+    },
+    "lft": 363,
+    "rght": 364,
+    "level": 2,
+    "parent_id": 156,
+    "taxon_id": 599,
+    "general_info": {
+        "name": {
+            "value": "Chambeyronia oliviformis"
+        },
+        "rank": {
+            "value": "species"
+        },
+        "taxon_type": {
+            "value": "species"
+        },
+        "parent_family": {
+            "value": "Arecaceae"
+        },
+        "parent_genus": {
+            "value": "Chambeyronia"
+        },
+        "occurrences_count": {
+            "value": 13
+        },
+        "endemic": {
+            "value": "True"
+        },
+        "id_florical": {
+            "value": null
+        },
+        "redlist_cat": {
+            "value": null
+        },
+        "endemia_url": {
+            "value": "https://endemia.nc/flore/fiche8885"
+        },
+        "image_url": {
+            "value": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg"
+        },
+        "images": {
+            "value": "[{'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/86211b3cc90c593ccfd35a19c4f26e8b.jpg', 'auteur': 'Bernard Suprin', 'section': 'flore', 'datmaj': '2010-12-07 10:09:56'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/eb5974a28daf2005ae727cfd2e0c0a8e.jpg', 'auteur': 'Bernard Suprin', 'section': 'flore', 'datmaj': '2001-10-23 00:00:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/824922353855d6358ba6d001f2c9587b.jpg', 'auteur': 'Bernard Suprin', 'section': 'flore', 'datmaj': '2010-12-07 10:10:46'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/a/a5ec3ff001f7f64c86551bc08f298e48.jpg', 'auteur': 'Daniel & Ir\u00e8ne L\u00e9tocart', 'section': 'flore', 'datmaj': '2011-05-18 08:35:28'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/5/5fddc2de4cf5a728bf7fef2c7bd34c5a.jpg', 'auteur': 'Jean-Pierre Canel', 'section': 'flore', 'datmaj': '2022-11-11 18:33:26'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/2/2aa5e9cf836a3ad379cba611fe6c4111.jpg', 'auteur': 'Jean-Pierre Canel', 'section': 'flore', 'datmaj': '2011-05-12 08:37:52'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/5/5f88fab836330e2313a7846ff20ba78a.jpg', 'auteur': 'Henri L\u00e9v\u00eaque', 'section': 'flore', 'datmaj': '2011-05-12 08:37:11'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/1/1399fd60470af80ed27f41cc703294da.jpg', 'auteur': 'Maurice Laloum', 'section': 'flore', 'datmaj': '2011-05-18 08:35:48'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/d/d13f38565b8eb6cad10c85ce01f30bfd.jpg', 'auteur': 'Bernard Suprin', 'section': 'flore', 'datmaj': '2010-12-07 10:11:41'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/fa8347f658203b267097170648fcb650.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2010-12-07 10:29:34'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e596d8c703c118d4b5293100b071e110.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2010-12-07 10:29:46'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e1991d47d0a80a2af713f95ca8a5989e.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2010-12-07 10:29:56'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/e8b70167092f09a2af05231525e7ddb9.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2010-12-07 10:30:51'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/9/9ce5401c2fb3e80d32ced274a52f7de5.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2011-05-10 14:01:39'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/ef95f4e176eada9c23bfc6149a54ce37.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2010-12-07 10:24:58'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/e/ea821fd579071e0bcafe57b816317342.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2010-12-07 10:25:47'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/f8ce5363d2628127f47699b2a15c4feb.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2010-12-07 10:32:00'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/0/08d46c806b4f9572391ce5f6eb5c1da7.jpg', 'auteur': 'Maurice L\u00e9cole', 'section': 'flore', 'datmaj': '2015-11-26 15:50:26'}]"
+        }
+    },
+    "distribution_map": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.66029578854668,
+                        -21.59976473821584
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.5379132,
+                        -21.5883702
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.8079105,
+                        -21.4966527
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.7,
+                        -21.65
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.26373291015625,
+                        -21.54840660095215
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.71627933800713,
+                        -21.657394682258833
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.715738973561,
+                        -21.657042063648547
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.66103675561772,
+                        -21.599760859533
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.7531858150514,
+                        -21.334977759980532
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.8047,
+                        -21.4997
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.80472,
+                        -21.49972
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            }
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Chambeyronia oliviformis"
+        ],
+        "counts": [
+            13
+        ]
+    },
+    "distribution_substrat": {
+        "um": 1,
+        "num": 12,
+        "um_percent": 7.69,
+        "num_percent": 92.31
+    },
+    "phenology": {
+        "phenology_raw": {
+            "month_data": {
+                "fleur": [
+                    0,
+                    0.0,
+                    0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "fruit": [
+                    0,
+                    0.0,
+                    0,
+                    100.0,
+                    0.0,
+                    0.0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "labels": [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Avr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aou",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ]
+        },
+        "phenology_peaks": {
+            "fleur": {
+                "value": [],
+                "count": 0,
+                "heights": [],
+                "threshold": 30.0,
+                "mean": 0.0,
+                "std": 0.0,
+                "min": 0.0,
+                "max": 0.0
+            },
+            "fruit": {
+                "value": [
+                    3
+                ],
+                "count": 1,
+                "heights": [
+                    100.0
+                ],
+                "threshold": 30.0,
+                "mean": 8.333333333333334,
+                "std": 27.63853991962834,
+                "min": 0.0,
+                "max": 100.0
+            }
+        },
+        "phenology_periods": {
+            "value": {
+                "fleur": {
+                    "periods": [],
+                    "count": 0,
+                    "total_active_duration": 0,
+                    "activity_percentage": 0.0
+                },
+                "fruit": {
+                    "periods": [
+                        {
+                            "start": 3,
+                            "end": 3,
+                            "duration": 1,
+                            "start_label": "Avr",
+                            "end_label": "Avr",
+                            "mean_value": 100.0,
+                            "max_value": 100.0
+                        }
+                    ],
+                    "count": 1,
+                    "total_active_duration": 1,
+                    "activity_percentage": 8.333333333333332
+                }
+            },
+            "series_count": 2,
+            "threshold": 0.0,
+            "min_duration": 1
+        },
+        "phenology_data": {
+            "value": {
+                "raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0.0,
+                            0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        "fruit": [
+                            0,
+                            0.0,
+                            0,
+                            100.0,
+                            0.0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "peaks": {
+                    "fleur": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    },
+                    "fruit": {
+                        "value": [
+                            3
+                        ],
+                        "count": 1,
+                        "heights": [
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 8.333333333333334,
+                        "std": 27.63853991962834,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 3,
+                                    "end": 3,
+                                    "duration": 1,
+                                    "start_label": "Avr",
+                                    "end_label": "Avr",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 1,
+                            "total_active_duration": 1,
+                            "activity_percentage": 8.333333333333332
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            },
+            "formula": "{'raw': phenology_raw, 'peaks': phenology_peaks, 'periods': phenology_periods}",
+            "description": "Custom formula",
+            "variables": {
+                "phenology_raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0.0,
+                            0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        "fruit": [
+                            0,
+                            0.0,
+                            0,
+                            100.0,
+                            0.0,
+                            0.0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "phenology_peaks": {
+                    "fleur": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    },
+                    "fruit": {
+                        "value": [
+                            3
+                        ],
+                        "count": 1,
+                        "heights": [
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 8.333333333333334,
+                        "std": 27.63853991962834,
+                        "min": 0.0,
+                        "max": 100.0
+                    }
+                },
+                "phenology_periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 3,
+                                    "end": 3,
+                                    "duration": 1,
+                                    "start_label": "Avr",
+                                    "end_label": "Avr",
+                                    "mean_value": 100.0,
+                                    "max_value": 100.0
+                                }
+                            ],
+                            "count": 1,
+                            "total_active_duration": 1,
+                            "activity_percentage": 8.333333333333332
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            }
+        }
+    },
+    "phenology_distribution": {
+        "month_data": {
+            "fleur": [
+                0,
+                0.0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "fruit": [
+                0,
+                0.0,
+                0,
+                100.0,
+                0.0,
+                0.0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "labels": [
+            "Jan",
+            "Fev",
+            "Mar",
+            "Avr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aou",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            200,
+            300,
+            400,
+            500
+        ],
+        "counts": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "dbh_max": {
+        "max": 25.0,
+        "units": "cm",
+        "max_value": 500
+    },
+    "height_max": {
+        "max": 30.0,
+        "units": "m",
+        "max_value": 40
+    },
+    "elevation_distribution": {
+        "bins": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            1000,
+            1100,
+            1200,
+            1700
+        ],
+        "counts": [
+            1,
+            4,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            14.29,
+            57.14,
+            28.57,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "wood_density": {
+        "mean": null,
+        "units": "g/cm3",
+        "max_value": 1.2
+    },
+    "rainfall_distribution": {
+        "bins": [
+            1000,
+            1500,
+            2000,
+            2500,
+            3000,
+            3500,
+            4000,
+            4500,
+            5000
+        ],
+        "counts": [
+            4,
+            5,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            36.36,
+            45.45,
+            18.18,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "holdridge_distribution": {
+        "categories": [
+            1,
+            2,
+            3
+        ],
+        "counts": [
+            3,
+            9,
+            0
+        ],
+        "labels": [
+            "Sec",
+            "Humide",
+            "Tr\u00e8s humide"
+        ],
+        "percentages": [
+            25.0,
+            75.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "categories": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0
+        ],
+        "labels": [
+            "Sous-bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ]
+    },
+    "bark_thickness": {
+        "mean": null,
+        "units": "mm",
+        "max_value": 80
+    },
+    "leaf_sla": {
+        "mean": null,
+        "units": "g/m2",
+        "max_value": 50
+    },
+    "leaf_area": {
+        "mean": null,
+        "units": "cm2",
+        "max_value": 1500
+    },
+    "leaf_thickness": {
+        "mean": null,
+        "units": "\u00b5m",
+        "max_value": 800
+    }
+}

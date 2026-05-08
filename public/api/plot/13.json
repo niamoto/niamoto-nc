@@ -1,0 +1,232 @@
+{
+    "id": 13,
+    "locality": "Gohapin",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.24076843,
+            -21.25712776
+        ]
+    },
+    "plot_id": 13,
+    "general_info": {
+        "plot_name": {
+            "value": "Gohapin"
+        },
+        "elevation": {
+            "value": "259",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "1360",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "24"
+        },
+        "nb_species": {
+            "value": "42"
+        },
+        "occurrences_count": {
+            "value": "807"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.24076843,
+                        -21.25712776
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Salicaceae",
+            "Oleaceae",
+            "Ebenaceae",
+            "Monimiaceae",
+            "Apocynaceae",
+            "Elaeocarpaceae",
+            "Rutaceae",
+            "Meliaceae",
+            "Euphorbiaceae",
+            "Moraceae"
+        ],
+        "counts": [
+            369.0,
+            86.0,
+            48.0,
+            42.0,
+            42.0,
+            41.0,
+            38.0,
+            33.0,
+            31.0,
+            22.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Homalium deplanchei",
+            "Olea paniculata",
+            "Diospyros fasciculosa",
+            "Tabernaemontana cerifera",
+            "Elaeocarpus angustifolius",
+            "Hedycarya cupulata",
+            "Comptonella drupacea",
+            "Didymocheton roseus",
+            "Aleurites moluccana",
+            "Citronella macrocarpa"
+        ],
+        "counts": [
+            369.0,
+            86.0,
+            48.0,
+            42.0,
+            41.0,
+            41.0,
+            24.0,
+            22.0,
+            14.0,
+            13.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            589.0,
+            103.0,
+            50.0,
+            31.0,
+            25.0,
+            6.0,
+            2.0,
+            0.0,
+            1.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            39,
+            206,
+            465,
+            97
+        ],
+        "percentages": [
+            4.83,
+            25.53,
+            57.62,
+            12.02
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            807
+        ],
+        "percentages": [
+            0.0,
+            0.0,
+            0.0,
+            100.0
+        ]
+    },
+    "species_level": {
+        "value": "0.995",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            807,
+            25
+        ],
+        "percentages": [
+            97.0,
+            3.0
+        ],
+        "arbres_vivants": {
+            "value": 807,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 25,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "13.1",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.7308879981267713",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "39.3",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 42,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "2.27",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.61",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.77",
+        "units": ""
+    },
+    "biomass": {
+        "value": "294.828298605051",
+        "units": "t/ha"
+    }
+}

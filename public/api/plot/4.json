@@ -1,0 +1,232 @@
+{
+    "id": 4,
+    "locality": "Ateou",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            164.92033386,
+            -20.95063591
+        ]
+    },
+    "plot_id": 4,
+    "general_info": {
+        "plot_name": {
+            "value": "Ateou"
+        },
+        "elevation": {
+            "value": "774",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2260",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "43"
+        },
+        "nb_species": {
+            "value": "88"
+        },
+        "occurrences_count": {
+            "value": "1209"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.92033386,
+                        -20.95063591
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Arecaceae",
+            "Moraceae",
+            "Araliaceae",
+            "Metteniusaceae",
+            "Meliaceae",
+            "Lauraceae",
+            "Dicksoniaceae",
+            "Loganiaceae",
+            "Sapindaceae",
+            "Clusiaceae"
+        ],
+        "counts": [
+            476.0,
+            109.0,
+            99.0,
+            92.0,
+            68.0,
+            43.0,
+            40.0,
+            27.0,
+            22.0,
+            22.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Burretiokentia vieillardii",
+            "Apodytes clusiifolia",
+            "Didymocheton kouiriensis",
+            "Schefflera vieillardii",
+            "Dicksonia thyrsopteroides",
+            "Sparattosyce dioica",
+            "Neuburgia novocaledonica",
+            "Plerandra gabriellae",
+            "Cryptocarya oubatchensis",
+            "Ficus racemigera"
+        ],
+        "counts": [
+            476.0,
+            92.0,
+            54.0,
+            42.0,
+            40.0,
+            39.0,
+            26.0,
+            25.0,
+            23.0,
+            22.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            879.0,
+            145.0,
+            51.0,
+            47.0,
+            66.0,
+            10.0,
+            7.0,
+            3.0,
+            1.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            678,
+            308,
+            202,
+            21
+        ],
+        "percentages": [
+            56.08,
+            25.48,
+            16.71,
+            1.74
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            44,
+            0,
+            476,
+            689
+        ],
+        "percentages": [
+            3.64,
+            0.0,
+            39.37,
+            56.99
+        ]
+    },
+    "species_level": {
+        "value": "0.9777",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1209,
+            34
+        ],
+        "percentages": [
+            97.26,
+            2.74
+        ],
+        "arbres_vivants": {
+            "value": 1209,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 34,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "17.5",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.604064560252919",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "75.6",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 88,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "2.89",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.65",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.82",
+        "units": ""
+    },
+    "biomass": {
+        "value": "641.467841922537",
+        "units": "t/ha"
+    }
+}

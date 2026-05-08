@@ -1,0 +1,232 @@
+{
+    "id": 14,
+    "locality": "Grand Lac",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            166.90391541,
+            -22.27494812
+        ]
+    },
+    "plot_id": 14,
+    "general_info": {
+        "plot_name": {
+            "value": "Grand Lac"
+        },
+        "elevation": {
+            "value": "276",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "3150",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "True"
+        },
+        "nb_families": {
+            "value": "45"
+        },
+        "nb_species": {
+            "value": "96"
+        },
+        "occurrences_count": {
+            "value": "1307"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.90391541,
+                        -22.27494812
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Myrtaceae",
+            "Sapotaceae",
+            "Moraceae",
+            "Sapindaceae",
+            "Bignoniaceae",
+            "Cunoniaceae",
+            "Arecaceae",
+            "Calophyllaceae",
+            "Lauraceae",
+            "Clusiaceae"
+        ],
+        "counts": [
+            163.0,
+            163.0,
+            99.0,
+            91.0,
+            89.0,
+            80.0,
+            71.0,
+            52.0,
+            45.0,
+            41.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Sparattosyce dioica",
+            "Deplanchea speciosa",
+            "Pleurocalyptus pancheri",
+            "Planchonella endlicheri",
+            "Storthocalyx chryseus",
+            "Cunonia balansae",
+            "Cyphophoenix fulcita",
+            "Calophyllum caledonicum",
+            "Pycnandra acuminata",
+            "Gastrolepis austrocaledonica"
+        ],
+        "counts": [
+            95.0,
+            89.0,
+            84.0,
+            75.0,
+            69.0,
+            59.0,
+            56.0,
+            52.0,
+            39.0,
+            34.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            871.0,
+            247.0,
+            96.0,
+            47.0,
+            33.0,
+            6.0,
+            4.0,
+            2.0,
+            1.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            195,
+            548,
+            516,
+            48
+        ],
+        "percentages": [
+            14.92,
+            41.93,
+            39.48,
+            3.67
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            6,
+            14,
+            76,
+            1194
+        ],
+        "percentages": [
+            0.47,
+            1.09,
+            5.89,
+            92.56
+        ]
+    },
+    "species_level": {
+        "value": "0.9625",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1307,
+            63
+        ],
+        "percentages": [
+            95.4,
+            4.6
+        ],
+        "arbres_vivants": {
+            "value": 1307,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 63,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "12.7",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6843928201403089",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "64.5",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 96,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.82",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.84",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.97",
+        "units": ""
+    },
+    "biomass": {
+        "value": "418.817789117412",
+        "units": "t/ha"
+    }
+}

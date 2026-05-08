@@ -1,0 +1,232 @@
+{
+    "id": 2,
+    "locality": "Aoupini\u00e9",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.27731323,
+            -21.17780113
+        ]
+    },
+    "plot_id": 2,
+    "general_info": {
+        "plot_name": {
+            "value": "Aoupini\u00e9"
+        },
+        "elevation": {
+            "value": "884",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2670",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "42"
+        },
+        "nb_species": {
+            "value": "90"
+        },
+        "occurrences_count": {
+            "value": "1589"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.27731323,
+                        -21.17780113
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Sapindaceae",
+            "Malvaceae",
+            "Lauraceae",
+            "Arecaceae",
+            "Myrtaceae",
+            "Meliaceae",
+            "Chloranthaceae",
+            "Elaeocarpaceae",
+            "Primulaceae",
+            "Rhizophoraceae"
+        ],
+        "counts": [
+            206.0,
+            188.0,
+            139.0,
+            120.0,
+            107.0,
+            94.0,
+            83.0,
+            70.0,
+            64.0,
+            64.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Acropogon aoupiniensis",
+            "Burretiokentia vieillardii",
+            "Cupaniopsis phalacrocarpa",
+            "Ascarina solmsiana",
+            "Sloanea magnifolia",
+            "Crossostylis multiflora",
+            "Didymocheton kouiriensis",
+            "Cryptocarya oubatchensis",
+            "Guioa microsepala",
+            "Syzygium neolaurifolium"
+        ],
+        "counts": [
+            188.0,
+            120.0,
+            114.0,
+            83.0,
+            68.0,
+            64.0,
+            64.0,
+            61.0,
+            54.0,
+            52.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            1252.0,
+            213.0,
+            59.0,
+            23.0,
+            25.0,
+            15.0,
+            2.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            59,
+            453,
+            989,
+            88
+        ],
+        "percentages": [
+            3.71,
+            28.51,
+            62.24,
+            5.54
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            63,
+            0,
+            119,
+            1407
+        ],
+        "percentages": [
+            3.96,
+            0.0,
+            7.49,
+            88.55
+        ]
+    },
+    "species_level": {
+        "value": "0.9969",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1589,
+            78
+        ],
+        "percentages": [
+            95.32,
+            4.68
+        ],
+        "arbres_vivants": {
+            "value": 1589,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 78,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "8.9",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6407981416652001",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "52.8",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 90,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.61",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.8",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.96",
+        "units": ""
+    },
+    "biomass": {
+        "value": "189.426175088672",
+        "units": "t/ha"
+    }
+}

@@ -1,0 +1,232 @@
+{
+    "id": 18,
+    "locality": "Paeoua",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.09597778,
+            -21.16776657
+        ]
+    },
+    "plot_id": 18,
+    "general_info": {
+        "plot_name": {
+            "value": "Paeoua"
+        },
+        "elevation": {
+            "value": "1096",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2420",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "True"
+        },
+        "nb_families": {
+            "value": "25"
+        },
+        "nb_species": {
+            "value": "40"
+        },
+        "occurrences_count": {
+            "value": "994"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.09597778,
+                        -21.16776657
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Nothofagaceae",
+            "Myrtaceae",
+            "Araucariaceae",
+            "Podocarpaceae",
+            "Apiaceae",
+            "Sapotaceae",
+            "Atherospermataceae",
+            "Ericaceae",
+            "Cunoniaceae",
+            "Balanopaceae"
+        ],
+        "counts": [
+            579.0,
+            80.0,
+            72.0,
+            57.0,
+            42.0,
+            37.0,
+            31.0,
+            18.0,
+            15.0,
+            14.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Nothofagus balansae",
+            "Araucaria montana",
+            "Retrophyllum comptonii",
+            "Apiopetalum glabratum",
+            "Pycnandra carinocostata",
+            "Nemuaron vieillardii",
+            "Syzygium multipetalum",
+            "Syzygium arboreum",
+            "Syzygium frutescens",
+            "Balanops sparsiflora"
+        ],
+        "counts": [
+            579.0,
+            72.0,
+            46.0,
+            42.0,
+            37.0,
+            31.0,
+            24.0,
+            20.0,
+            18.0,
+            14.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            884.0,
+            85.0,
+            18.0,
+            4.0,
+            3.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            45,
+            111,
+            743,
+            95
+        ],
+        "percentages": [
+            4.53,
+            11.17,
+            74.75,
+            9.56
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            10,
+            131,
+            1,
+            848
+        ],
+        "percentages": [
+            1.01,
+            13.23,
+            0.1,
+            85.66
+        ]
+    },
+    "species_level": {
+        "value": "0.9889",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            994,
+            393
+        ],
+        "percentages": [
+            71.67,
+            28.33
+        ],
+        "arbres_vivants": {
+            "value": 994,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 393,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "7.9",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.7108026777336266",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "19.3",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 40,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "1.87",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.51",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.64",
+        "units": ""
+    },
+    "biomass": {
+        "value": "72.8337687999792",
+        "units": "t/ha"
+    }
+}

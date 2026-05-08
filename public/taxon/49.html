@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Niamoto - Loganiaceae</title>
+
+    <script src="../js/taxonomy_tree.js"></script>
+
+    <style>
+        /* Sidebar styles */
+        #taxonomy-tree-container {
+            height: 100vh;
+            overflow-y: auto;
+            padding-top: 1rem;
+        }
+
+        #taxonomy-tree {
+            transition: all 0.3s ease-in-out;
+        }
+
+        @media (max-width: 1024px) {
+            #taxonomy-tree:not(.hidden) {
+                animation: slideDown 0.3s ease-in-out;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        #taxonSearch {
+            width: 100%;
+            padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 23%;
+            color: #666;
+            pointer-events: none;
+        }
+
+        #taxonomy-tree ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        #taxonomy-tree li {
+            margin: 5px 0;
+        }
+
+        #taxonomy-tree .toggle {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        #taxonomy-tree a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        #taxonomy-tree a:hover {
+            text-decoration: underline;
+        }
+
+        #taxonomy-tree .current-taxon {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Map styles */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chart styles */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        /* Widget styles */
+        .widget-container {
+            @apply bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0;
+        }
+
+        .widget-header {
+            @apply bg-gray-600 text-white p-3;
+        }
+
+        .widget-content {
+            @apply p-4;
+            min-height: 300px;
+        }
+
+        .tooltip-content {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-100%);
+            background-color: #ffffff;
+            color: #333333;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: normal;
+            width: 20rem;
+            z-index: 9999;
+            display: none;
+        }
+
+        .group:hover .tooltip-content {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            #taxonomy-tree-container {
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .widget-content {
+                min-height: 250px;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+        }
+
+        .loading-indicator {
+            padding: 8px 10px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-top-color: #007bff;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+
+        #imageModal {
+            background: rgba(255, 255, 255, 0); /* Fond semi-transparent noir autour */
+        }
+
+        #imageModal > div {
+            background-color: transparent; /* Rend le fond du conteneur transparent */
+            box-shadow: none; /* Supprime l'ombre si nécessaire */
+        }
+
+        #imageModal img {
+            border-radius: 8px; /* Coins arrondis pour l'image directement */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Ombre légère autour de l'image */
+        }
+
+
+@keyframes spin {
+    to {transform: rotate(360deg);}
+}
+    </style>
+
+    <script>
+        const taxonId = 49;
+    </script>
+
+    <link rel="stylesheet" href="../js/vendor/tailwindcss/2.2.19_dist_tailwind.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.9.4_leaflet.css">
+    <link rel="stylesheet" href="../css/font-awesome/6.6.0_all.min.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.css" />
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.Default.css" />
+
+
+    <style>
+        ul {
+            list-style-type: none;
+        }
+
+        .loader-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .button-container {
+            transition: all 0.3s ease;
+        }
+        .button-container.fixed {
+            position: fixed;
+            top: 63px; /* Adjust this value to match the height of your navigation menu */
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bg p-0 fixed w-full top-0 shadow-md z-50 custom-nav">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <a id="home-link" class="inline-flex items-center py-2 px-4 text-white no-underline" href="#" data-link="index.html">
+                <span class="site-title">Niamoto</span>
+            </a>
+        </div>
+
+        <div class="block lg:hidden">
+            <button id="nav-toggle"
+                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0zm0 6h20v2H0zm0 6h20v2H0z" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
+            <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="index.html">
+                        <i class="fas fa-home menu-icon"></i>Accueil
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#introduction">Introduction</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#project">Projet</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#objective">Objectifs</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#context">Contexte</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#flora">Flore</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="methodology.html">
+                        <i class="fas fa-flask menu-icon"></i>Méthodologie
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#methodes">Nos méthodes</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#faq">FAQ</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="trees.html">
+                        <i class="fas fa-leaf menu-icon"></i>Arbres
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#learnTaxon">Étudier les
+                arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#taxon">Les arbres de
+                Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="plots.html">
+                        <i class="fas fa-map-marked-alt menu-icon"></i>Peuplements
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#learnPlot">Étudier les
+                            peuplements forestiers</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#plot">Les
+                peuplements forestiers de Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="forests.html">
+                        <i class="fas fa-tree menu-icon"></i>Forêt
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#learnForest">Étudier la
+                forêt</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#forestNC">La forêt de Nouvelle-Calédonie</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#">
+                        <i class="fas fa-database menu-icon"></i>Accéder aux données
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="taxon/index.html">Arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plot/index.html">Peuplements</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="shape/index.html">Forêt</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="resources.html">
+                        <i class="fas fa-book menu-icon"></i>Ressources
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#equipe">L'équipe</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#productions">Productions</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    document.getElementById('nav-toggle').onclick = () =>
+        document.getElementById('nav-content').classList.toggle('hidden');
+
+    // Function to adjust the navigation links based on page depth
+        function adjustNavLinks(depth) {
+            document.querySelectorAll('a[data-link]').forEach(link => {
+                link.href = depth + link.getAttribute('data-link');
+            });
+        }
+
+        // Adjust the navigation links based on the depth
+        adjustNavLinks("../");
+
+</script>
+
+<style>
+    .site-title {
+        font-family: 'Arial Black', sans-serif; /* Custom font for a bold effect */
+        font-size: 2rem; /* Increased font size */
+        text-transform: uppercase; /* Uppercase letters for visibility */
+        letter-spacing: 2px; /* Spacing between letters */
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Text shadow for better visibility */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .site-title:hover {
+        color: #ffdd57; /* Change color on hover */
+    }
+
+    .text-contour {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .nav-bg {
+        background-color: rgba(34, 139, 34, 0.8); /* Fond vert semi-transparent */
+        transition: background-color 0.3s;
+    }
+
+    .nav-bg:hover {
+        background-color: rgba(34, 139, 34, 1); /* Fond vert opaque au survol */
+    }
+
+    .group:hover .group-hover\:block {
+        display: block;
+    }
+
+    .custom-nav {
+        z-index: 1500;
+    }
+
+    .custom-dropdown {
+        z-index: 1500;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* Fond blanc transparent au survol */
+        border-radius: 4px;
+    }
+
+    .menu-icon {
+        margin-right: 8px;
+    }
+</style>
+    <div class="flex flex-col lg:flex-row">
+        
+    <div class="w-full mt-16 lg:w-1/4 lg:min-h-screen bg-white shadow-md overflow-y-auto">
+        <button id="sidebar-toggle"
+                class="lg:hidden w-full flex items-center justify-between p-4 text-gray-600 hover:bg-gray-50">
+            <span>Taxonomie</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <div id="taxonomy-tree-container" class="hidden lg:block p-4">
+            <label for="taxonSearch"></label>
+            <div class="search-container">
+                <input type="text" id="taxonSearch" class="w-full mb-4 pl-10" aria-label="Search taxon">
+                <i class="fas fa-search search-icon" aria-hidden="true"></i>
+            </div>
+            <div id="taxonomy-tree">
+                <!-- The taxonomic tree will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+        <div class="w-full">
+            
+    <div class="flex-1 p-4">
+        <div class="container mx-auto px-4 md:px-6 py-4 md:py-8">
+            
+            <div class="mt-16">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution géographique</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution géographique des occurrences du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="h-96">
+    <div id="distribution_mapMap" class="w-full h-full"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 mt-4">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Informations générales</h2>
+        
+    </div>
+    <div class="p-4">
+        
+<!-- Information panel content -->
+<div class="space-y-2 md:space-y-3">
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Taxon</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            Loganiaceae 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Rang</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            
+            
+            
+            
+            Famille
+            
+            
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Nombre d'occurrences</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            661 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0"></span>
+        <span class="font-medium text-sm md:text-base">
+            
+            <a href="https://endemia.nc/flore/fiche960" target="_blank"
+                class="text-green-600 hover:text-green-800 underline">
+                Fiche Endemia
+                <i class="fas fa-external-link-alt ml-1"></i>
+            </a>
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Images</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            
+            
+            
+            <div class="flex flex-col gap-2 items-end">
+                <div id="images-images_8" class="flex flex-wrap gap-2 justify-end">
+                    <div id="loading-images-images_8" class="text-center w-full">
+                        <div
+                            class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-green-500">
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">Chargement des images...</span>
+                    </div>
+                </div>
+                <button onclick="toggleImages('images_8')" id="toggle-images_8"
+                    class="w-6 h-6 rounded-full bg-green-100 hover:bg-green-200 flex items-center justify-center transition-colors duration-200 hidden"
+                    title="Afficher plus d'images">
+                    <i class="fas fa-plus text-green-600" id="icon-images_8"></i>
+                </button>
+            </div>
+
+            
+            <dialog id="imageModal">
+                <div class="relative w-full h-full flex items-center justify-center p-4">
+                    <div class="relative bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-hidden">
+                        <!-- Le loader sera inséré ici par le JavaScript -->
+                        <img id="modalImage" src="" alt="" class="max-h-[80vh] w-auto">
+                        <div class="absolute bottom-0 w-full bg-black bg-opacity-50 text-white p-2">
+                            <p id="modalCaption" class="text-center"></p>
+                        </div>
+                        <button onclick="closeModal()"
+                            class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </dialog>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const imagesContainer = document.getElementById('images-images_8');
+                    const loadingElement = document.getElementById('loading-images-images_8');
+                    const toggleButton = document.getElementById('toggle-images_8');
+
+                    try {
+                        // Retrieve the JSON string from Jinja2
+                        const imagesRawDataString = "[]";
+                // Clean escaped characters and convert to valid JSON
+                const cleanedJsonString = imagesRawDataString
+                    .replace(/\\u0027/g, "'") // Replace \u0027 with '
+                    .replace(/'/g, '"');      // Replace ' with " for valid JSON
+                const imagesRawData = JSON.parse(cleanedJsonString);
+                const images = [];
+
+                // Retrieve the image mapping defined in the configuration
+                    const imageMapping = {"author": "auteur", "date": "datmaj", "thumbnail": "small_thumb", "url": "big_thumb"} || {
+                        url: "url",
+                        thumbnail: "small_thumb",
+                        author: "auteur",
+                        date: "datmaj"
+                    };
+
+                // Process the image array with the custom mapping
+                    if (Array.isArray(imagesRawData)) {
+                        imagesRawData.forEach(img => {
+                            // Retrieve values based on the mapping
+                            const url = img[imageMapping.url] || '';
+                            const thumbnail = img[imageMapping.thumbnail] || url || '';
+                            const author = img[imageMapping.author] || '';
+                            const date = img[imageMapping.date] || '';
+
+                            // Check if at least one URL is available
+                            if (url || thumbnail) {
+                                images.push({
+                                    url: url,
+                                    thumbnail: thumbnail,
+                                    author: author,
+                                    date: date
+                                });
+                            }
+                        });
+                    }
+
+                // Remove the loading indicator
+                if (loadingElement) {
+                    loadingElement.remove();
+                }
+
+                // Display the images
+                if (images.length > 0) {
+                        images.forEach((image, index) => {
+                            const imgUrl = image.url;
+                            const thumbUrl = image.thumbnail;
+                            const author = image.author || '';
+                            const date = image.date || '';
+
+                        const imageButton = document.createElement('button');
+                        imageButton.className = `relative group ${index >= 5 ? 'hidden' : ''} border-0 p-0 bg-transparent cursor-pointer`;
+                        imageButton.title = author ? `Photo: ${author}` : 'Photo';
+                        imageButton.onclick = function () { openModal(imgUrl, author, date); };
+
+                        const img = document.createElement('img');
+                        img.src = thumbUrl;
+                        img.alt = author ? `Photo par ${author}` : 'Photo';
+                        img.className = 'w-20 h-20 object-cover rounded transition-transform duration-200 group-hover:scale-105';
+                        img.dataset.errorHandled = 'false'; // Flag to avoid infinite loop
+                        img.onerror = function () {
+                            if (this.dataset.errorHandled === 'false') {
+                                // Use a valid public URL as a fallback
+                                this.src = 'https://via.placeholder.com/150?text=Image+non+disponible';
+                                this.dataset.errorHandled = 'true'; // Mark as handled
+                            }
+                        };
+
+                        const overlay = document.createElement('div');
+                        overlay.className = 'absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 rounded transition-all duration-200';
+
+                        imageButton.appendChild(img);
+                        imageButton.appendChild(overlay);
+
+                        if (author) {
+                            const attribution = document.createElement('div');
+                            attribution.className = 'absolute bottom-0 right-0 bg-black bg-opacity-50 text-white text-[10px] p-1 rounded-bl rounded-tr opacity-0 group-hover:opacity-100 transition-opacity duration-200';
+                            attribution.textContent = `© ${author}`;
+                            imageButton.appendChild(attribution);
+                        }
+
+                        imagesContainer.appendChild(imageButton);
+                    });
+
+                    if (images.length > 5) {
+                        toggleButton.classList.remove('hidden');
+                    }
+                } else {
+                    const noImages = document.createElement('p');
+                    noImages.className = 'text-gray-500 italic';
+                    noImages.textContent = 'Aucune image disponible';
+                    imagesContainer.appendChild(noImages);
+                }
+                                        } catch (error) {
+                    console.error('Erreur lors du traitement des images:', error);
+                    if (loadingElement) {
+                        loadingElement.remove();
+                    }
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'text-red-500 italic';
+                    errorMsg.textContent = 'Erreur lors du chargement des images';
+                    imagesContainer.appendChild(errorMsg);
+                }
+                                    });
+
+                function openModal(imgSrc, author, date) {
+                        const modal = document.getElementById('imageModal');
+                        const modalImg = document.getElementById('modalImage');
+                        const modalCaption = document.getElementById('modalCaption');
+
+                        // Add a loader and hide the previous image
+                        modalImg.style.display = 'none';
+
+                        // Create or get the loading element
+                        let loader = document.getElementById('modalLoader');
+                        if (!loader) {
+                            loader = document.createElement('div');
+                            loader.id = 'modalLoader';
+                            loader.className = 'flex justify-center items-center p-8';
+                            loader.innerHTML = '<div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div><span class="ml-2 text-gray-500">Chargement...</span>';
+                            modalImg.parentNode.insertBefore(loader, modalImg);
+                        } else {
+                            loader.style.display = 'flex';
+                        }
+
+                        // Reset the image source
+                        modalImg.src = '';
+                        modalCaption.textContent = '';
+                        modal.showModal();
+
+                        // Load the new image
+                        const newImg = new Image();
+                        newImg.onload = function () {
+                            // Once the image is loaded, hide the loader and display the image
+                            if (loader) loader.style.display = 'none';
+                            modalCaption.textContent = author ? `© ${author} ${date ? `(${date})` : ''}` : '';
+                            modalImg.src = imgSrc;
+                            modalImg.style.display = 'block';
+                        };
+
+                        newImg.onerror = function () {
+                            // In case of loading error
+                            if (loader) loader.style.display = 'none';
+                            modalImg.src = 'https://via.placeholder.com/400?text=Image+non+disponible';
+                            modalImg.style.display = 'block';
+                        };
+
+                        newImg.src = imgSrc;
+
+                        modal.addEventListener('click', function (event) {
+                            if (event.target === modal) {
+                                closeModal();
+                            }
+                        });
+                    }
+
+                    function closeModal() {
+                        const modal = document.getElementById('imageModal');
+                        modal.close();
+                    }
+
+                function toggleImages(id) {
+                    const container = document.getElementById('images-' + id);
+                    const button = document.getElementById('toggle-' + id);
+                    const icon = document.getElementById('icon-' + id);
+                    const images = container.querySelectorAll('button');
+                    const isExpanded = icon.classList.contains('fa-minus');
+
+                    images.forEach((img, index) => {
+                        if (index >= 5) {
+                            img.classList.toggle('hidden');
+                        }
+                    });
+
+                    icon.classList.toggle('fa-plus');
+                    icon.classList.toggle('fa-minus');
+                    button.title = isExpanded ? "Afficher plus d'images" : "Afficher moins d'images";
+                }
+            </script>
+            
+            
+            
+        </span>
+    </div>
+    
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Sous-taxons principaux</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Principaux sous-taxons (espèce, sous-espèce)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="top_speciesChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution diamétrique (DBH)</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Répartition des occurrences par classe de diamètre
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="dbh_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Phénologie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Phénologie des états fertiles (fleur, fruit) du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="phenology_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution substrat</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution des occurrences par substrat (= fréquence du taxon par substrat)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="distribution_substratChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Milieu de vie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Fréquence des occurrences du taxon et de ses sous-taxons par milieu de vie
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="holdridge_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Répartition pluviométrie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution pluviométrique des occurrences du taxon (= fréquence par classe de pluviométrie)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="rainfall_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Répartition altitudinale</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution altitudinale des occurrences du taxon (= fréquence par classe d'altitude)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="elevation_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Stratification</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Répartition des occurrences par strate
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="strata_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Hauteur maximale</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Hauteur maximale atteint par le taxon et ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="height_maxGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Diamètre maximal (DBH)</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Diamètre maximal atteint par le taxon et ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="dbh_maxGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Densité de bois</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Densité de bois moyenne mesuré avec une Tarière de Pressler
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="wood_densityGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Épaisseur d'écorce</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Epaisseur moyenne de l'écorce mesurée à la jauge à écorce
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="bark_thicknessGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Surface foliaire spécifique</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Surface foliaire spécifique du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="leaf_slaGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Surface foliaire</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Surface foliaire du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="leaf_areaGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Épaisseur des feuilles</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Epaisseur moyenne des feuilles du taxon et de ses sous-taxons
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="leaf_thicknessGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    <footer class="bg-green-700 text-white p-4 mt-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white p-2 w-3/5 rounded-lg shadow-md flex justify-center">
+                    <a class='logo' href="https://www.province-nord.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="pn" src="../files/pn_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.province-sud.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/ps_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://endemia.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/endemia_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://amap.cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="amap" src="../files/amap_100.png"></figure>
+                    </a>
+                    <a class='logo' href="http://publish.plantnet-project.org/project/nou" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="herbarium" src="../files/herbarium_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://iac.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="iac" src="../files/iac_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://nouvelle-caledonie.ird.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ird" src="../files/ird_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="cirad" src="../files/cirad_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.ofb.gouv.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ofb" src="../files/ofb_100.png"></figure>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>Niamoto - Portail de la forêt de Nouvelle-Calédonie</p>
+                <a class="inline-block py-2 px-4 text-white no-underline" href="https://github.com/niamoto/niamoto" target="_blank">
+                    <span class="fab fa-github fa-lg" aria-hidden="true"></span> Github
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/vendor/chart/4.4.2_chart.js"></script>
+    <script src="../js/vendor/d3/7.8.5_d3.js"></script>
+    <script src="../js/vendor/jquery/3.6.0_jquery.js"></script>
+    <script src="../js/vendor/lodash/4.17.21_lodash.min.js"></script>
+    <script src="../js/vendor/raphael/2.3.0_raphael.js"></script>
+    <script src="../js/vendor/justgage/1.6.1_justgage.js"></script>
+    <script src="../js/vendor/leaflet/1.9.4_leaflet.js"></script>
+    <script src="../js/vendor/leaflet/1.5.3_leaflet.markercluster.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const buttonContainer = document.getElementById('buttonContainer');
+
+            // Only proceed if the button container exists
+            if (buttonContainer) {
+                const buttonContainerOffset = buttonContainer.offsetTop;
+                const navHeight = 60; // Adjust this value to match your navigation height
+
+                window.onscroll = () => {
+                    if (window.pageYOffset > buttonContainerOffset - navHeight) {
+                        buttonContainer.classList.add('fixed');
+                    } else {
+                        buttonContainer.classList.remove('fixed');
+                    }
+                };
+
+                // Initial check in case the page is loaded scrolled
+                window.onscroll();
+            }
+        });
+    </script>
+    
+    <script>
+        // =====================================
+        // Constants & Initial Setup
+        // =====================================
+        const taxon = {"authors": "", "bark_thickness": {"max_value": 80, "mean": 6.62, "units": "mm"}, "dbh_distribution": {"bins": [10, 20, 30, 40, 50, 75, 100, 200, 300, 400, 500], "counts": [60, 36, 11, 12, 16, 2, 0, 0, 0, 0], "percentages": [43.8, 26.28, 8.03, 8.76, 11.68, 1.46, 0.0, 0.0, 0.0, 0.0]}, "dbh_max": {"max": 99.9, "max_value": 500, "units": "cm"}, "distribution_map": {"features": [{"geometry": {"coordinates": [164.5877685546875, -20.757858276367188], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.86105346679688, -21.48493766784668], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1554718017578, -21.745664596557617], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.20289900000054, -20.462603000616912], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8327778, -21.5652778], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0199668300169, -21.18287559438828], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.73049545262037, -21.40132821910905], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.73016357421875, -21.604415893554688], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.592617, -22.2621238], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.05117797851562, -21.528152465820312], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.625732421875, -22.19208526611328], "type": "Point"}, "properties": {"count": 5}, "type": "Feature"}, {"geometry": {"coordinates": [165.772705078125, -21.607946395874023], "type": "Point"}, "properties": {"count": 5}, "type": "Feature"}, {"geometry": {"coordinates": [166.3118179014693, -21.953117819520603], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.5453949, -21.41693115], "type": "Point"}, "properties": {"count": 11}, "type": "Feature"}, {"geometry": {"coordinates": [166.91944885253906, -22.324722290039062], "type": "Point"}, "properties": {"count": 14}, "type": "Feature"}, {"geometry": {"coordinates": [165.253462732064, -21.365863603671055], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.75592041015625, -21.61498260498047], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.59332275390625, -22.159719467163086], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.12036133, -21.14814186], "type": "Point"}, "properties": {"count": 4}, "type": "Feature"}, {"geometry": {"coordinates": [166.91870117, -22.32359123], "type": "Point"}, "properties": {"count": 3}, "type": "Feature"}, {"geometry": {"coordinates": [165.7385358974716, -21.32774353130585], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.02066040039062, -21.482555389404297], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.24221801757812, -21.671451568603516], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [164.23401677234926, -20.471271019211922], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.91888428, -22.32347298], "type": "Point"}, "properties": {"count": 4}, "type": "Feature"}, {"geometry": {"coordinates": [166.32790585583115, -21.95675794161452], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.23045615617715, -21.912917715068847], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.77491760253906, -21.60249137878418], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.08399528492563, -21.160982935559407], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.24578857421875, -20.463214874267578], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.13356018, -20.8148365], "type": "Point"}, "properties": {"count": 11}, "type": "Feature"}, {"geometry": {"coordinates": [165.236, -20.876], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.92033386, -20.95063591], "type": "Point"}, "properties": {"count": 27}, "type": "Feature"}, {"geometry": {"coordinates": [165.74591064453125, -21.3328857421875], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.20027700000009, -21.73910100064904], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.01371710384808, -21.18133024663999], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7507602194329, -21.30483747190259], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.02067785308122, -21.763220949463705], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.43788147, -20.30602264], "type": "Point"}, "properties": {"count": 12}, "type": "Feature"}, {"geometry": {"coordinates": [165.08680725097656, -21.293190002441406], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.72740173339844, -20.9719295501709], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7335968017578, -20.96739387512207], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.73240661621094, -20.965621948242188], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.83102417, -20.99641609], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.585106658936, -20.8190549850464], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7945271, -21.047879], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [163.68833923339844, -19.754606246948242], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7322998046875, -20.960845947265625], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8259205, -21.0125548], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.4347891, -20.305337], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7142791748047, -20.965530395507812], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.350876808167, -20.6062544504801], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.2211427, -20.4191931], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.991062, -20.907664], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.98220825195312, -21.235795974731445], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.219530932109, -20.8760542551676], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.156158, -21.2554927], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.1548947, -21.2411851], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.1503223, -21.2731726], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.226664463679, -20.8694646199544], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.77268982, -21.60794449], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.09939575195312, -21.520151138305664], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.3308928, -20.9378508], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.510084443667, -22.092089653], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.438516076406, -21.8568961461385], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.3453347, -22.0659384], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5346651, -22.184421], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.66568, -22.21344], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5871565, -22.2327595], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5942209, -22.1657415], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.662188, -22.2220638], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.4180556, -21.7205556], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5235093, -22.1653416], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [167.4476944444, -22.5437777778], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.792291, -22.1668713], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [164.7013414, -20.94011], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.885296842787, -22.291943776166], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [167.4730564, -22.6069583], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.74, -21.0188889], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [163.6762134, -19.7480547], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5273258, -22.1807993], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.0928116, -21.5733615], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7769444, -21.0225], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.5188212, -21.1404177], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2805833, -21.2381944], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.2965192, -21.9404243], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.2474633, -21.6782146], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8265424, -21.3973133], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.2422222, -21.6716667], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.2361111, -21.6786111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0116667, -20.8933333], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.258348, -21.37572], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2990279, -20.9277973], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8277778, -20.9988611], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5139895, -22.171662], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.4667673, -22.0321982], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1554669, -21.8178385], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7797556, -21.0272806], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5011111, -22.1761111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.1663889, -20.9730556], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.0019444, -21.7635], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.019459, -21.1845364], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5030064, -22.1236963], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5066667, -21.9644444], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.4168042, -21.8828044], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.6911553, -21.5301293], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.3641667, -22.0605556], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.3397222, -21.9241667], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.4491667, -22.0488889], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.0561111, -21.6263889], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.4215898, -20.3005713], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6703567, -22.0286739], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9215829, -22.3872928], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5999648, -22.1274882], "type": "Point"}, "properties": {"count": 6}, "type": "Feature"}, {"geometry": {"coordinates": [164.0883569, -20.2059904], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.4283333, -20.2997222], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6734935, -22.2085982], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6259795, -22.1477506], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.6957533, -22.1694831], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8700088, -22.1644409], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8811261, -22.0602682], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8213518, -22.3212252], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.4379685, -20.3436707], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8024556, -20.5625543], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.9186789, -20.9488165], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.4361111, -20.3025], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8758333, -20.6413889], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8683965, -22.2658764], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7606667, -20.5026111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.7007756, -22.3081465], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [167.4602266, -22.6517754], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9528526, -22.2698698], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8848084, -22.1599576], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5932081, -22.1594012], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.25465393, -21.1871357], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.28031921, -21.19093132], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8880805, -21.5721889], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.5402831, -21.3799], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2402049, -20.7818521], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6366487, -22.2724676], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6366526, -22.100056], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.76493835, -21.62101936], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2720933, -21.2238756], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.911846, -20.953668], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.483058338083, -22.04674984325], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.4998453, -21.4187201], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7892682, -21.5958939], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.1180722, -21.1595451], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.919636792917, -20.95089227075], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5359004, -22.1784091], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2533641, -20.8377553], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.1075, -20.9061111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8663712, -21.6252617], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.92011, -22.32465], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.684969, -22.1028821], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.155954996745, -21.1632400035858], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.558756, -21.4445836], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8658556, -21.6285158], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.7736111, -21.6038889], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7767955712, -21.5557870587333], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.3451115, -21.0639567], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6878075, -22.1097306], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7471389, -21.6133889], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5094444, -21.9661111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8063704, -21.6125759], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1665635, -21.759654], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1520889, -21.7452722], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.161372, -21.7534519], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.9204167, -20.95004], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.9203056, -20.9500383], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.51136779785156, -21.964365005493164], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.4719051, -22.0013752], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.35112987273592, -20.60434497355353], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.72714233, -20.59311104], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.74484252929688, -20.733118057250977], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.87786865234375, -20.785865783691406], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [164.74642944335938, -20.738248825073242], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.894775390625, -20.78559684753418], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.86593627929688, -20.773019790649414], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8706665, -20.64097214], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.9043426513672, -20.77436065673828], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.9155556, -20.9503194], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.76635742, -20.74247169], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0602264404297, -20.968725204467773], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.079422, -20.82331657], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02383422851562, -20.967119216918945], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.00839233, -20.85251427], "type": "Point"}, "properties": {"count": 7}, "type": "Feature"}, {"geometry": {"coordinates": [165.06063842773438, -20.952484130859375], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.01036071777344, -20.982900619506836], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.08108521, -20.82463837], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.3041687, -21.20472145], "type": "Point"}, "properties": {"count": 4}, "type": "Feature"}, {"geometry": {"coordinates": [165.23970032, -21.01072311], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.28205872, -21.17741585], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.25242615, -21.00801468], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2769928, -21.17821884], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.28085327, -21.01221085], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.14291382, -20.82550049], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2369444, -21.0044444], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.27166748, -21.18444443], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.24972534, -21.00583267], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.26426697, -21.01841354], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.13766479, -20.82269478], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.30265808, -21.02495003], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2754364, -21.00283813], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.25508118, -21.18729782], "type": "Point"}, "properties": {"count": 4}, "type": "Feature"}, {"geometry": {"coordinates": [165.1641667, -21.0186111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.49394226, -21.36111069], "type": "Point"}, "properties": {"count": 3}, "type": "Feature"}, {"geometry": {"coordinates": [165.3350067138672, -21.29480743408203], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.4765625, -21.24147606], "type": "Point"}, "properties": {"count": 6}, "type": "Feature"}, {"geometry": {"coordinates": [165.43495178, -21.22610474], "type": "Point"}, "properties": {"count": 5}, "type": "Feature"}, {"geometry": {"coordinates": [165.32751465, -21.1622963], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.435089, -21.226273], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.33333, -21.11667], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.5459833, -21.4161167], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.72529602, -21.3786068], "type": "Point"}, "properties": {"count": 4}, "type": "Feature"}, {"geometry": {"coordinates": [165.8275, -21.5725], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9225647, -22.3216887], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.545698, -21.417147], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.96430969, -21.59263802], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.055, -21.6525], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8221349, -21.6178463], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.32110596, -21.15194511], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5346314, -22.1712356], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [167.4515833333, -22.6535277778], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.1178515, -21.2417249], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6686064, -22.2114812], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.5844444, -20.7622222], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.664679, -21.987125], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.0538889, -20.2911111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1410676, -21.7483157], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.525, -22.1375], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8499889, -20.8569806], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.3088326, -21.6561789], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.0533333, -20.2911111], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.5861042, -20.7828728], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5035162, -22.04264], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.19316300000057, -20.430546000616122], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.03833500000079, -20.26066000061175], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.22393766344922, -20.485349698601105], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.04735120884956, -20.254998046481354], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.2296417021871, -20.47491587587048], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.21579695996735, -20.47451031069422], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.05869700000076, -20.282621000612302], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.19570071344185, -20.461032590937567], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.03039500000085, -20.244540000611316], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.2038044558849, -20.465048271961635], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.19122396669303, -20.490645841356915], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.21649453410487, -20.47892650054346], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.05103033323016, -20.245286454080553], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.2348692223679, -20.475468887367775], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.01994002049796, -21.17824159521886], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02074633129092, -21.16133687478131], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.04014002982566, -21.168721129232388], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.25294127699678, -21.36922132454995], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.01369304752433, -21.16199984096938], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.11830399999985, -21.203192000635735], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.082792671243, -21.1546533532075], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0115108109978, -21.16145397407235], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.01967772204026, -21.169938881156686], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.3559441806664, -20.60878266130295], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.06913749492156, -21.160900606532888], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.3483790182906, -20.605835142244935], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.04134533118537, -21.168484180456776], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.35633261763834, -20.607503848516345], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.020534671147, -21.16851673231138], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02030034611795, -21.163231148347936], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0863025616853, -21.180844261014837], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0206221916998, -21.164064060618493], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0746389641036, -21.285547722446534], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02058046634176, -21.16886928186909], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02240143893124, -21.183178942343673], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0817934872349, -21.160446915668796], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.03944187144313, -21.17239346627179], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0658251821141, -21.160864006342816], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0409079808973, -21.16615119549453], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0908846342078, -21.191760577571127], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02031078617094, -21.161668529717335], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.06545308046026, -21.197514106223778], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.08196970447887, -21.177559979895015], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.9822038300715, -21.16852002045741], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.08051422936236, -21.16021404203023], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.23664829094704, -20.485241331150075], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.022412460264, -21.181525999416415], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.89152362520198, -21.178367387684972], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02273080585502, -21.18289182334898], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.03752582838607, -21.16940158000186], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.01948321994166, -21.16158236716929], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.03614279995844, -21.164443598502626], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.6946635071941, -21.295061250644487], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7072421932484, -21.34284826634182], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.20230100000012, -21.864879000652095], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.76360535680172, -21.412453650491084], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.69959389386122, -21.381790273681055], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.85056030115507, -21.474886124590196], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7411427664901, -21.42952916070116], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.317581129926, -21.35045324191264], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.13406977352577, -21.723851096249025], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.73827373824898, -21.404321338504328], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.88810699999996, -21.3892130006405], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.78421085396715, -21.452611704826662], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.26431517132943, -21.369231449601322], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1746828661695, -21.6274548804757], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.76487998995694, -21.461645206128495], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.74253631727336, -21.427506827905496], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.72250531979492, -21.403410680693142], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7566543718228, -21.4469826972405], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.30572672439973, -21.347342266602496], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.76539576390257, -21.431192151522385], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.70828570984298, -21.422440466180944], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.73240872438402, -21.299136557424845], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.69436585479897, -21.428499110226863], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.708945741083, -21.31037901415103], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.74095113474445, -21.426741906443393], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.151558023265, -21.71061095476952], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7291634064049, -21.401877049084707], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.6846248949498, -21.368376451081108], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.74964093044395, -21.44736497727148], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.82638999999998, -21.4603460006422], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.3441020910686, -21.351057401056813], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.83370699999998, -21.475413000642618], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.6805965503377, -21.41224185323099], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7546165443482, -21.458951719331168], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.74472745880476, -21.41968667571292], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.19969558963754, -21.75873886358486], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.82711299999994, -21.465042000642335], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.75474422065153, -21.46006759155769], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.85324699999995, -21.440477000641728], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.80289900000065, -22.31222700066284], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.30377029890022, -21.948133003875068], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [167.48865200000154, -22.631017000670134], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.38912000000016, -21.735165000648884], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.23280800000012, -21.78044700065001], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.31162566266372, -21.940857082139367], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.39381500000025, -21.94165800065395], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.3522160459708, -21.91610080444884], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.2880533802429, -21.94113408785303], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.363839660083, -21.91453120176986], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.97851174455982, -22.27624013811455], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.50310000000036, -22.121892000658285], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.67154400000044, -21.981300000654834], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.49282836914062, -21.937314987182617], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.96916300000083, -22.315596000662815], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.50900268554688, -21.96551513671875], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.59779357910156, -22.138141632080078], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.23141479492188, -21.672611236572266], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.50545400000036, -22.123285000658345], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.30425200000013, -21.68310600064764], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.81263200000063, -22.261104000661522], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.23146203618552, -21.91245570768751], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.08035278320312, -21.162471771240234], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.75495986450917, -22.01163667352212], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.34581519234092, -21.90592599415653], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.45157000000034, -22.099140000657748], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.29926657578116, -21.94720181043383], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.63649700000042, -21.993910000655138], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.33895055512502, -21.921946025530016], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.67321200000046, -21.98318900065482], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.60850400000038, -22.008734000655487], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.35075635227372, -21.90483643052731], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6327512696972, -22.224631360843034], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.95352167360335, -22.32134923026159], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1529541015625, -21.73768424987793], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.46041000000034, -22.113600000658078], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.35620731756515, -21.916201302774432], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.44695000000027, -22.07924000065723], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [167.0018768310547, -22.285804748535156], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7440185546875, -21.547374725341797], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.9206543, -22.31817436], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.2194061279297, -21.67568588256836], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [167.0122833251953, -22.290119171142578], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.70462036132812, -21.591779708862305], "type": "Point"}, "properties": {"count": 4}, "type": "Feature"}, {"geometry": {"coordinates": [167.00588989257812, -22.284257888793945], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.60498046875, -22.131086349487305], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.60617065429688, -22.073955535888672], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5094451904297, -21.966020584106445], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.23558044433594, -21.67922592163086], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.8572235107422, -22.203887939453125], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [167.00582885742188, -22.29214096069336], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.75965881347656, -21.561277389526367], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.52129100000033, -22.095707000657672], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.24258422851562, -21.679851531982422], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.010641, -20.852822], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [167.0077362060547, -22.2845516204834], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.31337800000014, -21.681378000647566], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.77777099609375, -21.608482360839844], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.81333923339844, -22.246944427490234], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.2758331298828, -20.96685028076172], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.14382934570312, -21.746370315551758], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1554718017578, -21.745750427246094], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.90350341796875, -22.274744033813477], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [166.64407348632812, -22.144983291625977], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.40280151367188, -21.881683349609375], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.74713134765625, -21.613399505615234], "type": "Point"}, "properties": {"count": 3}, "type": "Feature"}, {"geometry": {"coordinates": [164.22921752929688, -20.473716735839844], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8256378173828, -21.019678115844727], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.21348571777344, -20.474361419677734], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.82029724121094, -21.0183048248291], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.49639892578125, -20.743520736694336], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0202178955078, -21.19371223449707], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8114013671875, -21.003217697143555], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02732849121094, -21.178518295288086], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.22866821289062, -20.477821350097656], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.57408142089844, -20.778518676757812], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.18739318847656, -20.43585777282715], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.74827575683594, -21.011171340942383], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.02162170410156, -21.168773651123047], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.5878143310547, -20.77073097229004], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.01072692871094, -21.172895431518555], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.58782958984375, -20.76951026916504], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7829132080078, -20.957242965698242], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.1941680908203, -20.452756881713867], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.5522918701172, -20.760456085205078], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.09271240234375, -21.306100845336914], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8070068359375, -21.004955291748047], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.89491271972656, -21.178691864013672], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.83441162109375, -21.016254425048828], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.2084197998047, -20.45218849182129], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.74862670898438, -21.010400772094727], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.09844970703125, -21.3123836517334], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.57896423339844, -20.780765533447266], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.58084106445312, -20.78057098388672], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.0536346435547, -20.29098129272461], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.09518432617188, -21.30951690673828], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.2090606689453, -20.4721622467041], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.55613708496094, -20.73152732849121], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.0218505859375, -20.235458374023438], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.09584045410156, -21.308349609375], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.8296661376953, -21.001235961914062], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.0371856689453, -21.1646728515625], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.70799255371094, -21.31998634338379], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7374267578125, -21.3724422454834], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.84390258789062, -21.42892074584961], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.71435546875, -21.31340789794922], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.84153747558594, -21.439212799072266], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.0196533203125, -21.503631591796875], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.90322875976562, -22.274202346801758], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.00958251953125, -21.505271911621094], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.74717712402344, -21.444622039794922], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.09844970703125, -21.3114013671875], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.78085327148438, -21.34926986694336], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.899169921875, -22.289939880371094], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.33193969726562, -21.921667098999023], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.71441650390625, -21.31340789794922], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.74691772460938, -21.38644790649414], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.69900512695312, -21.44254493713379], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.78875732421875, -21.45541763305664], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.69444274902344, -21.34787940979004], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7439727783203, -21.424623489379883], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.72189331054688, -21.37529182434082], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.68862915039062, -22.159528732299805], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.84535217285156, -21.440044403076172], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.765869140625, -22.19108772277832], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.72848510742188, -21.33390235900879], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.6929931640625, -21.356468200683594], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.12452697753906, -21.552940368652344], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.89732360839844, -22.289764404296875], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.776611328125, -21.376358032226562], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.1234130859375, -21.553165435791016], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.60523986816406, -22.122135162353516], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.90634155273438, -22.292007446289062], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.7604522705078, -22.190670013427734], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.89935302734375, -22.29082489013672], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.0338592529297, -21.47810173034668], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.69520568847656, -21.290966033935547], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.0430908203125, -21.508678436279297], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.93861389160156, -22.349721908569336], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.6471710205078, -22.11350440979004], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.53012084960938, -21.137300491333008], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.8082275390625, -21.370588302612305], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.75164794921875, -21.30035400390625], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.76104736328125, -22.189680099487305], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.525943692774, -21.2947332859039], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.78921508789062, -21.614526748657227], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.7697296142578, -21.670000076293945], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.7813631285579, -21.64084322414139], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.187805087879, -20.8330990601598], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.673250168562, -20.4727220535278], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.197125, -20.875905], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.224981, -20.874669], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.23471, -21.01773], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.238078119807, -20.8633939497064], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.73947143554688, -21.61324119567871], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.450761656499, -21.4282041852846], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7540740966797, -21.612491607666016], "type": "Point"}, "properties": {"count": 2}, "type": "Feature"}, {"geometry": {"coordinates": [165.7368927001953, -21.54071044921875], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.30335999, -21.20469093], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.209609, -20.887928], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.233984750871, -20.8740439598545], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.71591186523438, -21.60738754272461], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.230587, -20.868913], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7566680908203, -21.57691764831543], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.42299, -20.31733], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.524658203125, -22.180130004882812], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.47702026367188, -21.236860275268555], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.73110961914062, -20.59833335876465], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.54058837890625, -22.17797088623047], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.4633331298828, -21.225833892822266], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.77444458007812, -20.741111755371094], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.3467254638672, -21.43839454650879], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.5229034423828, -22.184598922729492], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.87059020996094, -20.64106559753418], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [165.7672882080078, -21.624305725097656], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [166.52252197265625, -22.181907653808594], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7463836669922, -20.72861099243164], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}, {"geometry": {"coordinates": [164.7802124, -20.62504005], "type": "Point"}, "properties": {"count": 4}, "type": "Feature"}, {"geometry": {"coordinates": [166.1821269806957, -21.608903608104505], "type": "Point"}, "properties": {"count": 1}, "type": "Feature"}], "type": "FeatureCollection"}, "distribution_substrat": {"num": 249, "num_percent": 37.67, "um": 412, "um_percent": 62.33}, "elevation_distribution": {"bins": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1700], "counts": [51, 93, 78, 92, 75, 54, 72, 32, 21, 16, 5, 2], "percentages": [8.63, 15.74, 13.2, 15.57, 12.69, 9.14, 12.18, 5.41, 3.55, 2.71, 0.85, 0.34]}, "full_name": "Loganiaceae", "general_info": {"endemia_url": {"value": "https://endemia.nc/flore/fiche960"}, "endemic": {"value": "False"}, "id_florical": {"value": null}, "image_url": {"value": null}, "images": {"value": "[]"}, "name": {"value": "Loganiaceae"}, "occurrences_count": {"value": 661}, "parent_family": {"value": null}, "parent_genus": {"value": null}, "rank": {"value": "family"}, "redlist_cat": {"value": null}, "taxon_type": {"value": "family"}}, "height_max": {"max": 33.6, "max_value": 40, "units": "m"}, "holdridge_distribution": {"categories": [1, 2, 3], "counts": [27, 376, 229], "labels": ["Sec", "Humide", "Tr\u00e8s humide"], "percentages": [4.27, 59.49, 36.23]}, "id": 49, "leaf_area": {"max_value": 1500, "mean": 129.99, "units": "cm2"}, "leaf_sla": {"max_value": 50, "mean": 11.41, "units": "g/m2"}, "leaf_thickness": {"max_value": 800, "mean": 392.77, "units": "\u00b5m"}, "level": 0, "lft": 1465, "metadata": {"auto_generated": true, "endemia_url": "https://endemia.nc/flore/fiche960", "endemic": false, "id_endemia": 960, "images": [], "original_id": null, "protected": false, "protected_provnord": false, "protected_provsud": false, "redlist": false, "taxon_type": "family"}, "parent_id": null, "phenology": {"phenology_data": {"description": "Custom formula", "formula": "{\u0027raw\u0027: phenology_raw, \u0027peaks\u0027: phenology_peaks, \u0027periods\u0027: phenology_periods}", "value": {"peaks": {"fleur": {"count": 3, "heights": [35.71, 44.44, 52.08], "max": 52.08, "mean": 27.801666666666666, "min": 0.0, "std": 16.407552038280695, "threshold": 30.0, "value": [1, 7, 10]}, "fruit": {"count": 2, "heights": [35.71, 58.82], "max": 61.11, "mean": 22.887500000000003, "min": 0.0, "std": 19.283278215853237, "threshold": 30.0, "value": [1, 3]}}, "periods": {"min_duration": 1, "series_count": 2, "threshold": 0.0, "value": {"fleur": {"activity_percentage": 91.66666666666666, "count": 2, "periods": [{"duration": 4, "end": 3, "end_label": "Avr", "max_value": 35.71, "mean_value": 16.73, "start": 0, "start_label": "Jan"}, {"duration": 7, "end": 11, "end_label": "Dec", "max_value": 52.08, "mean_value": 38.10000000000001, "start": 5, "start_label": "Jun"}], "total_active_duration": 11}, "fruit": {"activity_percentage": 83.33333333333334, "count": 3, "periods": [{"duration": 7, "end": 6, "end_label": "Jul", "max_value": 58.82, "mean_value": 26.75, "start": 0, "start_label": "Jan"}, {"duration": 1, "end": 8, "end_label": "Sep", "max_value": 9.62, "mean_value": 9.62, "start": 8, "start_label": "Sep"}, {"duration": 2, "end": 11, "end_label": "Dec", "max_value": 61.11, "mean_value": 38.89, "start": 10, "start_label": "Nov"}], "total_active_duration": 10}}}, "raw": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [13.79, 35.71, 11.54, 5.88, 0.0, 23.08, 41.67, 44.44, 30.77, 46.88, 52.08, 27.78], "fruit": [27.59, 35.71, 23.08, 58.82, 10.0, 15.38, 16.67, 0.0, 9.62, 0.0, 16.67, 61.11]}}}, "variables": {"phenology_peaks": {"fleur": {"count": 3, "heights": [35.71, 44.44, 52.08], "max": 52.08, "mean": 27.801666666666666, "min": 0.0, "std": 16.407552038280695, "threshold": 30.0, "value": [1, 7, 10]}, "fruit": {"count": 2, "heights": [35.71, 58.82], "max": 61.11, "mean": 22.887500000000003, "min": 0.0, "std": 19.283278215853237, "threshold": 30.0, "value": [1, 3]}}, "phenology_periods": {"min_duration": 1, "series_count": 2, "threshold": 0.0, "value": {"fleur": {"activity_percentage": 91.66666666666666, "count": 2, "periods": [{"duration": 4, "end": 3, "end_label": "Avr", "max_value": 35.71, "mean_value": 16.73, "start": 0, "start_label": "Jan"}, {"duration": 7, "end": 11, "end_label": "Dec", "max_value": 52.08, "mean_value": 38.10000000000001, "start": 5, "start_label": "Jun"}], "total_active_duration": 11}, "fruit": {"activity_percentage": 83.33333333333334, "count": 3, "periods": [{"duration": 7, "end": 6, "end_label": "Jul", "max_value": 58.82, "mean_value": 26.75, "start": 0, "start_label": "Jan"}, {"duration": 1, "end": 8, "end_label": "Sep", "max_value": 9.62, "mean_value": 9.62, "start": 8, "start_label": "Sep"}, {"duration": 2, "end": 11, "end_label": "Dec", "max_value": 61.11, "mean_value": 38.89, "start": 10, "start_label": "Nov"}], "total_active_duration": 10}}}, "phenology_raw": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [13.79, 35.71, 11.54, 5.88, 0.0, 23.08, 41.67, 44.44, 30.77, 46.88, 52.08, 27.78], "fruit": [27.59, 35.71, 23.08, 58.82, 10.0, 15.38, 16.67, 0.0, 9.62, 0.0, 16.67, 61.11]}}}}, "phenology_peaks": {"fleur": {"count": 3, "heights": [35.71, 44.44, 52.08], "max": 52.08, "mean": 27.801666666666666, "min": 0.0, "std": 16.407552038280695, "threshold": 30.0, "value": [1, 7, 10]}, "fruit": {"count": 2, "heights": [35.71, 58.82], "max": 61.11, "mean": 22.887500000000003, "min": 0.0, "std": 19.283278215853237, "threshold": 30.0, "value": [1, 3]}}, "phenology_periods": {"min_duration": 1, "series_count": 2, "threshold": 0.0, "value": {"fleur": {"activity_percentage": 91.66666666666666, "count": 2, "periods": [{"duration": 4, "end": 3, "end_label": "Avr", "max_value": 35.71, "mean_value": 16.73, "start": 0, "start_label": "Jan"}, {"duration": 7, "end": 11, "end_label": "Dec", "max_value": 52.08, "mean_value": 38.10000000000001, "start": 5, "start_label": "Jun"}], "total_active_duration": 11}, "fruit": {"activity_percentage": 83.33333333333334, "count": 3, "periods": [{"duration": 7, "end": 6, "end_label": "Jul", "max_value": 58.82, "mean_value": 26.75, "start": 0, "start_label": "Jan"}, {"duration": 1, "end": 8, "end_label": "Sep", "max_value": 9.62, "mean_value": 9.62, "start": 8, "start_label": "Sep"}, {"duration": 2, "end": 11, "end_label": "Dec", "max_value": 61.11, "mean_value": 38.89, "start": 10, "start_label": "Nov"}], "total_active_duration": 10}}}, "phenology_raw": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [13.79, 35.71, 11.54, 5.88, 0.0, 23.08, 41.67, 44.44, 30.77, 46.88, 52.08, 27.78], "fruit": [27.59, 35.71, 23.08, 58.82, 10.0, 15.38, 16.67, 0.0, 9.62, 0.0, 16.67, 61.11]}}}, "phenology_distribution": {"labels": ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"], "month_data": {"fleur": [13.79, 35.71, 11.54, 5.88, 0.0, 23.08, 41.67, 44.44, 30.77, 46.88, 52.08, 27.78], "fruit": [27.59, 35.71, 23.08, 58.82, 10.0, 15.38, 16.67, 0.0, 9.62, 0.0, 16.67, 61.11]}}, "rainfall_distribution": {"bins": [1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000], "counts": [86, 179, 210, 125, 44, 4, 6, 0], "percentages": [13.15, 27.37, 32.11, 19.11, 6.73, 0.61, 0.92, 0.0]}, "rank_name": "family", "rght": 1478, "strata_distribution": {"categories": [1, 2, 3, 4], "counts": [12, 30, 56, 0], "labels": ["Sous-bois", "Sous-Canop\u00e9e", "Canop\u00e9e", "Emergent"]}, "taxon_id": 49, "top_species": {"counts": [364, 215, 56, 26], "tops": ["Geniostoma densiflorum", "Neuburgia novocaledonica", "Geniostoma erythrospermum", "Geniostoma novae-caledoniae"]}, "wood_density": {"max_value": 1.2, "mean": 0.5, "units": "g/cm3"}};
+        const mapping = {"group_by": "taxon", "widgets": {"bark_thickness": {"description": "Epaisseur moyenne de l\u0027\u00e9corce mesur\u00e9e \u00e0 la jauge \u00e0 \u00e9corce", "options": {"max": 80, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 16]}, {"color": "#fe6a00", "range": [16, 32]}, {"color": "#e8dd0f", "range": [32, 48]}, {"color": "#81e042", "range": [48, 64]}, {"color": "#049f50", "range": [64, 80]}], "units": "mm"}, "source": "bark_thickness", "title": "\u00c9paisseur d\u0027\u00e9corce", "type": "gauge", "value_key": "mean"}, "dbh_distribution": {"datasets": [{"backgroundColor": "#4CAF50", "data_key": "percentages", "label": "Occurrences"}], "description": "R\u00e9partition des occurrences par classe de diam\u00e8tre", "labels_key": "bins", "options": {"scales": {"x": {"title": {"display": true, "text": "Classe de diam\u00e8tre (cm)"}}, "y": {"title": {"display": true, "text": "Fr\u00e9quence (%)"}}}}, "source": "dbh_distribution", "title": "Distribution diam\u00e9trique (DBH)", "type": "bar_chart"}, "dbh_max": {"description": "Diam\u00e8tre maximal atteint par le taxon et ses sous-taxons", "options": {"max": 500, "min": 0, "sectors": [{"color": "#f02828", "range": [1, 101]}, {"color": "#fe6a00", "range": [101, 200]}, {"color": "#e8dd0f", "range": [200, 300]}, {"color": "#81e042", "range": [300, 400]}, {"color": "#049f50", "range": [400, 500]}], "units": "m"}, "source": "dbh_max", "title": "Diam\u00e8tre maximal (DBH)", "type": "gauge", "value_key": "max"}, "distribution_map": {"description": "Distribution g\u00e9ographique des occurrences du taxon et de ses sous-taxons", "layers": [{"id": "occurrences", "source": "coordinates", "style": {"color": "#1fb99d", "fillColor": "#00716b", "fillOpacity": 0.5, "radius": 2000, "weight": 1}}], "layout": "full_width", "source": "distribution_map", "title": "Distribution g\u00e9ographique", "type": "map_panel"}, "distribution_substrat": {"customPlugin": "percentagePlugin", "datasets": [{"backgroundColor": ["#e1a553", "#a97742"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["um_percent", "num_percent"], "label": "Distribution substrat"}], "description": "Distribution des occurrences par substrat (= fr\u00e9quence du taxon par substrat)", "labels": ["Ultramafique (UM)", "non-Ultramafique (NUM)"], "options": {"cutout": "50%", "layout": {"padding": {"top": 20}}, "plugins": {"legend": {"align": "center", "display": true, "labels": {"boxWidth": 30, "color": "#666666", "font": {"size": 12}, "padding": 20, "usePointStyle": false}, "position": "top"}}}, "source": "distribution_substrat", "title": "Distribution substrat", "type": "doughnut_chart"}, "elevation_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "data_key": "counts", "label": "Occurrences"}], "description": "Distribution altitudinale des occurrences du taxon (= fr\u00e9quence par classe d\u0027altitude)", "labels_key": "bins", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Occurrences"}}, "y": {"reverse": true, "title": {"display": true, "text": "Altitude (m)"}}}}, "source": "elevation_distribution", "title": "R\u00e9partition altitudinale", "type": "bar_chart"}, "general_info": {"fields": [{"label": "Taxon", "source": "name"}, {"label": "Famille", "source": "parent_family"}, {"label": "Genre", "source": "parent_genus"}, {"format": "map", "label": "Rang", "mapping": {"family": "Famille", "genus": "Genre", "species": "Esp\u00e8ce", "subspecies": "Sous-esp\u00e8ce"}, "source": "rank"}, {"format": "number", "label": "Nombre d\u0027occurrences", "source": "occurrences_count"}, {"format": "map", "label": "Cat\u00e9gorie UICN", "mapping": {"CR": "En danger critique", "DD": "Donn\u00e9es insuffisantes", "EN": "En danger", "LC": "Pr\u00e9occupation mineure", "NE": "Non \u00e9valu\u00e9", "NT": "Quasi menac\u00e9", "VU": "Vuln\u00e9rable"}, "source": "redlist_cat"}, {"display_text": "Fiche Endemia", "format": "link", "source": "endemia_url"}, {"base_url": "http://publish.plantnet-project.org/project/florical_fr/collection/florical/taxons/details/", "display_text": "Florical", "format": "link", "source": "id_florical"}, {"format": "image", "image_mapping": {"author": "auteur", "date": "datmaj", "thumbnail": "small_thumb", "url": "big_thumb"}, "label": "Images", "source": "images"}], "layout": "grid", "title": "Informations g\u00e9n\u00e9rales", "type": "info_panel"}, "height_max": {"description": "Hauteur maximale atteint par le taxon et ses sous-taxons", "options": {"max": 40, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 10]}, {"color": "#fe6a00", "range": [10, 18]}, {"color": "#e8dd0f", "range": [18, 25]}, {"color": "#81e042", "range": [25, 33]}, {"color": "#049f50", "range": [33, 40]}], "units": "m"}, "source": "height_max", "title": "Hauteur maximale", "type": "gauge", "value_key": "max"}, "holdridge_distribution": {"customPlugin": "percentagePlugin", "datasets": [{"backgroundColor": "#8B0000", "data_key": "percentages[0]", "label": "sec", "stack": "Stack 0"}, {"backgroundColor": "#FFEB3B", "data_key": "percentages[1]", "label": "humide", "stack": "Stack 0"}, {"backgroundColor": "#1E88E5", "data_key": "percentages[2]", "label": "Tr\u00e8s humide", "stack": "Stack 0"}], "description": "Fr\u00e9quence des occurrences du taxon et de ses sous-taxons par milieu de vie", "labels": [""], "options": {"datalabels": {"align": "center", "anchor": "center", "color": "#000000", "display": true, "font": {"weight": "bold"}, "formatter": "function(value) { return value + \u0027%\u0027; }"}, "indexAxis": "x", "scales": {"x": {"grid": {"display": false}, "stacked": true}, "y": {"max": 100, "min": 0, "stacked": true, "ticks": {"callback": "function(value) { return value + \u0027%\u0027; }"}, "title": {"display": true, "text": "Proportion (%)"}}}}, "source": "holdridge_distribution", "title": "Milieu de vie", "type": "bar_chart"}, "leaf_area": {"description": "Surface foliaire du taxon et de ses sous-taxons", "options": {"max": 1500, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 300]}, {"color": "#fe6a00", "range": [300, 600]}, {"color": "#e8dd0f", "range": [600, 900]}, {"color": "#81e042", "range": [900, 1200]}, {"color": "#049f50", "range": [1200, 1500]}], "units": "cm\u00b2"}, "source": "leaf_area", "title": "Surface foliaire", "type": "gauge", "value_key": "mean"}, "leaf_sla": {"description": "Surface foliaire sp\u00e9cifique du taxon et de ses sous-taxons", "options": {"max": 50, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 10]}, {"color": "#fe6a00", "range": [10, 20]}, {"color": "#e8dd0f", "range": [20, 30]}, {"color": "#81e042", "range": [30, 40]}, {"color": "#049f50", "range": [40, 50]}], "units": "m\u00b2\u00b7kg\u207b\u00b9"}, "source": "leaf_sla", "title": "Surface foliaire sp\u00e9cifique", "type": "gauge", "value_key": "mean"}, "leaf_thickness": {"description": "Epaisseur moyenne des feuilles du taxon et de ses sous-taxons", "options": {"max": 800, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 160]}, {"color": "#fe6a00", "range": [160, 320]}, {"color": "#e8dd0f", "range": [320, 480]}, {"color": "#81e042", "range": [480, 640]}, {"color": "#049f50", "range": [640, 800]}], "units": "\u00b5m"}, "source": "leaf_thickness", "title": "\u00c9paisseur des feuilles", "type": "gauge", "value_key": "mean"}, "phenology_distribution": {"datasets": [{"backgroundColor": "#FFD700", "borderColor": "#FFD700", "borderWidth": 1, "data_key": "month_data.fleur", "label": "Fleur"}, {"backgroundColor": "#DC143C", "borderColor": "#DC143C", "borderWidth": 1, "data_key": "month_data.fruit", "label": "Fruit"}], "description": "Ph\u00e9nologie des \u00e9tats fertiles (fleur, fruit) du taxon et de ses sous-taxons", "labels_key": "labels", "options": {"maintainAspectRatio": false, "plugins": {"legend": {"labels": {"boxWidth": 15, "padding": 20}, "position": "bottom"}}, "responsive": true, "scales": {"x": {"grid": {"display": false}}, "y": {"beginAtZero": true, "max": 50, "title": {"display": true, "text": "Fr\u00e9quence (%)"}}}}, "source": "phenology_distribution", "title": "Ph\u00e9nologie", "type": "bar_chart"}, "rainfall_distribution": {"datasets": [{"backgroundColor": "#2196F3", "data_key": "counts", "label": "Occurrences"}], "description": "Distribution pluviom\u00e9trique des occurrences du taxon (= fr\u00e9quence par classe de pluviom\u00e9trie)", "labels_key": "bins", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Occurrences"}}, "y": {"reverse": true, "title": {"display": true, "text": "Pluviom\u00e9trie (mm/an)"}}}}, "source": "rainfall_distribution", "title": "R\u00e9partition pluviom\u00e9trie", "type": "bar_chart"}, "strata_distribution": {"datasets": [{"backgroundColor": ["#90A4AE", "#66BB6A", "#43A047", "#2E7D32"], "borderWidth": 1, "data_key": "counts", "label": "Occurrences"}], "description": "R\u00e9partition des occurrences par strate", "labels_key": "labels", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Nombre d\u0027occurrences"}}, "y": {"reverse": true, "title": {"display": true}}}}, "source": "strata_distribution", "title": "Stratification", "type": "bar_chart"}, "top_species": {"datasets": [{"data_key": "counts", "generateColors": true, "label": "Occurrences"}], "description": "Principaux sous-taxons (esp\u00e8ce, sous-esp\u00e8ce)", "labels_key": "tops", "options": {"indexAxis": "y", "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "responsive": true, "scales": {"x": {"beginAtZero": true, "grid": {"display": true, "drawBorder": true, "drawOnChartArea": true, "drawTicks": true}, "ticks": {"stepSize": 5}, "title": {"display": true, "text": "Nombre d\u0027occurrences"}}, "y": {"grid": {"display": false}}}}, "sortData": true, "source": "top_species", "title": "Sous-taxons principaux", "type": "bar_chart"}, "wood_density": {"description": "Densit\u00e9 de bois moyenne mesur\u00e9 avec une Tari\u00e8re de Pressler", "options": {"max": 1.2, "min": 0, "sectors": [{"color": "#f02828", "range": [0.0, 0.24]}, {"color": "#fe6a00", "range": [0.24, 0.48]}, {"color": "#e8dd0f", "range": [0.48, 0.72]}, {"color": "#81e042", "range": [0.72, 0.96]}, {"color": "#049f50", "range": [0.96, 1.2]}], "units": "g/cm\u00b3"}, "source": "wood_density", "title": "Densit\u00e9 de bois", "type": "gauge", "value_key": "mean"}}};
+
+        // =====================================
+        // Core Initialization
+        // =====================================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize sidebar
+            initializeSidebar();
+
+            // Initialize tree
+            const treeContainer = document.getElementById('taxonomy-tree');
+            if (treeContainer) {
+                createTree(treeContainer, taxonomyData);
+            }
+
+            // Initialize all widgets
+            initializeWidgets(mapping.widgets, taxon);
+        });
+
+        // =====================================
+        // Sidebar Management
+        // =====================================
+        function initializeSidebar() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const taxonomyTree = document.getElementById('taxonomy-tree-container');
+
+            if (sidebarToggle && taxonomyTree) {
+                sidebarToggle.addEventListener('click', function () {
+                    taxonomyTree.classList.toggle('hidden');
+                    this.classList.toggle('menu-open');
+
+                    const svg = this.querySelector('svg');
+                    if (this.classList.contains('menu-open')) {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+                    } else {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+
+                // Close menu on outside click for mobile
+                document.addEventListener('click', function (e) {
+                    if (!sidebarToggle.contains(e.target) &&
+                        !taxonomyTree.contains(e.target) &&
+                        !taxonomyTree.classList.contains('hidden') &&
+                        window.innerWidth < 1024) {
+                        taxonomyTree.classList.add('hidden');
+                        sidebarToggle.classList.remove('menu-open');
+                        const svg = sidebarToggle.querySelector('svg');
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+            }
+        }
+
+        // =====================================
+        // Widget Management
+        // =====================================
+        function initializeWidgets(widgets, stats) {
+            // Mapping des types vers leurs fonctions d'initialisation
+            const initializerMap = {
+                'bar_chart': initChart,
+                'line_chart': initChart,
+                'pie_chart': initChart,
+                'doughnut_chart': initChart,
+                'gauge': initChart,
+                'map_panel': initMap
+            };
+
+            Object.entries(widgets)
+                .filter(([_, config]) => config.type in initializerMap)  // Ignore unsupported types
+                .forEach(([widgetKey, config]) => {
+                    // Automatically generate the widget ID if not specified
+                    const suffix = config.type.includes('chart') ? 'Chart' :
+                        config.type === 'gauge' ? 'Gauge' : 'Map';
+                    const widgetId = config.id || `${widgetKey}${suffix}`;
+
+                    // For maps, we directly pass stats
+                    if (config.type === 'map_panel') {
+                        initializerMap[config.type](widgetId, stats, config);
+                        return;
+                    }
+
+                    // For other widgets, we check the source in stats
+                    const data = _.get(stats, config.source);
+                    if (!data) return;  // Skip if no data
+
+                    // Initialize the widget with the appropriate function
+                    initializerMap[config.type](widgetId, data, config);
+                });
+        }
+
+
+        // =====================================
+        // Tree Management
+        // =====================================
+        function getBaseUrl() {
+            const pathArray = window.location.pathname.split('/');
+            pathArray.pop();
+            return pathArray.join('/') + '/';
+        }
+
+        function openCurrentNode($ul, currentId) {
+                const $currentLink = $ul.find(`a[data-id='${currentId}']`);
+                if ($currentLink.length > 0) {
+                    // Open all parents as you already do
+                    $currentLink.parents('ul').each(function () {
+                        $(this).show();
+                        $(this).siblings('span').text('▾');
+                    });
+
+                    // Wait a short moment to ensure the nodes are properly opened
+                    setTimeout(() => {
+                        // Scroll to the selected element
+                        const container = document.getElementById('taxonomy-tree-container');
+                        const element = $currentLink[0];
+
+                        if (container && element) {
+                            // Calculate the scroll position to center the element if possible
+                            const elementRect = element.getBoundingClientRect();
+                            const containerRect = container.getBoundingClientRect();
+                            const offset = elementRect.top - containerRect.top - (containerRect.height / 2) + (elementRect.height / 2);
+
+                            // Perform scrolling with smooth animation
+                            container.scrollTo({
+                                top: container.scrollTop + offset,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 100); // A short delay to ensure the DOM is updated
+                }
+            }
+
+        function createTree(container, taxonomyData) {
+            const baseUrl = getBaseUrl();
+
+            function createList(data) {
+                const $ul = $('<ul></ul>');
+                $.each(data, function (i, item) {
+                    const $li = $('<li></li>');
+                    const $a = $('<a></a>', {
+                        'href': `${baseUrl}${item.id}.html`,
+                        'text': item.name,
+                        'data-id': item.id
+                    });
+
+                    if (item.id == taxonId) {
+                        $a.css({
+                            'font-weight': 'bold',
+                        });
+                    }
+
+                    if (item.children && item.children.length > 0) {
+                        const $span = $('<span>▸</span>').css({
+                            'cursor': 'pointer',
+                            'margin-right': '5px'
+                        });
+
+                        const $childUl = createList(item.children).hide();
+                        $span.click(function (event) {
+                            event.stopPropagation();
+                            $childUl.toggle();
+                            $(this).text($childUl.is(":visible") ? '▾' : '▸');
+                        });
+
+                        $li.append($span).append($a).append($childUl);
+                    } else {
+                        $li.append($a);
+                    }
+                    $ul.append($li);
+                });
+                return $ul;
+            }
+
+            const $tree = createList(taxonomyData);
+            $(container).append($tree);
+            openCurrentNode($tree, taxonId);
+        }
+
+
+        // =====================================
+        // Map Management
+        // =====================================
+        function initMap(mapId, data, mapConfig) {
+                const mapContainer = document.getElementById(mapId);
+                if (!mapContainer) return;
+
+                // Base configuration
+                const defaultZoom = 7;
+                const maxZoom = 12;
+
+                // Base layers with backup options
+                const baseLayers = {
+                    "Satellite": L.tileLayer.wms("https://carto10.gouv.nc/arcgis/services/fond_imagerie/MapServer/WMSServer", {
+                        layers: '0',
+                        format: 'image/png',
+                        transparent: true,
+                        attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                        maxZoom: maxZoom,
+                        timeout: 5000
+                    }),
+                    "Carte": L.tileLayer.wms('https://carto.gouv.nc/arcgis/services/fond_cartographie/MapServer/WMSServer', {
+                        layers: '0',
+                        format: 'image/png',
+                        transparent: true,
+                        attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                        maxZoom: maxZoom,
+                        timeout: 5000
+                    }),
+                    "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        maxZoom: maxZoom
+                    }),
+                    "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                        maxZoom: maxZoom
+                    })
+                };
+
+                // Create map with Satellite as default layer
+                const map = L.map(mapId, {
+                    layers: [baseLayers["Satellite"]],
+                    zoom: defaultZoom,
+                    maxZoom: maxZoom,
+                    scrollWheelZoom: false
+                });
+
+                // Add layer control
+                L.control.layers(baseLayers).addTo(map);
+                map.attributionControl.setPrefix(false);
+
+                // Handle layer fallback
+                let primaryLayerAvailable = false;
+
+                baseLayers["Satellite"].on('load', function () {
+                    primaryLayerAvailable = true;
+                });
+
+                setTimeout(function () {
+                    if (!primaryLayerAvailable) {
+                        map.removeLayer(baseLayers["Satellite"]);
+                        map.addLayer(baseLayers["ESRI Satellite"]);
+                    }
+                }, 3000);
+
+                // Determine the data source based on mapConfig
+                const dataSource = mapConfig.source;
+
+                // Create a marker cluster group with custom options for better performance
+                const markers = L.markerClusterGroup({
+                    maxClusterRadius: 30, // Smaller radius makes more, smaller clusters
+                    spiderfyOnMaxZoom: true,
+                    showCoverageOnHover: false,
+                    zoomToBoundsOnClick: true,
+                    disableClusteringAtZoom: 12, // Disable clustering at max zoom
+                    chunkedLoading: true, // Load markers in chunks to avoid freezing
+                    chunkProgress: updateProgressBar // Optional progress callback
+                });
+
+                // Process and add markers
+                setTimeout(() => {
+                    processMarkers(data, dataSource, mapConfig, markers, map);
+                }, 100); // Small delay to allow UI to render first
+
+                // Add empty cluster layer to map immediately (will be populated)
+                map.addLayer(markers);
+
+                // Add a loading indicator
+                const loadingIndicator = L.control({ position: 'topright' });
+                loadingIndicator.onAdd = function (map) {
+                    this._div = L.DomUtil.create('div', 'loading-indicator');
+                    this._div.innerHTML = '<div class="spinner"></div> Loading points...';
+                    return this._div;
+                };
+                loadingIndicator.addTo(map);
+
+                function updateProgressBar(processed, total, elapsed) {
+                    if (processed === total) {
+                        // Hide loading indicator when complete
+                        loadingIndicator.getContainer().style.display = 'none';
+                    }
+                }
+            }
+
+            // Separate function to process markers to avoid blocking the UI
+            function processMarkers(data, dataSource, mapConfig, markers, map) {
+                // Check if the data is in GeoJSON standard format
+                if (data && data[dataSource] && data[dataSource].type === "FeatureCollection") {
+                    const geoJsonData = data[dataSource];
+
+                    if (geoJsonData.features && geoJsonData.features.length > 0) {
+                        // Sample large datasets (optional)
+                        let features = geoJsonData.features;
+                        if (features.length > 2000) {
+                            // Sample only first 2000 points to avoid browser freezing
+                            features = features.slice(0, 2000);
+                            console.warn(`Map showing only 2000 points out of ${geoJsonData.features.length}`);
+                        }
+
+                        // Process in batches to avoid freezing the UI
+                        processBatch(features, 0, 100, markers, mapConfig, map);
+                    }
+                }
+                // Keep compatibility with the old format
+                else if (data && data[dataSource]) {
+                    const coordinatesSource = mapConfig.layers[0].source;
+
+                    if (data[dataSource][coordinatesSource]) {
+                        // Sample large datasets (optional)
+                        let points = data[dataSource][coordinatesSource];
+                        if (points.length > 2000) {
+                            points = points.slice(0, 2000);
+                            console.warn(`Map showing only 2000 points out of ${data[dataSource][coordinatesSource].length}`);
+                        }
+
+                        // Process in batches to avoid freezing the UI
+                        processLegacyBatch(points, 0, 100, markers, mapConfig, map);
+                    }
+                }
+            }
+
+            // Process a batch of GeoJSON features
+            function processBatch(features, startIndex, batchSize, markers, mapConfig, map) {
+                const endIndex = Math.min(startIndex + batchSize, features.length);
+                const bounds = [];
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const feature = features[i];
+                    if (feature.geometry && feature.geometry.type === "Point") {
+                        const coords = feature.geometry.coordinates;
+                        const latLng = [coords[1], coords[0]];
+
+                        // Create circle marker instead of standard marker for better performance
+                        const marker = L.circleMarker(latLng, {
+                            ...mapConfig.layers[0].style,
+                            radius: 5 // Smaller radius for better performance
+                        });
+
+                        // Add popup only on click to improve performance
+                        if (feature.properties) {
+                            marker.on('click', function () {
+                                const popupContent = Object.entries(feature.properties)
+                                    .map(([key, value]) => `${key}: ${value}`)
+                                    .join('<br>');
+
+                                marker.bindPopup(popupContent || "Occurrence").openPopup();
+                            });
+                        }
+
+                        markers.addLayer(marker);
+                        bounds.push(latLng);
+                    }
+                }
+
+                // Process next batch or fit bounds
+                if (endIndex < features.length) {
+                    setTimeout(() => {
+                        processBatch(features, endIndex, batchSize, markers, mapConfig, map);
+                    }, 10); // Small timeout to allow UI to update
+                } else {
+                    // All features processed, fit bounds if needed
+                    if (bounds.length > 0) {
+                        map.fitBounds(L.latLngBounds(bounds), {
+                            maxZoom: 12,
+                            padding: [50, 50]
+                        });
+                    }
+                }
+            }
+
+            // Process a batch of legacy format points
+            function processLegacyBatch(points, startIndex, batchSize, markers, mapConfig, map) {
+                const endIndex = Math.min(startIndex + batchSize, points.length);
+                const bounds = [];
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const point = points[i];
+                    const latLng = [point.coordinates[1], point.coordinates[0]];
+
+                    const marker = L.circleMarker(latLng, {
+                        ...mapConfig.layers[0].style,
+                        radius: 5 // Smaller radius for better performance
+                    });
+
+                    // Add popup only on click
+                    marker.on('click', function () {
+                        marker.bindPopup(`Occurrences: ${point.count || 1}`).openPopup();
+                    });
+
+                    markers.addLayer(marker);
+                    bounds.push(latLng);
+                }
+
+                // Process next batch or fit bounds
+                if (endIndex < points.length) {
+                    setTimeout(() => {
+                        processLegacyBatch(points, endIndex, batchSize, markers, mapConfig, map);
+                    }, 10);
+                } else {
+                    // All points processed, fit bounds if needed
+                    if (bounds.length > 0) {
+                        map.fitBounds(L.latLngBounds(bounds), {
+                            maxZoom: 12,
+                            padding: [50, 50]
+                        });
+                    }
+                }
+            }
+
+        // =====================================
+        // Chart Type Management & Data Processing
+        // =====================================
+        /**
+         * Maps widget types to Chart.js chart types
+         * @param {string} widgetType - Type from widget configuration
+         * @returns {string} Corresponding Chart.js type
+         */
+        function getChartTypeFromWidgetType(widgetType) {
+            const typeMapping = {
+                'doughnut_chart': 'doughnut',
+                'pie_chart': 'pie',
+                'bar_chart': 'bar',
+                'line_chart': 'line',
+                'stacked_bar_chart': 'bar',
+                'gauge': 'gauge'
+            };
+            return typeMapping[widgetType] || 'bar'; //
+        }
+
+        /**
+         * Prepares data for chart rendering, including sorting and transformation
+         * @param {Object} config - Widget configuration
+         * @param {Object} data - Raw data for the chart
+         * @returns {Object} Formatted data for Chart.js
+         */
+        function prepareChartData(config, data) {
+            const datasets = [];
+            let labels = [];
+
+            if (!config.datasets || !Array.isArray(config.datasets)) {
+                console.warn('No datasets configuration provided');
+                return {labels: [], datasets: []};
+            }
+
+            // Get and sort data if needed
+            let sortedData = data;
+            let sortedIndices = null;
+            if (config.sortBy) {
+                const values = _.get(data, config.sortBy, []);
+                sortedIndices = values.map((v, i) => i);
+                sortedIndices.sort((a, b) => values[a] - values[b]);
+
+                // Create new sorted data object
+                sortedData = Object.keys(data).reduce((acc, key) => {
+                    if (Array.isArray(data[key])) {
+                        acc[key] = sortedIndices.map(i => data[key][i]);
+                    } else {
+                        acc[key] = data[key];
+                    }
+                    return acc;
+                }, {});
+            }
+
+            // Get labels before dataset processing
+            labels = config.labels_key ?
+                _.get(sortedData, config.labels_key, []).map(v => v.toString()) :
+                config.labels ? config.labels :
+                    [];
+
+            config.datasets.forEach((datasetConfig) => {
+                const dataset = {
+                    label: datasetConfig.label,
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: datasetConfig.borderWidth ?? 1,
+                    fill: datasetConfig.fill ?? false,
+                    tension: datasetConfig.tension ?? 0,
+                    stack: datasetConfig.stack,
+                    pointRadius: datasetConfig.pointRadius ?? undefined,
+                    pointHoverRadius: datasetConfig.pointHoverRadius ?? undefined,
+                    pointHoverBackgroundColor: datasetConfig.pointHoverBackgroundColor ?? undefined,
+                };
+
+                // Process data
+                dataset.data = processDataset(datasetConfig, sortedData, config.type);
+
+                // Transform data if needed
+                if (datasetConfig.transformData) {
+                    dataset.data = dataset.data.map((value, index) =>
+                        transformDataValue(value, datasetConfig.transformData, index, sortedData)
+                    );
+                }
+
+                // Process colors after data is loaded
+                processColors(dataset, datasetConfig, labels);
+
+                datasets.push(dataset);
+            });
+
+            return {labels, datasets};
+        }
+
+        /**
+         * Prepares chart options by merging defaults with configuration
+         * Handles scales, plugins, and callbacks configuration
+         * @param {Object} config - Widget configuration
+         * @returns {Object} Complete Chart.js options
+         */
+        function prepareChartOptions(config) {
+            // Default options restent les mêmes
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: false,
+                            boxWidth: 15,
+                        },
+                    },
+                    title: {
+                        display: false,
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                },
+                scales: {},
+            };
+
+            // Merge custom options with defaults
+            const options = _.merge({}, defaultOptions, config.options);
+
+            // Handle scales configuration
+            if (config.options && config.options.scales) {
+                Object.keys(options.scales || {}).forEach(scaleKey => {
+                    const scale = options.scales[scaleKey];
+                    if (scale.ticks && scale.ticks.callback) {
+                        const callbackName = scale.ticks.callback;
+                        if (typeof window[callbackName] === 'function') {
+                            scale.ticks.callback = window[callbackName];
+                        }
+                    }
+                });
+            }
+
+            // Handle stacked charts
+            if (config.type === 'stacked_bar_chart' || (config.options && config.options.stacked)) {
+                if (options.scales.x) options.scales.x.stacked = true;
+                if (options.scales.y) options.scales.y.stacked = true;
+            }
+
+            // Process plugin callbacks
+            if (options.plugins) {
+                for (const pluginKey in options.plugins) {
+                    const plugin = options.plugins[pluginKey];
+                    if (plugin.callbacks) {
+                        for (const callbackKey in plugin.callbacks) {
+                            const callbackName = plugin.callbacks[callbackKey];
+                            if (typeof callbackName === 'string' && typeof window[callbackName] === 'function') {
+                                plugin.callbacks[callbackKey] = window[callbackName];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return options;
+        }
+
+        /**
+         * Process dataset values according to chart type
+         */
+        function processDataset(datasetConfig, data, chartType) {
+            let processedData = [];
+
+            if (datasetConfig.data_keys && Array.isArray(datasetConfig.data_keys)) {
+                processedData = datasetConfig.data_keys.map(key => {
+                    const value = parseFloat(_.get(data, key, 0)) || 0;
+                    return formatValue(value, chartType);
+                });
+            } else if (datasetConfig.data_key) {
+                const values = _.get(data, datasetConfig.data_key, []);
+                processedData = Array.isArray(values) ?
+                    values.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(values) || 0, chartType)];
+            } else if (datasetConfig.data) {
+                processedData = Array.isArray(datasetConfig.data) ?
+                    datasetConfig.data.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(datasetConfig.data) || 0, chartType)];
+            }
+
+            return processedData;
+        }
+
+        /**
+         * Process colors for chart datasets
+         */
+        function processColors(dataset, datasetConfig, labels) {
+            if (datasetConfig.generateColors) {
+                // Génère autant de couleurs que de données
+                dataset.backgroundColor = generateColors(dataset.data.length);
+                dataset.borderColor = dataset.backgroundColor;
+                return;
+            }
+
+            if (datasetConfig.color_mapping && labels) {
+                dataset.backgroundColor = Array.isArray(dataset.data) ?
+                    dataset.data.map((_, index) => {
+                        const label = labels[index];
+                        return datasetConfig.color_mapping[label] || '#000000';
+                    }) :
+                    datasetConfig.color_mapping[labels[0]] || '#000000';
+
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else if (datasetConfig.backgroundColors) {
+                dataset.backgroundColor = datasetConfig.backgroundColors;
+                dataset.borderColor = datasetConfig.borderColor || datasetConfig.backgroundColors;
+            } else if (datasetConfig.backgroundColor) {
+                dataset.backgroundColor = datasetConfig.backgroundColor;
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else {
+                dataset.backgroundColor = '#000000';
+                dataset.borderColor = '#000000';
+            }
+        }
+
+        function generateColors(count, defaultColor) {
+            if (defaultColor) {
+                return Array(count).fill(defaultColor);
+            }
+
+            // Function to convert HSL to RGB
+            function hslToRgb(h, s, l) {
+                let r, g, b;
+
+                if (s === 0) {
+                    r = g = b = l; // achromatic
+                } else {
+                    const hue2rgb = (p, q, t) => {
+                        if (t < 0) t += 1;
+                        if (t > 1) t -= 1;
+                        if (t < 1 / 6) return p + (q - p) * 6 * t;
+                        if (t < 1 / 2) return q;
+                        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                        return p;
+                    };
+
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1 / 3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1 / 3);
+                }
+
+                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+            }
+
+            // Function to convert RGB to Hex
+            function rgbToHex(r, g, b) {
+                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
+
+            // Generate harmonious colors
+            return Array.from({length: count}, (_, i) => {
+                // Use golden ratio to spread hues evenly
+                const hue = (i * 0.618033988749895) % 1;
+
+                // Vary saturation slightly
+                const saturation = 0.5 + (i % 3) * 0.1;
+
+                // Vary lightness to create contrast
+                const lightness = 0.4 + (i % 2) * 0.2;
+
+                const [r, g, b] = hslToRgb(hue, saturation, lightness);
+                return rgbToHex(r, g, b);
+            });
+        }
+
+        /**
+         * Initialize chart widgets including gauges
+         * Handles both Chart.js charts and JustGage gauges
+         */
+        function initChart(widgetId, data, config) {
+            const ctx = document.getElementById(widgetId);
+            if (!ctx) return;
+
+            const chartType = getChartTypeFromWidgetType(config.type);
+
+            if (chartType === 'gauge') {
+                const rawValue = _.get(data, config.value_key);
+
+                if (rawValue === null || rawValue === undefined || isNaN(rawValue)) {
+                    if (ctx) {
+                        ctx.className = 'flex items-center justify-center h-64';
+                        ctx.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    }
+                    return;
+                }
+
+                const value = parseFloat(rawValue.toFixed(1));
+
+                const gaugeOptions = {
+                    id: widgetId,
+                    value: value,
+                    min: config.options.min,
+                    max: config.options.max,
+                    label: config.options.units,
+                    title: config.title,
+                    gaugeColor: "#eee",
+                    levelColors: config.options.sectors.map(s => s.color),
+                    decimals: 1,
+                    gaugeWidthScale: 0.6,
+                    counter: true,
+                    pointer: true,
+                    pointerOptions: {
+                        toplength: -15,
+                        bottomlength: 10,
+                        bottomwidth: 12,
+                        color: '#8E8E93',
+                        stroke: '#fff',
+                        stroke_width: 3,
+                        stroke_linecap: 'round'
+                    },
+                    // Default options that don't need to be in config
+                    showMinMax: false,
+                    donut: false,
+                    relativeGaugeSize: true,
+                    // Font colors that don't need to be in config
+                    titleFontColor: "#333",
+                    valueFontColor: "#333",
+                    labelFontColor: "#666"
+                };
+
+                const gauge = new JustGage(gaugeOptions);
+
+                // Add value text below
+                const valueText = document.createElement('p');
+                valueText.className = 'text-center mt-5 text-lg text-gray-700';
+                ctx.parentNode.appendChild(valueText);
+
+                return;
+            }
+
+            // Pour les autres types de graphiques...
+            const chartData = prepareChartData(config, data);
+
+            // Vérifier si les données sont vides
+            let hasData = false;
+
+            if (chartData && chartData.datasets) {
+                // Vérifier si au moins un dataset contient des données
+                hasData = chartData.datasets.some(dataset => {
+                    // Vérifier si le dataset a des données et qu'elles ne sont pas toutes nulles/0
+                    return dataset.data &&
+                           dataset.data.length > 0 &&
+                           dataset.data.some(value => value !== null && value !== undefined && value !== 0);
+                });
+            }
+
+            // Si aucune donnée n'est disponible, afficher un message
+            if (!hasData) {
+                if (ctx) {
+                    // Remplacer le canvas par un div avec le message
+                    const container = ctx.parentNode;
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'flex items-center justify-center h-64';
+                    messageDiv.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    container.replaceChild(messageDiv, ctx);
+                }
+                return;
+            }
+
+            const chartOptions = prepareChartOptions(config);
+            const plugins = [];
+
+            if (config.customPlugin && typeof window[config.customPlugin] === 'object') {
+                plugins.push(window[config.customPlugin]);
+            }
+
+            new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: chartOptions,
+                plugins: plugins,
+            });
+        }
+
+        // =====================================
+        // Value Formatters
+        // =====================================
+        // Various formatters for different data types
+        window.formatLogValue = function (value) {
+            return value.toString();
+        };
+        window.formatSurfaceValue = function (value) {
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(0) + 'k';
+            }
+            return value;
+        };
+        window.formatPercentage = function (value) {
+            return value.toFixed(0) + '%';
+        };
+        window.formatForestTypeTooltip = function (context) {
+            return context.dataset.label + ': ' + context.raw.toFixed(1) + '%';
+        };
+        window.formatTooltipLabel = function (context) {
+            return `${context.label}: ${context.parsed}%`;
+        };
+        window.formatForestTypeElevationTooltip = function (context) {
+            const value = Math.round(context.raw);  // ou .toFixed(0) pour aucune décimale
+            return context.dataset.label + ': ' + value + '%';
+        };
+        window.formatAbsoluteValue = function (value) {
+            // Si c'est zéro, on l'affiche au centre
+            if (value === 0) return '0';
+            // Pour les autres valeurs, on affiche la valeur absolue
+            return Math.abs(value).toString();
+        };
+
+        window.formatForestCoverTooltip = function (context) {
+            const label = context.dataset.label;
+            const value = Math.abs(context.raw).toFixed(1);
+            return `${label}: ${value}%`;
+        };
+
+        function transformDataValue(value, transform, valueIndex, allData) {
+            if (!transform) return value;
+
+            switch (transform) {
+                case 'negateValues':
+                    return isNaN(value) ? 0 : -value;
+                case 'toPercentage':
+                    return isNaN(value) ? 0 : value * 100;
+                case 'stackedPercentage':
+                    const total = ['secondaire', 'mature', 'coeur'].reduce((sum, key) =>
+                        sum + (allData[key] ? allData[key][valueIndex] : 0), 0);
+                    return total === 0 ? 0 : (value / total * 100);
+                default:
+                    return value;
+            }
+        }
+
+        function formatValue(value, chartType) {
+            switch (chartType) {
+                case 'doughnut_chart':
+                case 'pie_chart':
+                    return Number(value);
+                default:
+                    return value;
+            }
+        }
+
+        // =====================================
+        // Custom Plugins
+        // =====================================
+        /**
+         * Custom plugin for drawing labels on doughnut charts
+         */
+        window.customLabels = {
+            id: 'customLabels',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = '11px system-ui';
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center';
+
+                const datasets = chart.data.datasets;
+                const meta = chart.getDatasetMeta(0);
+                const centerX = meta.data[0].x;
+                const centerY = meta.data[0].y;
+
+                datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    const percentage = dataset.data[0];
+                    const element = meta.data[0];
+
+                    const percentageAngle = -Math.PI + 0.2;
+                    const radius = (element.innerRadius + element.outerRadius) / 2;
+                    const x = centerX + Math.cos(percentageAngle) * radius;
+                    const y = centerY + Math.sin(percentageAngle) * radius;
+
+                    ctx.fillText(percentage.toFixed(1) + '%', x, y);
+
+                    // Affichage du label
+                    ctx.fillText(dataset.label, centerX, centerY + element.outerRadius - 10);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        /**
+         * Custom plugin for drawing percentage labels on forest type charts
+         */
+        window.forestTypeLabelsPlugin = {
+            id: 'text',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                chart.data.datasets.forEach(function (dataset, i) {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach(function (element, index) {
+                        const value = dataset.data[index];
+                        const position = element.getCenterPoint();
+
+                        // Draw value
+                        ctx.save();
+                        ctx.fillStyle = '#000000';
+                        ctx.font = '12px system-ui';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(value.toFixed(1) + '%', position.x, position.y);
+                        ctx.restore();
+                    });
+                });
+            }
+        };
+
+        /**
+             * Custom plugin for drawing percentage labels on taxonomic distribution chart
+             */
+            window.percentagePlugin = {
+                id: 'percentagePlugin',
+                afterDraw: function (chart) {
+                    const ctx = chart.ctx;
+
+                    // Vérifier si c'est un graphique circulaire ou en barres
+                    if (chart.config.type === 'doughnut' || chart.config.type === 'pie') {
+                        // Code original pour les graphiques circulaires
+                        chart.data.datasets.forEach(function (dataset, i) {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach(function (element, index) {
+                                // Ne pas afficher si la valeur est trop petite
+                                const value = dataset.data[index];
+                                if (value < 2) return; // Skip small values
+
+                                // Calcul de la position pour l'étiquette
+                                const angle = element.startAngle + (element.endAngle - element.startAngle) / 2;
+                                const radius = (element.innerRadius + element.outerRadius) / 2;
+                                const x = element.x + Math.cos(angle) * radius * 0.7;
+                                const y = element.y + Math.sin(angle) * radius * 0.7;
+
+                                // Dessiner le pourcentage
+                                ctx.save();
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.font = 'bold 14px system-ui';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+
+                                // Ajouter un contour noir pour améliorer la lisibilité
+                                ctx.strokeStyle = '#000000';
+                                ctx.lineWidth = 3;
+                                ctx.lineJoin = 'round';
+                                ctx.strokeText(value.toFixed(1) + '%', x, y);
+                                ctx.fillText(value.toFixed(1) + '%', x, y);
+
+                                ctx.restore();
+                            });
+                        });
+                    } else if (chart.config.type === 'bar') {
+                        // Nouveau code pour les graphiques en barres
+                        chart.data.datasets.forEach(function (dataset, i) {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach(function (element, index) {
+                                const value = dataset.data[index];
+                                if (value < 2) return; // Skip small values
+
+                                // Obtenir les dimensions et la position de la barre
+                                const { x, y, width, height } = element.getProps(['x', 'y', 'width', 'height']);
+
+                                // Calculer le centre de la barre
+                                let centerX, centerY;
+
+                                // Vérifier si c'est un graphique horizontal ou vertical
+                                if (chart.options.indexAxis === 'y') {
+                                    // Graphique horizontal
+                                    centerX = x + width / 2;
+                                    centerY = y;
+                                } else {
+                                    // Graphique vertical
+                                    centerX = x;
+                                    centerY = y + height / 2;
+                                }
+
+                                // Dessiner le pourcentage
+                                ctx.save();
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.font = 'bold 14px system-ui';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+
+                                ctx.strokeStyle = '#000000';
+                                ctx.lineWidth = 3;
+                                ctx.lineJoin = 'round';
+                                ctx.strokeText(value.toFixed(1) + '%', centerX, centerY);
+                                ctx.fillText(value.toFixed(1) + '%', centerX, centerY);
+                                ctx.restore();
+                            });
+                        });
+                    }
+                }
+            };
+    </script>
+
+</body>
+</html>

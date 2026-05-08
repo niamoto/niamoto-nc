@@ -1,0 +1,232 @@
+{
+    "id": 19,
+    "locality": "Prokomeo",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.86972046,
+            -21.49363899
+        ]
+    },
+    "plot_id": 19,
+    "general_info": {
+        "plot_name": {
+            "value": "Prokomeo"
+        },
+        "elevation": {
+            "value": "671",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2460",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "True"
+        },
+        "nb_families": {
+            "value": "36"
+        },
+        "nb_species": {
+            "value": "70"
+        },
+        "occurrences_count": {
+            "value": "1490"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.86972046,
+                        -21.49363899
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Sapindaceae",
+            "Atherospermataceae",
+            "Myrtaceae",
+            "Casuarinaceae",
+            "Sapotaceae",
+            "Myodocarpaceae",
+            "Cunoniaceae",
+            "Stemonuraceae",
+            "Araucariaceae",
+            "Ericaceae"
+        ],
+        "counts": [
+            216.0,
+            192.0,
+            173.0,
+            160.0,
+            130.0,
+            100.0,
+            46.0,
+            45.0,
+            39.0,
+            38.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Gongrodiscus bilocularis",
+            "Nemuaron vieillardii",
+            "Gymnostoma intermedium",
+            "Myodocarpus fraxinifolius",
+            "Pleioluma lasiantha",
+            "Metrosideros nitida",
+            "Xanthomyrtus kanalaensis",
+            "Gastrolepis austrocaledonica",
+            "Araucaria montana",
+            "Pancheria ternata"
+        ],
+        "counts": [
+            195.0,
+            192.0,
+            160.0,
+            99.0,
+            69.0,
+            49.0,
+            46.0,
+            45.0,
+            39.0,
+            35.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            1.0,
+            1154.0,
+            232.0,
+            63.0,
+            27.0,
+            11.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            100,
+            399,
+            961,
+            30
+        ],
+        "percentages": [
+            6.71,
+            26.78,
+            64.5,
+            2.01
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            2,
+            67,
+            2,
+            1405
+        ],
+        "percentages": [
+            0.14,
+            4.54,
+            0.14,
+            95.19
+        ]
+    },
+    "species_level": {
+        "value": "0.9839",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1490,
+            99
+        ],
+        "percentages": [
+            93.77,
+            6.23
+        ],
+        "arbres_vivants": {
+            "value": 1490,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 99,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "10.5",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.7097708770624227",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "41.7",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 70,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.32",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.78",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.94",
+        "units": ""
+    },
+    "biomass": {
+        "value": "221.402872635875",
+        "units": "t/ha"
+    }
+}

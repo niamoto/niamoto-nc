@@ -1,0 +1,232 @@
+{
+    "id": 7,
+    "locality": "Col d'Amoss",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            164.43788147,
+            -20.30602264
+        ]
+    },
+    "plot_id": 7,
+    "general_info": {
+        "plot_name": {
+            "value": "Col d'Amoss"
+        },
+        "elevation": {
+            "value": "485",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2170",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "43"
+        },
+        "nb_species": {
+            "value": "95"
+        },
+        "occurrences_count": {
+            "value": "1473"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.43788147,
+                        -20.30602264
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Clusiaceae",
+            "Calophyllaceae",
+            "Sapindaceae",
+            "Myrtaceae",
+            "Meliaceae",
+            "Arecaceae",
+            "Ebenaceae",
+            "Monimiaceae",
+            "Dicksoniaceae",
+            "Metteniusaceae"
+        ],
+        "counts": [
+            446.0,
+            224.0,
+            108.0,
+            91.0,
+            68.0,
+            52.0,
+            51.0,
+            48.0,
+            46.0,
+            45.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Garcinia vieillardii",
+            "Calophyllum caledonicum",
+            "Cupaniopsis petiolulata",
+            "Diospyros samoensis",
+            "Dicksonia thyrsopteroides",
+            "Apodytes clusiifolia",
+            "Didymocheton roseus",
+            "Chambeyronia magnifica",
+            "Garcinia virgata",
+            "Hedycarya cupulata"
+        ],
+        "counts": [
+            381.0,
+            224.0,
+            67.0,
+            48.0,
+            46.0,
+            45.0,
+            39.0,
+            35.0,
+            31.0,
+            27.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            970.0,
+            291.0,
+            115.0,
+            44.0,
+            43.0,
+            7.0,
+            3.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            378,
+            470,
+            578,
+            47
+        ],
+        "percentages": [
+            25.66,
+            31.91,
+            39.24,
+            3.19
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            46,
+            0,
+            52,
+            1375
+        ],
+        "percentages": [
+            3.12,
+            0.0,
+            3.53,
+            93.35
+        ]
+    },
+    "species_level": {
+        "value": "0.9491",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1473,
+            43
+        ],
+        "percentages": [
+            97.16,
+            2.84
+        ],
+        "arbres_vivants": {
+            "value": 1473,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 43,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "13.8",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6760322670833255",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "65.6",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 95,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.16",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.69",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.89",
+        "units": ""
+    },
+    "biomass": {
+        "value": "424.040657546192",
+        "units": "t/ha"
+    }
+}

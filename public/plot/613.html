@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Niamoto - Parcelle Tchingou</title>
+
+    <script src="../js/plot_list.js"></script>
+    <style>
+        #plot-list li {
+            list-style: none;
+        }
+
+        .plot-link {
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .plot-link:hover {
+            background-color: #f0f0f0;
+        }
+
+        .plot-link.active {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        #plotMap {
+            position: relative;
+            height: 400px;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            @apply relative w-full;
+            min-height: 300px;
+        }
+
+        /* Specific chart types adjustments */
+        [id$='PieChart'],
+        [id$='BarChart'],
+        [id$='Gauge'],
+        [id*='Chart'] {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Widget styles */
+        .widget-container {
+            @apply bg-white rounded-lg shadow-lg overflow-hidden;
+        }
+
+        .widget-header {
+            @apply bg-gray-600 text-white p-3;
+        }
+
+        .widget-content {
+            @apply p-4;
+            min-height: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .widget-content {
+                min-height: 250px;
+            }
+        }
+
+        .tooltip-content {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-100%);
+            background-color: #ffffff;
+            color: #333333;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: normal;
+            width: 20rem;
+            z-index: 9999;
+            display: none;
+        }
+    </style>
+
+    <link rel="stylesheet" href="../js/vendor/tailwindcss/2.2.19_dist_tailwind.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.9.4_leaflet.css">
+    <link rel="stylesheet" href="../css/font-awesome/6.6.0_all.min.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.css" />
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.Default.css" />
+
+
+    <style>
+        ul {
+            list-style-type: none;
+        }
+
+        .loader-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .button-container {
+            transition: all 0.3s ease;
+        }
+        .button-container.fixed {
+            position: fixed;
+            top: 63px; /* Adjust this value to match the height of your navigation menu */
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bg p-0 fixed w-full top-0 shadow-md z-50 custom-nav">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <a id="home-link" class="inline-flex items-center py-2 px-4 text-white no-underline" href="#" data-link="index.html">
+                <span class="site-title">Niamoto</span>
+            </a>
+        </div>
+
+        <div class="block lg:hidden">
+            <button id="nav-toggle"
+                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0zm0 6h20v2H0zm0 6h20v2H0z" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
+            <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="index.html">
+                        <i class="fas fa-home menu-icon"></i>Accueil
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#introduction">Introduction</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#project">Projet</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#objective">Objectifs</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#context">Contexte</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#flora">Flore</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="methodology.html">
+                        <i class="fas fa-flask menu-icon"></i>Méthodologie
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#methodes">Nos méthodes</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#faq">FAQ</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="trees.html">
+                        <i class="fas fa-leaf menu-icon"></i>Arbres
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#learnTaxon">Étudier les
+                arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#taxon">Les arbres de
+                Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="plots.html">
+                        <i class="fas fa-map-marked-alt menu-icon"></i>Peuplements
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#learnPlot">Étudier les
+                            peuplements forestiers</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#plot">Les
+                peuplements forestiers de Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="forests.html">
+                        <i class="fas fa-tree menu-icon"></i>Forêt
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#learnForest">Étudier la
+                forêt</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#forestNC">La forêt de Nouvelle-Calédonie</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#">
+                        <i class="fas fa-database menu-icon"></i>Accéder aux données
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="taxon/index.html">Arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plot/index.html">Peuplements</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="shape/index.html">Forêt</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="resources.html">
+                        <i class="fas fa-book menu-icon"></i>Ressources
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#equipe">L'équipe</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#productions">Productions</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    document.getElementById('nav-toggle').onclick = () =>
+        document.getElementById('nav-content').classList.toggle('hidden');
+
+    // Function to adjust the navigation links based on page depth
+        function adjustNavLinks(depth) {
+            document.querySelectorAll('a[data-link]').forEach(link => {
+                link.href = depth + link.getAttribute('data-link');
+            });
+        }
+
+        // Adjust the navigation links based on the depth
+        adjustNavLinks("../");
+
+</script>
+
+<style>
+    .site-title {
+        font-family: 'Arial Black', sans-serif; /* Custom font for a bold effect */
+        font-size: 2rem; /* Increased font size */
+        text-transform: uppercase; /* Uppercase letters for visibility */
+        letter-spacing: 2px; /* Spacing between letters */
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Text shadow for better visibility */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .site-title:hover {
+        color: #ffdd57; /* Change color on hover */
+    }
+
+    .text-contour {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .nav-bg {
+        background-color: rgba(34, 139, 34, 0.8); /* Fond vert semi-transparent */
+        transition: background-color 0.3s;
+    }
+
+    .nav-bg:hover {
+        background-color: rgba(34, 139, 34, 1); /* Fond vert opaque au survol */
+    }
+
+    .group:hover .group-hover\:block {
+        display: block;
+    }
+
+    .custom-nav {
+        z-index: 1500;
+    }
+
+    .custom-dropdown {
+        z-index: 1500;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* Fond blanc transparent au survol */
+        border-radius: 4px;
+    }
+
+    .menu-icon {
+        margin-right: 8px;
+    }
+</style>
+    <div class="flex flex-col lg:flex-row">
+        
+    <div class="w-full mt-16 lg:w-1/4 lg:min-h-screen bg-white shadow-md overflow-y-auto">
+        <button id="sidebar-toggle"
+                class="lg:hidden w-full flex items-center justify-between p-4 text-gray-600 hover:bg-gray-50">
+            <span>Liste des parcelles</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+        <div id="plot-list-container" class="hidden lg:block p-4">
+            <div id="plot-list" class="list-disc pl-5">
+                <!-- The taxonomic tree will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+        <div class="w-full">
+            
+    <div class="flex-1 p-4">
+        <div class="container mx-auto px-4 md:px-6 py-4 md:py-8">
+            
+            <div class="mt-16">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Localisation de la parcelle</h2>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="h-96">
+    <div id="map_panelMap" class="w-full h-full"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 mt-4">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Informations générales</h2>
+        
+    </div>
+    <div class="p-4">
+        
+<!-- Information panel content -->
+<div class="space-y-2 md:space-y-3">
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Parcelle</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            Tchingou 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Altitude</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            936 m
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Précipitation annuelle moyenne</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            3 250 mm/an
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Substrat</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            
+            
+            
+            
+            Substrat ultramafique
+            
+            
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Milieu de vie</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            
+            
+            
+            
+            Très humide
+            
+            
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Nombre d'occurrences</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            1 323 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Nombre de familles</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            33 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Nombre d'espèces</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            83 
+            
+        </span>
+    </div>
+    
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Familles dominantes</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Les dix familles botaniques les plus fréquentes de la parcelle
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="top_familiesChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Sous-taxons principaux</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Les dix espèces botaniques les plus fréquentes de la parcelle
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="top_speciesChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Taux identification</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Pourcentage d'occurrences identifiées au niveau de l'espèce
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="species_level_gaugeGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Types de plantes</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distinction selon les grands types de plantes arborescentes
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="taxonomic_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution diamétrique (DBH)</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution des DBH (ou diamètre à 1,3 m) des arbres par classe de diamètre
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="dbh_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Stratification</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution des arbres de la parcelle dans la structure verticale selon la classification de Dawkins (1963)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="strata_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Arbres vivants/morts</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Comptage des arbres vivants et des arbres morts sur pied qui atteignent 10 cm de DBH ou diamètre mesuré à 1,30 m
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<!-- Information panel content -->
+<div class="space-y-2 md:space-y-3">
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Arbres vivants</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            1 323 
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Arbres morts</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            151 
+            
+        </span>
+    </div>
+    
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Hauteur moyenne</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Hauteur moyenne de la canopée calculée à partir de la mesure de la hauteur de 100 arbres appartenant à la strate canopée régulièrement distribués dans le peuplement (1 arbre pour 100 m²)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="heightGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Biomasse</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Biomasse totale de la parcelle selon l'équation de Chave (2005) qui lie hauteur, diamètre et densité de bois de chaque arbre
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="biomassGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Aire basale</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                L'aire basale représente la somme de la section de tous les arbres de la parcelle. Exprimée en m² par hectare, cette valeur donne une estimation de l'occupation des arbres
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="basal_areaGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Densité de bois</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Densité moyenne de bois du peuplement calculé comme la moyenne des densités de bois de chaque arbre de la parcelle
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="wood_densityGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Richesse</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Nombre d'espèces par hectare (Richesse alpha)
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="richnessGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Shannon</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                L’indice de diversité de Shannon prend en compte le nombre d’espèces et l’abondance des individus au sein de chacune de ces espèces
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="shannonGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Simpson</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                L'indice de diversité de Simpson est une fonction de la richesse et de l'abondance de chaque espèce dans laquelle la contribution relative des espèces rares est insignifiante
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="simpsonGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Pielou</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                L'indice d'équitabilité de Pielou représente l'indice de Shannon divisé par la richesse du peuplement. Il permet de mesurer la répartition des individus au sein des espèces, indépendamment de la richesse spécifique.
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="pielouGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    <footer class="bg-green-700 text-white p-4 mt-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white p-2 w-3/5 rounded-lg shadow-md flex justify-center">
+                    <a class='logo' href="https://www.province-nord.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="pn" src="../files/pn_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.province-sud.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/ps_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://endemia.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/endemia_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://amap.cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="amap" src="../files/amap_100.png"></figure>
+                    </a>
+                    <a class='logo' href="http://publish.plantnet-project.org/project/nou" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="herbarium" src="../files/herbarium_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://iac.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="iac" src="../files/iac_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://nouvelle-caledonie.ird.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ird" src="../files/ird_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="cirad" src="../files/cirad_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.ofb.gouv.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ofb" src="../files/ofb_100.png"></figure>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>Niamoto - Portail de la forêt de Nouvelle-Calédonie</p>
+                <a class="inline-block py-2 px-4 text-white no-underline" href="https://github.com/niamoto/niamoto" target="_blank">
+                    <span class="fab fa-github fa-lg" aria-hidden="true"></span> Github
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/vendor/chart/4.4.2_chart.js"></script>
+    <script src="../js/vendor/d3/7.8.5_d3.js"></script>
+    <script src="../js/vendor/jquery/3.6.0_jquery.js"></script>
+    <script src="../js/vendor/lodash/4.17.21_lodash.min.js"></script>
+    <script src="../js/vendor/raphael/2.3.0_raphael.js"></script>
+    <script src="../js/vendor/justgage/1.6.1_justgage.js"></script>
+    <script src="../js/vendor/leaflet/1.9.4_leaflet.js"></script>
+    <script src="../js/vendor/leaflet/1.5.3_leaflet.markercluster.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const buttonContainer = document.getElementById('buttonContainer');
+
+            // Only proceed if the button container exists
+            if (buttonContainer) {
+                const buttonContainerOffset = buttonContainer.offsetTop;
+                const navHeight = 60; // Adjust this value to match your navigation height
+
+                window.onscroll = () => {
+                    if (window.pageYOffset > buttonContainerOffset - navHeight) {
+                        buttonContainer.classList.add('fixed');
+                    } else {
+                        buttonContainer.classList.remove('fixed');
+                    }
+                };
+
+                // Initial check in case the page is loaded scrolled
+                window.onscroll();
+            }
+        });
+    </script>
+    
+    <script>
+        // =====================================
+        // Constants & Initial Setup
+        // =====================================
+        var plot = {"basal_area": {"units": "m\u00b2/ha", "value": "35.9"}, "biomass": {"units": "t/ha", "value": "163.504634373308"}, "dbh_distribution": {"bins": [10, 20, 30, 40, 50, 75, 100, 150, 200, 500], "counts": [0.0, 1046.0, 194.0, 53.0, 16.0, 13.0, 1.0, 0.0, 0.0, 0.0]}, "general_info": {"elevation": {"units": "m", "value": "936"}, "holdridge": {"value": "3"}, "in_um": {"value": "True"}, "nb_families": {"value": "33"}, "nb_species": {"value": "83"}, "occurrences_count": {"value": "1323"}, "plot_name": {"value": "Tchingou"}, "rainfall": {"units": "mm/an", "value": "3250"}}, "geometry": {"coordinates": [164.991062, -20.907664], "type": "Point"}, "height": {"units": "m", "value": "9.6"}, "id": 613, "living_dead_distribution": {"arbres_morts": {"units": "", "value": 151}, "arbres_vivants": {"units": "", "value": 1323}, "counts": [1323, 151], "labels": ["Arbres vivants", "Arbres morts"], "percentages": [89.76, 10.24]}, "locality": "Tchingou", "map_panel": {"features": [{"geometry": {"coordinates": [164.991062, -20.907664], "type": "Point"}, "properties": {}, "type": "Feature"}], "type": "FeatureCollection"}, "pielou": {"units": "", "value": "0.78"}, "plot_id": 613, "richness": {"units": "Nombre d\u0027esp\u00e8ces/ha", "value": 83}, "shannon": {"units": "", "value": "3.43"}, "simpson": {"units": "", "value": "0.93"}, "species_level": {"units": "", "value": "0.9947"}, "strata_distribution": {"counts": [52, 256, 992, 23], "labels": ["Sous-Bois", "Sous-Canop\u00e9e", "Canop\u00e9e", "Emergent"], "percentages": [3.93, 19.35, 74.98, 1.74]}, "taxonomic_distribution": {"counts": [24, 55, 35, 1208], "labels": ["Pteridophytes", "Gymnospermae", "Monocotyledonae", "Dicotyledonae"], "percentages": [1.82, 4.16, 2.65, 91.38]}, "top_families": {"counts": [316.0, 151.0, 86.0, 83.0, 69.0, 65.0, 55.0, 55.0, 52.0, 51.0], "tops": ["Sapindaceae", "Lauraceae", "Balanopaceae", "Myrtaceae", "Araliaceae", "Sapotaceae", "Primulaceae", "Podocarpaceae", "Myodocarpaceae", "Celastraceae"]}, "top_species": {"counts": [284.0, 106.0, 86.0, 53.0, 48.0, 48.0, 47.0, 43.0, 34.0, 29.0], "tops": ["Gongrodiscus bilocularis", "Cryptocarya velutinosa", "Balanops sparsiflora", "Pleioluma rubicunda", "Retrophyllum comptonii", "Nemuaron vieillardii", "Salaciopsis sparsiflora", "Myrsine asymmetrica", "Burretiokentia vieillardii", "Chionanthus brachystachys"]}, "wood_density": {"units": "g/cm3", "value": "0.6829347357584883"}};
+        var mapping = {"group_by": "plot", "widgets": {"basal_area": {"description": "L\u0027aire basale repr\u00e9sente la somme de la section de tous les arbres de la parcelle. Exprim\u00e9e en m\u00b2 par hectare, cette valeur donne une estimation de l\u0027occupation des arbres", "options": {"max": 100, "min": 0, "precision": 1, "sectors": [{"color": "#f02828", "range": [0, 15]}, {"color": "#fe6a00", "range": [15, 30]}, {"color": "#e8dd0f", "range": [30, 45]}, {"color": "#81e042", "range": [45, 60]}, {"color": "#049f50", "range": [60, 76]}], "units": "m\u00b2/ha"}, "source": "basal_area", "title": "Aire basale", "type": "gauge", "value_key": "value"}, "biomass": {"description": "Biomasse totale de la parcelle selon l\u0027\u00e9quation de Chave (2005) qui lie hauteur, diam\u00e8tre et densit\u00e9 de bois de chaque arbre", "options": {"max": 800, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 160]}, {"color": "#fe6a00", "range": [160, 320]}, {"color": "#e8dd0f", "range": [320, 480]}, {"color": "#81e042", "range": [480, 640]}, {"color": "#049f50", "range": [640, 800]}], "units": "t/ha"}, "source": "biomass", "title": "Biomasse", "type": "gauge", "value_key": "value"}, "dbh_distribution": {"datasets": [{"backgroundColor": "#4CAF50", "data_key": "counts", "label": "Occurrences"}], "description": "Distribution des DBH (ou diam\u00e8tre \u00e0 1,3 m) des arbres par classe de diam\u00e8tre", "labels_key": "bins", "options": {"scales": {"x": {"title": {"display": true, "text": "DBH (cm)"}}, "y": {"title": {"display": true, "text": "Nombre d\u0027occurrences"}}}}, "source": "dbh_distribution", "title": "Distribution diam\u00e9trique (DBH)", "type": "bar_chart"}, "general_info": {"fields": [{"label": "Parcelle", "source": "plot_name"}, {"format": "number", "label": "Altitude", "source": "elevation"}, {"format": "number", "label": "Pr\u00e9cipitation annuelle moyenne", "source": "rainfall"}, {"format": "map", "label": "Substrat", "mapping": {"False": "Substrat non-ultramafique", "True": "Substrat ultramafique"}, "source": "in_um"}, {"format": "map", "label": "Milieu de vie", "mapping": {"1": "Sec", "2": "Humide", "3": "Tr\u00e8s humide"}, "source": "holdridge"}, {"format": "number", "label": "Nombre d\u0027occurrences", "source": "occurrences_count"}, {"label": "Nombre de familles", "source": "nb_families"}, {"label": "Nombre d\u0027esp\u00e8ces", "source": "nb_species"}], "layout": "grid", "title": "Informations g\u00e9n\u00e9rales", "type": "info_panel"}, "height": {"description": "Hauteur moyenne de la canop\u00e9e calcul\u00e9e \u00e0 partir de la mesure de la hauteur de 100 arbres appartenant \u00e0 la strate canop\u00e9e r\u00e9guli\u00e8rement distribu\u00e9s dans le peuplement (1 arbre pour 100 m\u00b2)", "options": {"max": 40, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 5]}, {"color": "#fe6a00", "range": [5, 10]}, {"color": "#e8dd0f", "range": [10, 15]}, {"color": "#81e042", "range": [15, 20]}, {"color": "#049f50", "range": [20, 25]}], "units": "m"}, "source": "height", "title": "Hauteur moyenne", "type": "gauge", "value_key": "value"}, "living_dead_distribution": {"description": "Comptage des arbres vivants et des arbres morts sur pied qui atteignent 10 cm de DBH ou diam\u00e8tre mesur\u00e9 \u00e0 1,30 m", "fields": [{"format": "number", "label": "Arbres vivants", "source": "arbres_vivants"}, {"format": "number", "label": "Arbres morts", "source": "arbres_morts"}], "layout": "grid", "title": "Arbres vivants/morts", "type": "info_panel"}, "map_panel": {"layers": [{"id": "plot", "source": "geometry", "style": {"color": "#1fb99d", "fillOpacity": 0, "weight": 2}}], "layout": "full_width", "source": "map_panel", "title": "Localisation de la parcelle", "type": "map_panel"}, "pielou": {"description": "L\u0027indice d\u0027\u00e9quitabilit\u00e9 de Pielou repr\u00e9sente l\u0027indice de Shannon divis\u00e9 par la richesse du peuplement. Il permet de mesurer la r\u00e9partition des individus au sein des esp\u00e8ces, ind\u00e9pendamment de la richesse sp\u00e9cifique.", "options": {"max": 1, "min": 0, "precision": 2, "sectors": [{"color": "#f02828", "range": [0.0, 0.2]}, {"color": "#fe6a00", "range": [0.2, 0.4]}, {"color": "#e8dd0f", "range": [0.4, 0.6]}, {"color": "#81e042", "range": [0.6, 0.8]}, {"color": "#049f50", "range": [0.8, 1.0]}], "units": ""}, "source": "pielou", "title": "Pielou", "type": "gauge", "value_key": "value"}, "richness": {"description": "Nombre d\u0027esp\u00e8ces par hectare (Richesse alpha)", "options": {"max": 130, "min": 0, "precision": 0, "sectors": [{"color": "#f02828", "range": [0, 28]}, {"color": "#fe6a00", "range": [28, 52]}, {"color": "#e8dd0f", "range": [52, 78]}, {"color": "#81e042", "range": [78, 104]}, {"color": "#049f50", "range": [104, 130]}], "units": "Esp\u00e8ces/ha"}, "source": "richness", "title": "Richesse", "type": "gauge", "value_key": "value"}, "shannon": {"description": "L\u2019indice de diversit\u00e9 de Shannon prend en compte le nombre d\u2019esp\u00e8ces et l\u2019abondance des individus au sein de chacune de ces esp\u00e8ces", "options": {"max": 5, "min": 0, "precision": 2, "sectors": [{"color": "#f02828", "range": [0.0, 1.0]}, {"color": "#fe6a00", "range": [1.0, 2.0]}, {"color": "#e8dd0f", "range": [2.0, 3.0]}, {"color": "#81e042", "range": [3.0, 4.0]}, {"color": "#049f50", "range": [4.0, 5.0]}], "units": ""}, "source": "shannon", "title": "Shannon", "type": "gauge", "value_key": "value"}, "simpson": {"description": "L\u0027indice de diversit\u00e9 de Simpson est une fonction de la richesse et de l\u0027abondance de chaque esp\u00e8ce dans laquelle la contribution relative des esp\u00e8ces rares est insignifiante", "options": {"max": 1, "min": 0, "precision": 2, "sectors": [{"color": "#f02828", "range": [0.0, 0.2]}, {"color": "#fe6a00", "range": [0.2, 0.4]}, {"color": "#e8dd0f", "range": [0.4, 0.6]}, {"color": "#81e042", "range": [0.6, 0.8]}, {"color": "#049f50", "range": [0.8, 1.0]}], "units": ""}, "source": "simpson", "title": "Simpson", "type": "gauge", "value_key": "value"}, "species_level_gauge": {"description": "Pourcentage d\u0027occurrences identifi\u00e9es au niveau de l\u0027esp\u00e8ce", "options": {"format": "percentage", "max": 1, "min": 0, "multiplier": 100, "precision": 0, "sectors": [{"color": "#f02828", "range": [0, 0.5]}, {"color": "#fe6a00", "range": [0.5, 0.7]}, {"color": "#e8dd0f", "range": [0.7, 0.85]}, {"color": "#81e042", "range": [0.85, 0.95]}, {"color": "#049f50", "range": [0.95, 1]}], "units": "%"}, "source": "species_level", "title": "Taux identification", "type": "gauge", "value_key": "value"}, "strata_distribution": {"datasets": [{"backgroundColor": ["#90A4AE", "#66BB6A", "#43A047", "#2E7D32"], "borderWidth": 1, "data_key": "counts", "label": "Occurrences"}], "description": "Distribution des arbres de la parcelle dans la structure verticale selon la classification de Dawkins (1963)", "labels_key": "labels", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Nombre d\u0027occurrences"}}, "y": {"reverse": true, "title": {"display": true}}}}, "source": "strata_distribution", "title": "Stratification", "type": "bar_chart"}, "taxonomic_distribution": {"customPlugin": "percentagePlugin", "datasets": [{"backgroundColor": ["#4285F4", "#A8A8A8", "#F4B400", "#0F9D58"], "borderColor": "#ffffff", "borderWidth": 1, "data_key": "percentages", "label": "Types de plantes"}], "description": "Distinction selon les grands types de plantes arborescentes", "labels_key": "labels", "options": {"animation": {"animateRotate": true, "animateScale": true}, "cutout": "40%", "elements": {"arc": {"borderWidth": 0}}, "layout": {"padding": {"top": 10}}, "plugins": {"legend": {"align": "center", "display": true, "labels": {"boxWidth": 10, "color": "#666666", "font": {"size": 12}, "padding": 15, "usePointStyle": true}, "position": "right"}}}, "source": "taxonomic_distribution", "title": "Types de plantes", "type": "doughnut_chart"}, "top_families": {"datasets": [{"data_key": "counts", "generateColors": true, "label": "Occurrences"}], "description": "Les dix familles botaniques les plus fr\u00e9quentes de la parcelle", "labels_key": "tops", "options": {"indexAxis": "y", "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "responsive": true, "scales": {"x": {"beginAtZero": true, "grid": {"display": true, "drawBorder": true, "drawOnChartArea": true, "drawTicks": true}, "ticks": {"stepSize": 5}, "title": {"display": true, "text": "Nombre d\u0027occurrences"}}, "y": {"grid": {"display": false}}}}, "sortData": true, "source": "top_families", "title": "Familles dominantes", "type": "bar_chart"}, "top_species": {"datasets": [{"data_key": "counts", "generateColors": true, "label": "Occurrences"}], "description": "Les dix esp\u00e8ces botaniques les plus fr\u00e9quentes de la parcelle", "labels_key": "tops", "options": {"indexAxis": "y", "maintainAspectRatio": false, "plugins": {"legend": {"display": false}}, "responsive": true, "scales": {"x": {"beginAtZero": true, "grid": {"display": true, "drawBorder": true, "drawOnChartArea": true, "drawTicks": true}, "ticks": {"stepSize": 5}, "title": {"display": true, "text": "Nombre d\u0027occurrences"}}, "y": {"grid": {"display": false}}}}, "sortData": true, "source": "top_species", "title": "Sous-taxons principaux", "type": "bar_chart"}, "wood_density": {"description": "Densit\u00e9 moyenne de bois du peuplement calcul\u00e9 comme la moyenne des densit\u00e9s de bois de chaque arbre de la parcelle", "options": {"max": 1.2, "min": 0, "sectors": [{"color": "#f02828", "range": [0.0, 0.24]}, {"color": "#fe6a00", "range": [0.24, 0.48]}, {"color": "#e8dd0f", "range": [0.48, 0.72]}, {"color": "#81e042", "range": [0.72, 0.96]}, {"color": "#049f50", "range": [0.96, 1.2]}], "units": "g/cm\u00b3"}, "source": "wood_density", "title": "Densit\u00e9 de bois", "type": "gauge", "value_key": "value"}}};
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            loadPlotList(); // Chargement de la liste des plots
+            //setTimeout(initMap, 0.5);
+
+            // Initialize all widgets
+            initializeWidgets(mapping.widgets, plot);
+        });
+
+        // =====================================
+        // Sidebar Management
+        // =====================================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gestion du toggle du menu mobile
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const shapeTree = document.getElementById('plot-list-container');
+
+            if (sidebarToggle && shapeTree) {
+                sidebarToggle.addEventListener('click', function () {
+                    // Toggle la classe hidden sur le plot-list-container
+                    shapeTree.classList.toggle('hidden');
+
+                    // Toggle une classe pour indiquer l'état ouvert/fermé
+                    this.classList.toggle('menu-open');
+
+                    // Change l'icône si besoin
+                    const svg = this.querySelector('svg');
+                    if (this.classList.contains('menu-open')) {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+                    } else {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+
+                // Fermer le menu au clic en dehors
+                document.addEventListener('click', function (e) {
+                    if (!sidebarToggle.contains(e.target) &&
+                        !shapeTree.contains(e.target) &&
+                        !shapeTree.classList.contains('hidden') &&
+                        window.innerWidth < 1024) {
+                        shapeTree.classList.add('hidden');
+                        sidebarToggle.classList.remove('menu-open');
+                        const svg = sidebarToggle.querySelector('svg');
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+            }
+        });
+
+        // =====================================
+        // Widget Management
+        // =====================================
+        function initializeWidgets(widgets, stats) {
+            // Mapping des types vers leurs fonctions d'initialisation
+            const initializerMap = {
+                'bar_chart': initChart,
+                'line_chart': initChart,
+                'pie_chart': initChart,
+                'doughnut_chart': initChart,
+                'gauge': initChart,
+                'map_panel': initMap
+            };
+
+            Object.entries(widgets)
+                .filter(([_, config]) => config.type in initializerMap)  // Ignore les types non gérés
+                .forEach(([widgetKey, config]) => {
+                    // Génère l'ID du widget automatiquement si non spécifié
+                    const suffix = config.type.includes('chart') ? 'Chart' :
+                        config.type === 'gauge' ? 'Gauge' : 'Map';
+                    const widgetId = config.id || `${widgetKey}${suffix}`;
+
+                    // Pour les cartes, on passe directement stats
+                    if (config.type === 'map_panel') {
+                        initializerMap[config.type](widgetId, stats, config);
+                        return;
+                    }
+
+                    // Pour les autres widgets, on vérifie la source dans stats
+                    const data = _.get(stats, config.source);
+                    if (!data) return;  // Skip si pas de données
+
+                    // Initialise le widget avec la fonction appropriée
+                    initializerMap[config.type](widgetId, data, config);
+                });
+        }
+
+        // =====================================
+        // Map Management
+        // =====================================
+
+        function initMap(mapId, data, mapConfig) {
+            const mapContainer = document.getElementById(mapId);
+            if (!mapContainer) return;
+
+            var geometry = plot.geometry;
+
+            // Base layers with backup options
+            const baseLayers = {
+                "Satellite": L.tileLayer.wms("https://carto10.gouv.nc/arcgis/services/fond_imagerie/MapServer/WMSServer", {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                "Carte": L.tileLayer.wms('https://carto.gouv.nc/arcgis/services/fond_cartographie/MapServer/WMSServer', {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                // Backup map sources (global)
+                "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }),
+                // Alternative satellite imagery
+                "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                })
+            };
+
+            // Tracker to check if primary map sources are available
+            let primaryLayerAvailable = false;
+            let primaryLayersLoaded = 0;
+            const totalPrimaryLayers = 2; // Number of primary layers (Satellite and Carte)
+
+            // Function to check layer availability
+            function checkLayersAvailability() {
+                if (primaryLayersLoaded >= totalPrimaryLayers && !primaryLayerAvailable) {
+                    // No primary map source is available, switch to ESRI Satellite
+                    map.removeLayer(baseLayers["Satellite"]);
+                    map.addLayer(baseLayers["ESRI Satellite"]);
+                    // Force the primaryLayersLoaded to avoid further checks
+                    primaryLayersLoaded = totalPrimaryLayers;
+                }
+            }
+
+            // Create map with Satellite as default layer
+            const map = L.map(mapId, {
+                layers: [baseLayers["Satellite"]],
+                scrollWheelZoom: false
+            });
+
+            // Add layer control
+            L.control.layers(baseLayers).addTo(map);
+            map.attributionControl.setPrefix(false);
+
+            // Set a timeout to automatically switch to backup layer if primary layers don't load quickly
+            let mapLoadTimeout = setTimeout(function() {
+                if (!primaryLayerAvailable) {
+                    map.removeLayer(baseLayers["Satellite"]);
+                    map.addLayer(baseLayers["ESRI Satellite"]);
+                    // Force the primaryLayersLoaded to avoid further checks
+                    primaryLayersLoaded = totalPrimaryLayers;
+                }
+            }, 3000); // 3 seconds timeout
+
+            // Listen for tile loading events on primary layers
+            baseLayers["Satellite"].on('tileerror', function(error) {
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Satellite"].on('load', function() {
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            baseLayers["Carte"].on('tileerror', function(error) {
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Carte"].on('load', function() {
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            // Display plot geometry if available
+            if (geometry) {
+                const geoJsonLayer = L.geoJSON(geometry, {
+                    style: function () {
+                        return {
+                            color: '#228b22', // Border color
+                            weight: 2,       // Border width
+                            fillColor: '#228b22cc', // Fill color with opacity
+                            fillOpacity: 0.8 // Fill opacity
+                        };
+                    }
+                }).addTo(map);
+                map.fitBounds(geoJsonLayer.getBounds());
+                var currentZoom = map.getZoom();
+                map.setZoom(currentZoom - 3);
+            } else {
+                // Set default view if no geometry is found
+                map.setView([-21.291237, 165.516418], 8);
+            }
+        }
+
+        function loadPlotList() {
+            var plotListElement = document.getElementById("plot-list");
+            plotList.forEach(function (plotItem) {
+                var li = document.createElement("li");
+                var a = document.createElement("a");
+                a.href = "../plot/" + plotItem.id + ".html";
+                a.textContent = plotItem.name;
+                a.className = "plot-link" + (plotItem.id === plot.id ? " active" : "");
+                li.appendChild(a);
+                plotListElement.appendChild(li);
+            });
+        }
+
+
+        // =====================================
+        // Chart Type Management & Data Processing
+        // =====================================
+        /**
+         * Maps widget types to Chart.js chart types
+         * @param {string} widgetType - Type from widget configuration
+         * @returns {string} Corresponding Chart.js type
+         */
+        function getChartTypeFromWidgetType(widgetType) {
+            const typeMapping = {
+                'doughnut_chart': 'doughnut',
+                'pie_chart': 'pie',
+                'bar_chart': 'bar',
+                'line_chart': 'line',
+                'stacked_bar_chart': 'bar',
+                'gauge': 'gauge'
+            };
+            return typeMapping[widgetType] || 'bar'; //
+        }
+
+        /**
+         * Prepares data for chart rendering, including sorting and transformation
+         * @param {Object} config - Widget configuration
+         * @param {Object} data - Raw data for the chart
+         * @returns {Object} Formatted data for Chart.js
+         */
+        function prepareChartData(config, data) {
+            const datasets = [];
+            let labels = [];
+
+            if (!config.datasets || !Array.isArray(config.datasets)) {
+                return {labels: [], datasets: []};
+            }
+
+            // Get and sort data if needed
+            let sortedData = data;
+            let sortedIndices = null;
+            if (config.sortBy) {
+                const values = _.get(data, config.sortBy, []);
+                sortedIndices = values.map((v, i) => i);
+                sortedIndices.sort((a, b) => values[a] - values[b]);
+
+                // Create new sorted data object
+                sortedData = Object.keys(data).reduce((acc, key) => {
+                    if (Array.isArray(data[key])) {
+                        acc[key] = sortedIndices.map(i => data[key][i]);
+                    } else {
+                        acc[key] = data[key];
+                    }
+                    return acc;
+                }, {});
+            }
+
+            // Get labels before dataset processing
+            labels = config.labels_key ?
+                _.get(sortedData, config.labels_key, []).map(v => v.toString()) :
+                config.labels ? config.labels :
+                    [];
+
+            config.datasets.forEach((datasetConfig) => {
+                const dataset = {
+                    label: datasetConfig.label,
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: datasetConfig.borderWidth ?? 1,
+                    fill: datasetConfig.fill ?? false,
+                    tension: datasetConfig.tension ?? 0,
+                    stack: datasetConfig.stack,
+                    pointRadius: datasetConfig.pointRadius ?? undefined,
+                    pointHoverRadius: datasetConfig.pointHoverRadius ?? undefined,
+                    pointHoverBackgroundColor: datasetConfig.pointHoverBackgroundColor ?? undefined,
+                };
+
+                // Process data
+                dataset.data = processDataset(datasetConfig, sortedData, config.type);
+
+                // Transform data if needed
+                if (datasetConfig.transformData) {
+                    dataset.data = dataset.data.map((value, index) =>
+                        transformDataValue(value, datasetConfig.transformData, index, sortedData)
+                    );
+                }
+
+                // Process colors after data is loaded
+                processColors(dataset, datasetConfig, labels);
+
+                datasets.push(dataset);
+            });
+
+            return {labels, datasets};
+        }
+
+        /**
+         * Prepares chart options by merging defaults with configuration
+         * Handles scales, plugins, and callbacks configuration
+         * @param {Object} config - Widget configuration
+         * @returns {Object} Complete Chart.js options
+         */
+        function prepareChartOptions(config) {
+            // Default options restent les mêmes
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: false,
+                            boxWidth: 15,
+                        },
+                    },
+                    title: {
+                        display: false,
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                },
+                scales: {},
+            };
+
+            // Merge custom options with defaults
+            const options = _.merge({}, defaultOptions, config.options);
+
+            // Handle scales configuration
+            if (config.options && config.options.scales) {
+                Object.keys(options.scales || {}).forEach(scaleKey => {
+                    const scale = options.scales[scaleKey];
+                    if (scale.ticks && scale.ticks.callback) {
+                        const callbackName = scale.ticks.callback;
+                        if (typeof window[callbackName] === 'function') {
+                            scale.ticks.callback = window[callbackName];
+                        }
+                    }
+                });
+            }
+
+            // Handle stacked charts
+            if (config.type === 'stacked_bar_chart' || (config.options && config.options.stacked)) {
+                if (options.scales.x) options.scales.x.stacked = true;
+                if (options.scales.y) options.scales.y.stacked = true;
+            }
+
+            // Process plugin callbacks
+            if (options.plugins) {
+                for (const pluginKey in options.plugins) {
+                    const plugin = options.plugins[pluginKey];
+                    if (plugin.callbacks) {
+                        for (const callbackKey in plugin.callbacks) {
+                            const callbackName = plugin.callbacks[callbackKey];
+                            if (typeof callbackName === 'string' && typeof window[callbackName] === 'function') {
+                                plugin.callbacks[callbackKey] = window[callbackName];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return options;
+        }
+
+        /**
+         * Process dataset values according to chart type
+         */
+        function processDataset(datasetConfig, data, chartType) {
+            let processedData = [];
+
+            if (datasetConfig.data_keys && Array.isArray(datasetConfig.data_keys)) {
+                processedData = datasetConfig.data_keys.map(key => {
+                    const value = parseFloat(_.get(data, key, 0)) || 0;
+                    return formatValue(value, chartType);
+                });
+            } else if (datasetConfig.data_key) {
+                const values = _.get(data, datasetConfig.data_key, []);
+                processedData = Array.isArray(values) ?
+                    values.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(values) || 0, chartType)];
+            } else if (datasetConfig.data) {
+                processedData = Array.isArray(datasetConfig.data) ?
+                    datasetConfig.data.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(datasetConfig.data) || 0, chartType)];
+            }
+
+            return processedData;
+        }
+
+        /**
+         * Process colors for chart datasets
+         */
+        function processColors(dataset, datasetConfig, labels) {
+            if (datasetConfig.generateColors) {
+                // Génère autant de couleurs que de données
+                dataset.backgroundColor = generateColors(dataset.data.length);
+                dataset.borderColor = dataset.backgroundColor;
+                return;
+            }
+
+            if (datasetConfig.color_mapping && labels) {
+                dataset.backgroundColor = Array.isArray(dataset.data) ?
+                    dataset.data.map((_, index) => {
+                        const label = labels[index];
+                        return datasetConfig.color_mapping[label] || '#000000';
+                    }) :
+                    datasetConfig.color_mapping[labels[0]] || '#000000';
+
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else if (datasetConfig.backgroundColors) {
+                dataset.backgroundColor = datasetConfig.backgroundColors;
+                dataset.borderColor = datasetConfig.borderColor || datasetConfig.backgroundColors;
+            } else if (datasetConfig.backgroundColor) {
+                dataset.backgroundColor = datasetConfig.backgroundColor;
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else {
+                dataset.backgroundColor = '#000000';
+                dataset.borderColor = '#000000';
+            }
+        }
+
+        function generateColors(count, defaultColor) {
+            if (defaultColor) {
+                return Array(count).fill(defaultColor);
+            }
+
+            // Function to convert HSL to RGB
+            function hslToRgb(h, s, l) {
+                let r, g, b;
+
+                if (s === 0) {
+                    r = g = b = l; // achromatic
+                } else {
+                    const hue2rgb = (p, q, t) => {
+                        if (t < 0) t += 1;
+                        if (t > 1) t -= 1;
+                        if (t < 1 / 6) return p + (q - p) * 6 * t;
+                        if (t < 1 / 2) return q;
+                        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                        return p;
+                    };
+
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1 / 3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1 / 3);
+                }
+
+                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+            }
+
+            // Function to convert RGB to Hex
+            function rgbToHex(r, g, b) {
+                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
+
+            // Generate harmonious colors
+            return Array.from({length: count}, (_, i) => {
+                // Use golden ratio to spread hues evenly
+                const hue = (i * 0.618033988749895) % 1;
+
+                // Vary saturation slightly
+                const saturation = 0.5 + (i % 3) * 0.1;
+
+                // Vary lightness to create contrast
+                const lightness = 0.4 + (i % 2) * 0.2;
+
+                const [r, g, b] = hslToRgb(hue, saturation, lightness);
+                return rgbToHex(r, g, b);
+            });
+        }
+
+        /**
+         * Initialize chart widgets including gauges
+         * Handles both Chart.js charts and JustGage gauges
+         */
+        function initChart(widgetId, data, config) {
+            const ctx = document.getElementById(widgetId);
+            if (!ctx) return;
+
+            const chartType = getChartTypeFromWidgetType(config.type);
+
+            if (chartType === 'gauge') {
+                const rawValue = _.get(data, config.value_key);
+
+                if (rawValue === null || rawValue === undefined || isNaN(rawValue)) {
+                    if (ctx) {
+                        ctx.className = 'flex items-center justify-center h-64';
+                        ctx.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    }
+                    return;
+                }
+
+                // Déterminer si nous devons afficher un pourcentage
+                const isPercentage = config.options.format === 'percentage';
+                const multiplier = config.options.multiplier || 1;
+                const precision = config.options.precision !== undefined ? config.options.precision : 1;
+
+                // Calculer la valeur à afficher - Ensure it's a number first
+                let value;
+                if (isPercentage) {
+                    // Pour les pourcentages, multiplier par 100 et arrondir selon la précision demandée
+                    const numericValue = parseFloat(rawValue) || 0;
+                    value = parseFloat((numericValue * multiplier).toFixed(precision));
+                } else {
+                    // Always ensure we have a numeric value before calling toFixed
+                    const numericValue = parseFloat(rawValue) || 0;
+                    value = parseFloat(numericValue.toFixed(precision));
+                }
+
+                const gaugeOptions = {
+                    id: widgetId,
+                    value: value,
+                    min: config.options.min,
+                    max: config.options.max,
+                    label: config.options.units,
+                    title: config.title,
+                    gaugeColor: "#eee",
+                    levelColors: config.options.sectors.map(s => s.color),
+                    decimals: config.options.precision !== undefined ? config.options.precision : 1,
+                    gaugeWidthScale: 0.6,
+                    counter: true,
+                    pointer: true,
+                    pointerOptions: {
+                        toplength: -15,
+                        bottomlength: 10,
+                        bottomwidth: 12,
+                        color: '#8E8E93',
+                        stroke: '#fff',
+                        stroke_width: 3,
+                        stroke_linecap: 'round'
+                    },
+                    // Default options that don't need to be in config
+                    showMinMax: false,
+                    donut: false,
+                    relativeGaugeSize: true,
+                    // Font colors that don't need to be in config
+                    titleFontColor: "#333",
+                    valueFontColor: "#333",
+                    labelFontColor: "#666"
+                };
+
+                const gauge = new JustGage(gaugeOptions);
+
+                // Add value text below
+                const valueText = document.createElement('p');
+                valueText.className = 'text-center mt-5 text-lg text-gray-700';
+                ctx.parentNode.appendChild(valueText);
+
+                return;
+            }
+
+            // Pour les autres types de graphiques...
+            const chartData = prepareChartData(config, data);
+
+            // Vérifier si les données sont vides
+            let hasData = false;
+
+            if (chartData && chartData.datasets) {
+                // Vérifier si au moins un dataset contient des données
+                hasData = chartData.datasets.some(dataset => {
+                    // Vérifier si le dataset a des données et qu'elles ne sont pas toutes nulles/0
+                    return dataset.data &&
+                           dataset.data.length > 0 &&
+                           dataset.data.some(value => value !== null && value !== undefined && value !== 0);
+                });
+            }
+
+            // Si aucune donnée n'est disponible, afficher un message
+            if (!hasData) {
+                if (ctx) {
+                    // Remplacer le canvas par un div avec le message
+                    const container = ctx.parentNode;
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'flex items-center justify-center h-64';
+                    messageDiv.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    container.replaceChild(messageDiv, ctx);
+                }
+                return;
+            }
+
+            const chartOptions = prepareChartOptions(config);
+            const plugins = [];
+
+            if (config.customPlugin && typeof window[config.customPlugin] === 'object') {
+                plugins.push(window[config.customPlugin]);
+            }
+
+            new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: chartOptions,
+                plugins: plugins,
+            });
+        }
+
+        // =====================================
+        // Value Formatters
+        // =====================================
+        // Various formatters for different data types
+        window.formatLogValue = function (value) {
+            return value.toString();
+        };
+        window.formatSurfaceValue = function (value) {
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(0) + 'k';
+            }
+            return value;
+        };
+        window.formatPercentage = function (value) {
+            return value.toFixed(0) + '%';
+        };
+        window.formatForestTypeTooltip = function (context) {
+            return context.dataset.label + ': ' + context.raw.toFixed(1) + '%';
+        };
+        window.formatTooltipLabel = function (context) {
+            return `${context.label}: ${context.parsed}%`;
+        };
+        window.formatForestTypeElevationTooltip = function (context) {
+            const value = Math.round(context.raw);  // ou .toFixed(0) pour aucune décimale
+            return context.dataset.label + ': ' + value + '%';
+        };
+        window.formatAbsoluteValue = function (value) {
+            // Si c'est zéro, on l'affiche au centre
+            if (value === 0) return '0';
+            // Pour les autres valeurs, on affiche la valeur absolue
+            return Math.abs(value).toString();
+        };
+
+        window.formatForestCoverTooltip = function (context) {
+            const label = context.dataset.label;
+            const value = Math.abs(context.raw).toFixed(1);
+            return `${label}: ${value}%`;
+        };
+
+        function transformDataValue(value, transform, valueIndex, allData) {
+            if (!transform) return value;
+
+            switch (transform) {
+                case 'negateValues':
+                    return isNaN(value) ? 0 : -value;
+                case 'toPercentage':
+                    return isNaN(value) ? 0 : value * 100;
+                case 'stackedPercentage':
+                    const total = ['secondaire', 'mature', 'coeur'].reduce((sum, key) =>
+                        sum + (allData[key] ? allData[key][valueIndex] : 0), 0);
+                    return total === 0 ? 0 : (value / total * 100);
+                default:
+                    return value;
+            }
+        }
+
+        function formatValue(value, chartType) {
+            switch (chartType) {
+                case 'doughnut_chart':
+                case 'pie_chart':
+                    return Number(value);
+                default:
+                    return value;
+            }
+        }
+
+        // =====================================
+        // Custom Plugins
+        // =====================================
+        /**
+         * Custom plugin for drawing labels on doughnut charts
+         */
+        window.customLabels = {
+            id: 'customLabels',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = '11px system-ui';
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center';
+
+                const datasets = chart.data.datasets;
+                const meta = chart.getDatasetMeta(0);
+                const centerX = meta.data[0].x;
+                const centerY = meta.data[0].y;
+
+                datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    const percentage = dataset.data[0];
+                    const element = meta.data[0];
+
+                    const percentageAngle = -Math.PI + 0.2;
+                    const radius = (element.innerRadius + element.outerRadius) / 2;
+                    const x = centerX + Math.cos(percentageAngle) * radius;
+                    const y = centerY + Math.sin(percentageAngle) * radius;
+
+                    ctx.fillText(percentage.toFixed(1) + '%', x, y);
+
+                    // Affichage du label
+                    ctx.fillText(dataset.label, centerX, centerY + element.outerRadius - 10);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        /**
+         * Custom plugin for drawing percentage labels on forest type charts
+         */
+        window.forestTypeLabelsPlugin = {
+            id: 'text',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                chart.data.datasets.forEach(function (dataset, i) {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach(function (element, index) {
+                        const value = dataset.data[index];
+                        const position = element.getCenterPoint();
+
+                        // Draw value
+                        ctx.save();
+                        ctx.fillStyle = '#000000';
+                        ctx.font = '12px system-ui';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(value.toFixed(1) + '%', position.x, position.y);
+                        ctx.restore();
+                    });
+                });
+            }
+        };
+
+        /**
+         * Custom plugin for drawing percentage labels on taxonomic distribution chart
+         */
+        window.percentagePlugin = {
+            id: 'percentagePlugin',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+
+                // Vérifier si c'est un graphique circulaire ou en barres
+                if (chart.config.type === 'doughnut' || chart.config.type === 'pie') {
+                    // Code original pour les graphiques circulaires
+                    chart.data.datasets.forEach(function (dataset, i) {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach(function (element, index) {
+                            // Ne pas afficher si la valeur est trop petite
+                            const value = dataset.data[index];
+                            if (value < 2) return; // Skip small values
+
+                            // Calcul de la position pour l'étiquette
+                            const angle = element.startAngle + (element.endAngle - element.startAngle) / 2;
+                            const radius = (element.innerRadius + element.outerRadius) / 2;
+                            const x = element.x + Math.cos(angle) * radius * 0.7;
+                            const y = element.y + Math.sin(angle) * radius * 0.7;
+
+                            // Dessiner le pourcentage
+                            ctx.save();
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.font = 'bold 14px system-ui';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+
+                            // Ajouter un contour noir pour améliorer la lisibilité
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.lineJoin = 'round';
+                            ctx.strokeText(value.toFixed(1) + '%', x, y);
+                            ctx.fillText(value.toFixed(1) + '%', x, y);
+
+                            ctx.restore();
+                        });
+                    });
+                } else if (chart.config.type === 'bar') {
+                    // Nouveau code pour les graphiques en barres
+                    chart.data.datasets.forEach(function (dataset, i) {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach(function (element, index) {
+                            const value = dataset.data[index];
+                            if (value < 2) return; // Skip small values
+
+                            // Obtenir les dimensions et la position de la barre
+                            const { x, y, width, height } = element.getProps(['x', 'y', 'width', 'height']);
+
+                            // Calculer le centre de la barre
+                            let centerX, centerY;
+
+                            // Vérifier si c'est un graphique horizontal ou vertical
+                            if (chart.options.indexAxis === 'y') {
+                                // Graphique horizontal
+                                centerX = x + width / 2;
+                                centerY = y;
+                            } else {
+                                // Graphique vertical
+                                centerX = x;
+                                centerY = y + height / 2;
+                            }
+
+                            // Dessiner le pourcentage
+                            ctx.save();
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.font = 'bold 14px system-ui';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.lineJoin = 'round';
+                            ctx.strokeText(value.toFixed(1) + '%', centerX, centerY);
+                            ctx.fillText(value.toFixed(1) + '%', centerX, centerY);
+                            ctx.restore();
+                        });
+                    });
+                }
+            }
+        };
+    </script>
+
+</body>
+</html>

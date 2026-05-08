@@ -1,0 +1,232 @@
+{
+    "id": 10,
+    "locality": "For\u00eat Plate P12",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.12036133,
+            -21.14814186
+        ]
+    },
+    "plot_id": 10,
+    "general_info": {
+        "plot_name": {
+            "value": "For\u00eat Plate P12"
+        },
+        "elevation": {
+            "value": "507",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "1830",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "True"
+        },
+        "nb_families": {
+            "value": "41"
+        },
+        "nb_species": {
+            "value": "104"
+        },
+        "occurrences_count": {
+            "value": "919"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.12036133,
+                        -21.14814186
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Sapindaceae",
+            "Primulaceae",
+            "Ebenaceae",
+            "Proteaceae",
+            "Moraceae",
+            "Myrtaceae",
+            "Calophyllaceae",
+            "Clusiaceae",
+            "Lauraceae",
+            "Annonaceae"
+        ],
+        "counts": [
+            111.0,
+            97.0,
+            74.0,
+            60.0,
+            54.0,
+            51.0,
+            49.0,
+            43.0,
+            37.0,
+            34.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Myrsine citrifolia",
+            "Virotia leptophylla",
+            "Cupaniopsis petiolulata",
+            "Garcinia densiflora",
+            "Calophyllum caledonicum",
+            "Xylopia vieillardii",
+            "Diospyros samoensis",
+            "Chionanthus brachystachys",
+            "Sparattosyce balansae",
+            "Syzygium macranthum"
+        ],
+        "counts": [
+            85.0,
+            44.0,
+            44.0,
+            37.0,
+            35.0,
+            32.0,
+            32.0,
+            30.0,
+            28.0,
+            28.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            34.0,
+            519.0,
+            184.0,
+            88.0,
+            40.0,
+            38.0,
+            13.0,
+            3.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            218,
+            342,
+            339,
+            20
+        ],
+        "percentages": [
+            23.72,
+            37.21,
+            36.89,
+            2.18
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            0,
+            16,
+            0,
+            900
+        ],
+        "percentages": [
+            0.0,
+            1.75,
+            0.0,
+            98.25
+        ]
+    },
+    "species_level": {
+        "value": "0.9837",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            919,
+            35
+        ],
+        "percentages": [
+            96.33,
+            3.67
+        ],
+        "arbres_vivants": {
+            "value": 919,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 35,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "18.2",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6728974299191747",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "52.8",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 104,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.95",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.85",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.97",
+        "units": ""
+    },
+    "biomass": {
+        "value": "416.806709475504",
+        "units": "t/ha"
+    }
+}

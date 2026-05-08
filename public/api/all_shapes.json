@@ -1,0 +1,539 @@
+{
+    "total": 89,
+    "shapes": [
+        {
+            "id": 1,
+            "name": "PROVINCE NORD",
+            "type": "provinces",
+            "endpoint": "/api/shape/1.json"
+        },
+        {
+            "id": 2,
+            "name": "PROVINCE SUD",
+            "type": "provinces",
+            "endpoint": "/api/shape/2.json"
+        },
+        {
+            "id": 3,
+            "name": "MONT DORE",
+            "type": "communes",
+            "endpoint": "/api/shape/3.json"
+        },
+        {
+            "id": 4,
+            "name": "LA FOA",
+            "type": "communes",
+            "endpoint": "/api/shape/4.json"
+        },
+        {
+            "id": 5,
+            "name": "POUM",
+            "type": "communes",
+            "endpoint": "/api/shape/5.json"
+        },
+        {
+            "id": 6,
+            "name": "OUEGOA",
+            "type": "communes",
+            "endpoint": "/api/shape/6.json"
+        },
+        {
+            "id": 7,
+            "name": "MOINDOU",
+            "type": "communes",
+            "endpoint": "/api/shape/7.json"
+        },
+        {
+            "id": 8,
+            "name": "SARRAMEA",
+            "type": "communes",
+            "endpoint": "/api/shape/8.json"
+        },
+        {
+            "id": 9,
+            "name": "POUEBO",
+            "type": "communes",
+            "endpoint": "/api/shape/9.json"
+        },
+        {
+            "id": 10,
+            "name": "YATE",
+            "type": "communes",
+            "endpoint": "/api/shape/10.json"
+        },
+        {
+            "id": 11,
+            "name": "PAITA",
+            "type": "communes",
+            "endpoint": "/api/shape/11.json"
+        },
+        {
+            "id": 12,
+            "name": "VOH",
+            "type": "communes",
+            "endpoint": "/api/shape/12.json"
+        },
+        {
+            "id": 13,
+            "name": "NOUMEA",
+            "type": "communes",
+            "endpoint": "/api/shape/13.json"
+        },
+        {
+            "id": 14,
+            "name": "CANALA",
+            "type": "communes",
+            "endpoint": "/api/shape/14.json"
+        },
+        {
+            "id": 15,
+            "name": "POINDIMIE",
+            "type": "communes",
+            "endpoint": "/api/shape/15.json"
+        },
+        {
+            "id": 16,
+            "name": "FARINO",
+            "type": "communes",
+            "endpoint": "/api/shape/16.json"
+        },
+        {
+            "id": 17,
+            "name": "ILE DES PINS",
+            "type": "communes",
+            "endpoint": "/api/shape/17.json"
+        },
+        {
+            "id": 18,
+            "name": "KONE",
+            "type": "communes",
+            "endpoint": "/api/shape/18.json"
+        },
+        {
+            "id": 19,
+            "name": "POYA",
+            "type": "communes",
+            "endpoint": "/api/shape/19.json"
+        },
+        {
+            "id": 20,
+            "name": "HIENGHENE",
+            "type": "communes",
+            "endpoint": "/api/shape/20.json"
+        },
+        {
+            "id": 21,
+            "name": "DUMBEA",
+            "type": "communes",
+            "endpoint": "/api/shape/21.json"
+        },
+        {
+            "id": 22,
+            "name": "BOURAIL",
+            "type": "communes",
+            "endpoint": "/api/shape/22.json"
+        },
+        {
+            "id": 23,
+            "name": "PONERIHOUEN",
+            "type": "communes",
+            "endpoint": "/api/shape/23.json"
+        },
+        {
+            "id": 24,
+            "name": "KAALA GOMEN",
+            "type": "communes",
+            "endpoint": "/api/shape/24.json"
+        },
+        {
+            "id": 25,
+            "name": "KOUMAC",
+            "type": "communes",
+            "endpoint": "/api/shape/25.json"
+        },
+        {
+            "id": 26,
+            "name": "KOUAOUA",
+            "type": "communes",
+            "endpoint": "/api/shape/26.json"
+        },
+        {
+            "id": 27,
+            "name": "HOUAILOU",
+            "type": "communes",
+            "endpoint": "/api/shape/27.json"
+        },
+        {
+            "id": 28,
+            "name": "POUEMBOUT",
+            "type": "communes",
+            "endpoint": "/api/shape/28.json"
+        },
+        {
+            "id": 29,
+            "name": "BELEP",
+            "type": "communes",
+            "endpoint": "/api/shape/29.json"
+        },
+        {
+            "id": 30,
+            "name": "TOUHO",
+            "type": "communes",
+            "endpoint": "/api/shape/30.json"
+        },
+        {
+            "id": 31,
+            "name": "BOULOUPARIS",
+            "type": "communes",
+            "endpoint": "/api/shape/31.json"
+        },
+        {
+            "id": 32,
+            "name": "THIO",
+            "type": "communes",
+            "endpoint": "/api/shape/32.json"
+        },
+        {
+            "id": 33,
+            "name": "Parc des Grandes Foug\u00e8res",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/33.json"
+        },
+        {
+            "id": 34,
+            "name": "Nod\u00e9la",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/34.json"
+        },
+        {
+            "id": 35,
+            "name": "Parc de la C\u00f4te Oubli\u00e9e",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/35.json"
+        },
+        {
+            "id": 36,
+            "name": "For\u00eat de Saille",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/36.json"
+        },
+        {
+            "id": 37,
+            "name": "Parc provincial de la Rivi\u00e8re bleue",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/37.json"
+        },
+        {
+            "id": 38,
+            "name": "Parc Municipal du Ouen Toro - Albert Etuv\u00e9 et Lucien Audet",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/38.json"
+        },
+        {
+            "id": 39,
+            "name": "Mont Do",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/39.json"
+        },
+        {
+            "id": 40,
+            "name": "Parc zoologique et forestier Michel Corbasson",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/40.json"
+        },
+        {
+            "id": 41,
+            "name": "For\u00eat cach\u00e9e",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/41.json"
+        },
+        {
+            "id": 42,
+            "name": "Vall\u00e9e de la Thy",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/42.json"
+        },
+        {
+            "id": 43,
+            "name": "Haute Pourina",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/43.json"
+        },
+        {
+            "id": 44,
+            "name": "Montagne des sources",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/44.json"
+        },
+        {
+            "id": 45,
+            "name": "Haute Yat\u00e9",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/45.json"
+        },
+        {
+            "id": 46,
+            "name": "\u00cele Lepr\u00e9dour",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/46.json"
+        },
+        {
+            "id": 47,
+            "name": "Chutes de la Madeleine",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/47.json"
+        },
+        {
+            "id": 48,
+            "name": "Cap N'dua",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/48.json"
+        },
+        {
+            "id": 49,
+            "name": "Pic Ningua",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/49.json"
+        },
+        {
+            "id": 50,
+            "name": "Pic du Pin",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/50.json"
+        },
+        {
+            "id": 51,
+            "name": "For\u00eat Nord",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/51.json"
+        },
+        {
+            "id": 52,
+            "name": "Haute Dumb\u00e9a",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/52.json"
+        },
+        {
+            "id": 53,
+            "name": "Netcha",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/53.json"
+        },
+        {
+            "id": 54,
+            "name": "Barrage de Yat\u00e9",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/54.json"
+        },
+        {
+            "id": 55,
+            "name": "Pic du grand Kaori",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/55.json"
+        },
+        {
+            "id": 56,
+            "name": "Bois du Sud",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/56.json"
+        },
+        {
+            "id": 57,
+            "name": "Mont Mou",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/57.json"
+        },
+        {
+            "id": 58,
+            "name": "Massif du Kouakou\u00e9",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/58.json"
+        },
+        {
+            "id": 59,
+            "name": "Fausse Yat\u00e9",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/59.json"
+        },
+        {
+            "id": 60,
+            "name": "Mont Humboldt",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/60.json"
+        },
+        {
+            "id": 61,
+            "name": "Parc de la Haute Dumb\u00e9a",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/61.json"
+        },
+        {
+            "id": 62,
+            "name": "R\u00e9serve de l'Aoupini\u00e9",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/62.json"
+        },
+        {
+            "id": 63,
+            "name": "R\u00e9serve du Mont Pani\u00e9",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/63.json"
+        },
+        {
+            "id": 64,
+            "name": "Roches de la Ouai\u00e8me",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/64.json"
+        },
+        {
+            "id": 65,
+            "name": "Zone tampon de l'AGDR de Hyab\u00e9-l\u00e9 Jao",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/65.json"
+        },
+        {
+            "id": 66,
+            "name": "R\u00e9serve de l'Ilot Pam",
+            "type": "protected_areas",
+            "endpoint": "/api/shape/66.json"
+        },
+        {
+            "id": 67,
+            "name": "Ultramafique",
+            "type": "substrates",
+            "endpoint": "/api/shape/67.json"
+        },
+        {
+            "id": 68,
+            "name": "Sec",
+            "type": "holdridge",
+            "endpoint": "/api/shape/68.json"
+        },
+        {
+            "id": 69,
+            "name": "Humide",
+            "type": "holdridge",
+            "endpoint": "/api/shape/69.json"
+        },
+        {
+            "id": 70,
+            "name": "Tr\u00e8s Humide",
+            "type": "holdridge",
+            "endpoint": "/api/shape/70.json"
+        },
+        {
+            "id": 71,
+            "name": "PPE Province Nord",
+            "type": "water_catchments",
+            "endpoint": "/api/shape/71.json"
+        },
+        {
+            "id": 72,
+            "name": "PPE Province Sud",
+            "type": "water_catchments",
+            "endpoint": "/api/shape/72.json"
+        },
+        {
+            "id": 73,
+            "name": "Grand Sud",
+            "type": "mines",
+            "endpoint": "/api/shape/73.json"
+        },
+        {
+            "id": 74,
+            "name": "Taom",
+            "type": "mines",
+            "endpoint": "/api/shape/74.json"
+        },
+        {
+            "id": 75,
+            "name": "Ouinne",
+            "type": "mines",
+            "endpoint": "/api/shape/75.json"
+        },
+        {
+            "id": 76,
+            "name": "Pinpin",
+            "type": "mines",
+            "endpoint": "/api/shape/76.json"
+        },
+        {
+            "id": 77,
+            "name": "Ouazangou",
+            "type": "mines",
+            "endpoint": "/api/shape/77.json"
+        },
+        {
+            "id": 78,
+            "name": "Mont Kaala",
+            "type": "mines",
+            "endpoint": "/api/shape/78.json"
+        },
+        {
+            "id": 79,
+            "name": "Kopeto",
+            "type": "mines",
+            "endpoint": "/api/shape/79.json"
+        },
+        {
+            "id": 80,
+            "name": "Cap Bocage",
+            "type": "mines",
+            "endpoint": "/api/shape/80.json"
+        },
+        {
+            "id": 81,
+            "name": "Montagne de Poum",
+            "type": "mines",
+            "endpoint": "/api/shape/81.json"
+        },
+        {
+            "id": 82,
+            "name": "Tiebaghi",
+            "type": "mines",
+            "endpoint": "/api/shape/82.json"
+        },
+        {
+            "id": 83,
+            "name": "Koniambo",
+            "type": "mines",
+            "endpoint": "/api/shape/83.json"
+        },
+        {
+            "id": 84,
+            "name": "Poro_Boakaine_Kiel",
+            "type": "mines",
+            "endpoint": "/api/shape/84.json"
+        },
+        {
+            "id": 85,
+            "name": "Thio Plateau",
+            "type": "mines",
+            "endpoint": "/api/shape/85.json"
+        },
+        {
+            "id": 86,
+            "name": "Bogota",
+            "type": "mines",
+            "endpoint": "/api/shape/86.json"
+        },
+        {
+            "id": 87,
+            "name": "Camp des Sapins",
+            "type": "mines",
+            "endpoint": "/api/shape/87.json"
+        },
+        {
+            "id": 88,
+            "name": "Tontouta_sensu_lato",
+            "type": "mines",
+            "endpoint": "/api/shape/88.json"
+        },
+        {
+            "id": 89,
+            "name": "Nakety_Dothio",
+            "type": "mines",
+            "endpoint": "/api/shape/89.json"
+        }
+    ]
+}

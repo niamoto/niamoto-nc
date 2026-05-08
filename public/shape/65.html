@@ -1,0 +1,1891 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Niamoto - Zone tampon de l'AGDR de Hyabé-lé Jao</title>
+
+    <script src="../js/vendor/topojson/3.1.0_topojson.js"></script>
+    <script src="../js/shape_list.js"></script>
+
+    
+
+
+
+    <style>
+        /* Sidebar styles */
+        #shape-sidebar {
+            height: 100vh;
+            overflow-y: auto;
+            padding-top: 1rem;
+        }
+
+        #shape-tree {
+            transition: all 0.3s ease-in-out;
+        }
+
+        @media (max-width: 1024px) {
+            #shape-tree:not(.hidden) {
+                animation: slideDown 0.3s ease-in-out;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #shape-tree ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .shape-type-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #343a40;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.2s, color 0.2s;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .shape-type-link:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .shape-type-link::before {
+            content: '\25B6';
+            margin-right: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .shape-type-link.open::before {
+            transform: rotate(90deg);
+        }
+
+        .shape-link {
+            display: block;
+            padding: 8px 15px 8px 45px;
+            color: #495057;
+            transition: background-color 0.2s, color 0.2s;
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+
+        .shape-link:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .current-shape {
+            background-color: #007bff;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .badge {
+            background-color: #6c757d;
+            color: white;
+            padding: 3px 7px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: auto;
+        }
+
+        /* Map styles */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chart styles */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        /* Info panel styles */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f8f9fa;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .tooltip-content {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-100%);
+            background-color: #ffffff;
+            color: #333333;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: normal;
+            width: 20rem;
+            z-index: 9999;
+            display: none;
+        }
+
+        .group:hover .tooltip-content {
+            display: block;
+        }
+
+
+        @media (max-width: 768px) {
+            #shape-sidebar {
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="../js/vendor/tailwindcss/2.2.19_dist_tailwind.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.9.4_leaflet.css">
+    <link rel="stylesheet" href="../css/font-awesome/6.6.0_all.min.css">
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.css" />
+    <link rel="stylesheet" href="../js/vendor/leaflet/1.5.3_MarkerCluster.Default.css" />
+
+
+    <style>
+        ul {
+            list-style-type: none;
+        }
+
+        .loader-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .button-container {
+            transition: all 0.3s ease;
+        }
+        .button-container.fixed {
+            position: fixed;
+            top: 63px; /* Adjust this value to match the height of your navigation menu */
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bg p-0 fixed w-full top-0 shadow-md z-50 custom-nav">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <a id="home-link" class="inline-flex items-center py-2 px-4 text-white no-underline" href="#" data-link="index.html">
+                <span class="site-title">Niamoto</span>
+            </a>
+        </div>
+
+        <div class="block lg:hidden">
+            <button id="nav-toggle"
+                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0zm0 6h20v2H0zm0 6h20v2H0z" />
+                </svg>
+            </button>
+        </div>
+        <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
+            <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="index.html">
+                        <i class="fas fa-home menu-icon"></i>Accueil
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#introduction">Introduction</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#project">Projet</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#objective">Objectifs</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#context">Contexte</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="index.html#flora">Flore</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="methodology.html">
+                        <i class="fas fa-flask menu-icon"></i>Méthodologie
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#methodes">Nos méthodes</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="methodology.html#faq">FAQ</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="trees.html">
+                        <i class="fas fa-leaf menu-icon"></i>Arbres
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#learnTaxon">Étudier les
+                arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="trees.html#taxon">Les arbres de
+                Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="plots.html">
+                        <i class="fas fa-map-marked-alt menu-icon"></i>Peuplements
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#learnPlot">Étudier les
+                            peuplements forestiers</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plots.html#plot">Les
+                peuplements forestiers de Nouvelle-Calédonie</a></li>
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="forests.html">
+                        <i class="fas fa-tree menu-icon"></i>Forêt
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#preambule">Préambule</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#learnForest">Étudier la
+                forêt</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="forests.html#forestNC">La forêt de Nouvelle-Calédonie</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#">
+                        <i class="fas fa-database menu-icon"></i>Accéder aux données
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="taxon/index.html">Arbres</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="plot/index.html">Peuplements</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="shape/index.html">Forêt</a></li>
+
+                    </ul>
+                </li>
+                <li class="relative group mr-3">
+                    <a class="nav-link inline-block py-2 px-3 text-white no-underline" href="#" data-link="resources.html">
+                        <i class="fas fa-book menu-icon"></i>Ressources
+                    </a>
+                    <ul class="absolute hidden text-gray-700 pt-1 group-hover:block bg-white shadow-lg rounded-md z-50 w-48 custom-dropdown">
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#equipe">L'équipe</a></li>
+                        <li><a class="py-2 px-4 block whitespace-no-wrap hover:bg-gray-100" href="#" data-link="resources.html#productions">Productions</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    document.getElementById('nav-toggle').onclick = () =>
+        document.getElementById('nav-content').classList.toggle('hidden');
+
+    // Function to adjust the navigation links based on page depth
+        function adjustNavLinks(depth) {
+            document.querySelectorAll('a[data-link]').forEach(link => {
+                link.href = depth + link.getAttribute('data-link');
+            });
+        }
+
+        // Adjust the navigation links based on the depth
+        adjustNavLinks("../");
+
+</script>
+
+<style>
+    .site-title {
+        font-family: 'Arial Black', sans-serif; /* Custom font for a bold effect */
+        font-size: 2rem; /* Increased font size */
+        text-transform: uppercase; /* Uppercase letters for visibility */
+        letter-spacing: 2px; /* Spacing between letters */
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Text shadow for better visibility */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .site-title:hover {
+        color: #ffdd57; /* Change color on hover */
+    }
+
+    .text-contour {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .nav-bg {
+        background-color: rgba(34, 139, 34, 0.8); /* Fond vert semi-transparent */
+        transition: background-color 0.3s;
+    }
+
+    .nav-bg:hover {
+        background-color: rgba(34, 139, 34, 1); /* Fond vert opaque au survol */
+    }
+
+    .group:hover .group-hover\:block {
+        display: block;
+    }
+
+    .custom-nav {
+        z-index: 1500;
+    }
+
+    .custom-dropdown {
+        z-index: 1500;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* Fond blanc transparent au survol */
+        border-radius: 4px;
+    }
+
+    .menu-icon {
+        margin-right: 8px;
+    }
+</style>
+    <div class="flex flex-col lg:flex-row">
+        
+    <!-- Sidebar -->
+    <div class="w-full mt-16 lg:w-1/4 lg:min-h-screen bg-white shadow-md overflow-y-auto">
+        <!-- Menu button for mobile -->
+        <button id="sidebar-toggle"
+                class="lg:hidden w-full flex items-center justify-between p-4 text-gray-600 hover:bg-gray-50">
+            <span>Catégories</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <!-- Sidebar content -->
+        <div id="shape-tree" class="hidden lg:block p-4">
+            <!-- The shape list will be loaded here -->
+        </div>
+    </div>
+
+        <div class="w-full">
+            
+    <div class="flex-1 p-4">
+        <!-- Overview Map -->
+        <div class="mt-16">
+            <div class="map-container" id="allShapesMap"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 md:px-6">
+            
+            <div class="mt-16">
+                
+            </div>
+
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 mt-4">
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Informations générales</h2>
+        
+    </div>
+    <div class="p-4">
+        
+<!-- Information panel content -->
+<div class="space-y-2 md:space-y-3">
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Surface totale</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            3 091 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Surface forêt</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            1 584 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Forêt sur mine</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            0 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Forêt en réserve</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            1 575 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Forêt sur captage (PPE)</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            450 ha
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Altitude médiane</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            416 m
+            
+        </span>
+    </div>
+    
+    
+    
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2">
+        <span class="text-gray-600 text-sm md:text-base mb-1 sm:mb-0">Altitude maximale</span>
+        <span class="font-medium text-sm md:text-base">
+            
+            1 307 m
+            
+        </span>
+    </div>
+    
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution de la forêt</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution de la forêt dans l'emprise sélectionnée
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="h-96">
+    <div id="map_panelMap" class="w-full h-full"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Couverture forestière</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                La couverture forestière (= superficie de forêt / superficie disponible) est un indicateur de l'importance de la forêt dans le paysage.
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_coverChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Occupation du sol</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Superficie occupée par le substrat, les milieux de vie de Holdridge, les limites administratives et la forêt dans l'emprise sélectionnée
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="land_useChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Distribution altitudinale</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution altitudinale de la forêt dans l'emprise
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="elevation_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Forêt et milieux de vie</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution de la forêt selon les milieux de vie de Holdridge
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="holdridge_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Types forestiers</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Répartition de la forêt selon les trois types de forêt
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_typesChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Couverture forestière par altitude</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution altitudinale de la couverture forestière en fonction du substrat
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_cover_by_elevationChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Types forestiers par altitude</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Distribution des types de forêts selon l'altitude
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="forest_types_by_elevationChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Fragmentation</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                La taille effective de maillage représente la probabilité que deux points appartiennent au même fragment de forêt
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="gauge-container" style="height: 300px;">
+    <div id="fragmentationGauge"></div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                    
+
+
+
+
+<div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4 md:mb-0">
+    <div class="bg-gray-600 text-white p-3 flex justify-between items-center">
+        <h2 class="text-lg">Fragments forestiers</h2>
+        
+        <button class="bg-white rounded-full w-6 h-6 flex items-center justify-center text-gray-600 relative group">
+            <i class="fas fa-info"></i>
+            <span
+                class="tooltip-content hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 md:w-64 bg-white p-2 rounded shadow-lg text-sm z-50">
+                Aire cumulée de chaque fragment forestier classé du plus petit au plus grand
+            </span>
+        </button>
+        
+    </div>
+    <div class="p-4">
+        
+<div class="chart-container h-48 sm:h-64 md:h-72 lg:h-80">
+    <canvas id="fragmentation_distributionChart"></canvas>
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    <footer class="bg-green-700 text-white p-4 mt-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white p-2 w-3/5 rounded-lg shadow-md flex justify-center">
+                    <a class='logo' href="https://www.province-nord.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="pn" src="../files/pn_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.province-sud.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/ps_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://endemia.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ps" src="../files/endemia_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://amap.cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="amap" src="../files/amap_100.png"></figure>
+                    </a>
+                    <a class='logo' href="http://publish.plantnet-project.org/project/nou" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="herbarium" src="../files/herbarium_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://iac.nc/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="iac" src="../files/iac_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://nouvelle-caledonie.ird.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ird" src="../files/ird_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://cirad.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="cirad" src="../files/cirad_100.png"></figure>
+                    </a>
+                    <a class='logo' href="https://www.ofb.gouv.fr/" target="_blank">
+                        <figure class="mx-2"><img class="img-fluid" id="ofb" src="../files/ofb_100.png"></figure>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>Niamoto - Portail de la forêt de Nouvelle-Calédonie</p>
+                <a class="inline-block py-2 px-4 text-white no-underline" href="https://github.com/niamoto/niamoto" target="_blank">
+                    <span class="fab fa-github fa-lg" aria-hidden="true"></span> Github
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/vendor/chart/4.4.2_chart.js"></script>
+    <script src="../js/vendor/d3/7.8.5_d3.js"></script>
+    <script src="../js/vendor/jquery/3.6.0_jquery.js"></script>
+    <script src="../js/vendor/lodash/4.17.21_lodash.min.js"></script>
+    <script src="../js/vendor/raphael/2.3.0_raphael.js"></script>
+    <script src="../js/vendor/justgage/1.6.1_justgage.js"></script>
+    <script src="../js/vendor/leaflet/1.9.4_leaflet.js"></script>
+    <script src="../js/vendor/leaflet/1.5.3_leaflet.markercluster.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const buttonContainer = document.getElementById('buttonContainer');
+
+            // Only proceed if the button container exists
+            if (buttonContainer) {
+                const buttonContainerOffset = buttonContainer.offsetTop;
+                const navHeight = 60; // Adjust this value to match your navigation height
+
+                window.onscroll = () => {
+                    if (window.pageYOffset > buttonContainerOffset - navHeight) {
+                        buttonContainer.classList.add('fixed');
+                    } else {
+                        buttonContainer.classList.remove('fixed');
+                    }
+                };
+
+                // Initial check in case the page is loaded scrolled
+                window.onscroll();
+            }
+        });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gestion du toggle du menu mobile
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const shapeTree = document.getElementById('shape-tree');
+
+            if (sidebarToggle && shapeTree) {
+                sidebarToggle.addEventListener('click', function () {
+                    // Toggle la classe hidden sur le shape-tree
+                    shapeTree.classList.toggle('hidden');
+
+                    // Toggle une classe pour indiquer l'état ouvert/fermé
+                    this.classList.toggle('menu-open');
+
+                    // Change l'icône si besoin
+                    const svg = this.querySelector('svg');
+                    if (this.classList.contains('menu-open')) {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+                    } else {
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+
+                // Fermer le menu au clic en dehors
+                document.addEventListener('click', function (e) {
+                    if (!sidebarToggle.contains(e.target) &&
+                        !shapeTree.contains(e.target) &&
+                        !shapeTree.classList.contains('hidden') &&
+                        window.innerWidth < 1024) {
+                        shapeTree.classList.add('hidden');
+                        sidebarToggle.classList.remove('menu-open');
+                        const svg = sidebarToggle.querySelector('svg');
+                        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+                    }
+                });
+            }
+        });
+
+        // =====================================
+        // Constants & Initial Setup
+        // =====================================
+        const shape = {"elevation_distribution": {"elevation": {"classes": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700], "complement": [521.3111127404363, 245.62891700503496, 206.19499413998057, 198.88099214457984, 153.0685908724234, 118.77678493313348, 46.87021076426598, 4.2410610947598, 6.760227016521441, 3.4173060565704816, 0.6227104934679915, 0.2834131092066201, 0.12374375190714915, 0.003991733932486752, 0.0, 0.0, 0.0], "subset": [90.37792370927917, 94.3769468822562, 84.77929126711149, 68.78319857520356, 69.58300320979896, 123.96971836228568, 211.1484235331831, 205.54979109101637, 227.1445162250912, 201.55076791803856, 124.7695229968811, 56.7861290562728, 24.793943672457075, 0.7998046345953906, 0.0, 0.0, 0.0]}}, "forest_cover": {"emprise": {"forest": 0.5126559568169143, "non_forest": 0.4873440431830856}, "num": {"forest": 0.5126559568169143, "non_forest": 0.4873440431830856}, "um": {"forest": 0.0, "non_forest": 0.0}}, "forest_cover_by_elevation": {"class_name": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700], "series": {"forest_num": [14.775141995978661, 27.757446828488007, 29.136351739295353, 25.697572166914327, 31.251967225576134, 51.06962064512882, 81.83456365781974, 97.97843373503996, 97.10983756770658, 98.33276178562627, 99.50338990212188, 99.5033899021218, 99.50338990212167, 99.50338990212192, 0.0, 0.0, 0.0], "forest_um": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "hors_foret_num": [85.22485800402134, 72.24255317151199, 70.86364826070465, 74.30242783308567, 68.74803277442386, 48.93037935487118, 18.165436342180257, 2.021566264960043, 2.8901624322934225, 1.6672382143737252, 0.4966100978781185, 0.49661009787820376, 0.49661009787833166, 0.49661009787807586, 100.0, 100.0, 100.0], "hors_foret_um": [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0]}}, "forest_types": {"categories": ["For\u00eat coeur", "For\u00eat mature", "For\u00eat secondaire"], "values": [0.0183893316941077, 0.6934257560860295, 0.2881849122198626]}, "forest_types_by_elevation": {"altitudes": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700], "coeur": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.998649145693943, 22.28069682686326, 0.8569498779562807, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "mature": [16.11155807493587, 15.305980171189097, 6.444623229974337, 4.0278895187339625, 17.722713882429424, 72.50201133721137, 168.3657818830794, 190.5623593685232, 199.25322670350428, 199.73194815499528, 124.7695229968811, 56.7861290562728, 24.793943672457075, 0.7998046345953906, 0.0, 0.0, 0.0], "secondaire": [74.2663656343433, 79.0709667110671, 78.33466803713715, 64.75530905646959, 51.86028932736953, 51.467707025074326, 42.782641650103706, 8.98878257679923, 5.610592694723635, 0.9618698850869648, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, "fragmentation": {"meff": {"units": "km\u00b2", "value": 187.3736052993}}, "fragmentation_distribution": {"sizes": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 600, 700, 800, 900, 1000, 1500, 2000, 5000, 10000, 20000, 30000], "values": [0.0133358937345797, 0.0133358937345797, 0.0310354098196466, 0.0310354098196466, 0.0310354098196466, 0.0310354098196466, 0.0310354098196466, 0.0310354098196466, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 0.083308889520785, 1.0, 1.9999999999999936, 1.0, 1.0, 1.0, 1.0]}, "general_info": {"elevation_max": {"units": "m", "value": 1307.0}, "elevation_median": {"units": "m", "value": 416.0}, "forest_area_ha": {"units": "ha", "value": 1584.41298113347}, "forest_mining_ha": {"units": "ha", "value": 0.0}, "forest_ppe_ha": {"units": "ha", "value": 449.678034269772}, "forest_reserve_ha": {"units": "ha", "value": 1574.59555318235}, "land_area_ha": {"units": "ha", "value": 3090.59703698969}, "rainfall": {"max": 2710.0, "min": 2280.0, "units": "mm/an"}}, "geography": {"forest_cover_coords": {"arcs": [[[15713, 63618], [140, 259], [433, 166], [150, 558], [388, 636], [-8, 425], [2402, 4448], [159, 16], [8, -1027], [-92, -317], [-386, -542], [-299, -686], [-722, -623], [-42, -555], [71, -238], [375, -119], [152, -267], [-95, -1668], [248, -881], [328, -405], [-77, -381], [61, -189], [300, -141], [260, 103], [214, 274], [283, 61], [650, -261], [688, 195], [645, 532], [547, 28], [759, 386], [588, 11], [880, 464], [784, -279], [455, 24], [547, 747], [1712, 133], [1717, -256], [336, 64], [368, 833], [445, 242], [28, 127], [-209, 250], [-281, 105], [-654, -125], [-519, 888], [-469, 399], [-109, 213], [55, 357], [-176, 252], [-20, 317], [490, 925], [499, 49], [152, -165], [-98, -730], [227, -720], [338, -311], [1125, -159], [1067, -539], [527, 346], [70, 378], [323, 364], [731, 497], [383, 112], [540, -418], [903, -205], [425, 769], [542, 118], [287, 208], [29, 1285], [689, 81], [362, 172], [249, 268], [217, 531], [1205, -132], [239, -462], [227, -60], [770, 627], [359, 449], [57, 210], [-72, 206], [-448, 50], [-37, 148], [348, 279], [211, 65], [246, -722], [165, -122], [484, 171], [664, -41], [134, 191], [-101, 359], [186, 263], [1110, 43], [198, 128], [467, 681], [455, 128], [257, 516], [410, -59], [190, 126], [201, 1043], [-185, 412], [-503, -42], [-461, 148], [-62, 148], [165, 249], [86, 804], [-307, 160], [-404, -194], [-149, 82], [-38, 214], [338, 660], [318, 128], [564, -301], [214, 286], [158, 15], [531, -98], [302, -315], [129, 94], [45, 319], [303, 24], [137, 141], [184, 578], [652, 673], [150, 479], [-465, 326], [-476, -66], [-162, 32], [-87, 164], [150, 789], [448, 190], [162, 408], [-25, 168], [-536, 270], [25, 180], [298, 181], [436, -195], [331, 102], [11, 226], [-504, 213], [460, 624], [360, -82], [251, -767], [452, 266], [19, 419], [322, 249], [76, 375], [349, 345], [127, 357], [-238, 650], [414, 434], [380, 729], [702, 622], [131, 496], [485, -136], [281, 486], [117, 636], [259, -227], [59, -395], [216, -230], [143, 64], [190, 425], [257, -8], [492, 404], [478, 84], [217, 197], [76, 179], [-112, 395], [148, 288], [101, 1274], [521, 593], [301, 972], [229, 328], [29, 453], [176, 464], [372, -82], [435, -427], [-87, -723], [-159, -407], [-105, -154], [-311, -103], [-204, -300], [159, -1285], [-175, -85], [-473, 508], [-267, 45], [-145, -126], [114, -279], [-1, -407], [263, -227], [421, -123], [-168, -184], [-43, -374], [-453, -339], [-130, -414], [-315, -449], [-295, -162], [-478, 44], [-264, -278], [344, -868], [-151, -443], [101, -494], [-169, -265], [18, -297], [-330, -259], [-387, -18], [-620, 524], [-240, 67], [-473, -278], [-676, -177], [-529, -777], [-148, -637], [358, -234], [144, -496], [506, -180], [82, -247], [-259, -358], [-791, -231], [-242, 169], [-54, 545], [-251, 48], [-281, -469], [-842, -705], [-248, -378], [24, -1017], [364, -664], [730, -886], [-88, -456], [-462, -505], [-23, -432], [-409, -412], [-125, -969], [-162, -148], [-310, 132], [-14, 307], [170, 383], [-171, 423], [-313, -10], [-468, 342], [-351, -162], [126, -544], [-114, -198], [-10, -377], [-566, -524], [1, -210], [-202, -153], [-137, -617], [134, -425], [-25, -335], [-720, -1715], [12, -574], [359, -839], [-214, -214], [-825, -20], [-399, -334], [52, -298], [404, -794], [12, -296], [-809, -1653], [261, -463], [15, -436], [388, 185], [170, -148], [-381, -553], [-126, -415], [185, -564], [84, -904], [-218, -111], [-320, 194], [-529, -112], [-285, 406], [35, 530], [-396, 411], [12, 197], [149, 165], [915, 412], [37, 339], [-348, 478], [-861, -34], [-142, -500], [-183, 101], [-242, 503], [-196, -146], [-272, -5], [-376, -442], [187, -621], [-315, -389], [-815, -199], [87, -345], [564, 109], [-360, -1141], [-120, -110], [-641, -26], [-227, -156], [-355, 148], [-447, -1335], [-34, -542], [-297, -496], [-622, -821], [-869, -440], [-58, -129], [-180, 174], [-44, 174], [348, 800], [999, 1471], [193, 1937], [-235, 174], [-512, -312], [-2, -524], [-500, -582], [-550, 2], [-367, 468], [-243, 130], [81, 388], [212, 480], [-5, 285], [320, 341], [82, 394], [234, 60], [645, 566], [282, 612], [124, 424], [-48, 647], [143, 707], [306, 608], [494, 160], [296, 444], [-107, 369], [-415, 141], [-280, 777], [-372, -104], [-382, -676], [-721, -400], [-336, -1244], [-755, -606], [-361, -805], [79, -750], [-145, -562], [-172, -376], [-492, -280], [-339, -531], [-62, -294], [74, -563], [360, -770], [77, -751], [345, -942], [-74, -230], [-161, -33], [-572, 1167], [-51, 723], [-146, 369], [-123, 30], [-159, -432], [187, -594], [-449, -1770], [98, -652], [-208, -211], [-75, -303], [82, -561], [421, -462], [99, 77], [26, 354], [579, -534], [226, -389], [566, -155], [308, 693], [711, 580], [309, -409], [141, -288], [220, -1545], [-181, -757], [179, -693], [-41, -317], [-208, -361], [3, -425], [-159, -411], [36, -355], [172, -262], [-269, -1107], [98, -215], [329, 55], [816, -528], [293, 19], [436, 302], [381, 17], [333, 438], [295, 189], [986, 154], [90, 212], [-56, 241], [736, 519], [2106, 501], [458, -103], [727, -579], [567, 29], [519, 456], [1172, 403], [697, -441], [487, -30], [1433, 882], [112, -114], [62, -710], [140, -280], [-81, -376], [-652, -838], [-669, -316], [-139, -198], [208, -500], [1066, 195], [195, 207], [1130, 248], [437, 228], [1240, -237], [776, 651], [489, -52], [450, -469], [659, -1], [837, 645], [175, 380], [1012, 1083], [-13, 422], [462, 971], [-72, 956], [215, 469], [1085, -34], [1075, 713], [380, 107], [642, 717], [633, 302], [698, 126], [457, 367], [499, 1131], [-75, 731], [183, 558], [32, 481], [1038, 379], [97, 199], [445, 87], [874, 604], [89, 124], [-30, 219], [273, 395], [146, 502], [-193, 717], [405, 275], [270, -65], [817, 486], [-144, 303], [-543, 87], [-193, 412], [-380, 214], [-220, 283], [-354, 138], [-470, -385], [-376, -497], [-527, -187], [-277, -415], [-77, -609], [-125, -101], [-682, -66], [-553, 435], [-1070, -563], [-213, -9], [-570, 321], [-89, -148], [-11, -564], [-203, -440], [-673, -706], [-173, -334], [149, -515], [-49, -148], [-241, -215], [-636, -226], [-416, -1071], [-473, -378], [-86, 164], [173, 692], [-248, 771], [338, 645], [-374, 616], [89, 508], [-401, 122], [-25, 180], [376, 147], [370, -276], [680, -214], [-15, 452], [-396, 443], [122, 284], [209, 176], [678, -85], [543, 375], [297, 487], [117, 896], [661, -559], [310, -492], [1285, 3], [432, 175], [405, 621], [660, 69], [298, 393], [315, -80], [138, 90], [300, 445], [-159, 237], [134, 529], [-121, 336], [37, 147], [161, 49], [421, -230], [180, -659], [902, -475], [420, -919], [999, -519], [174, 37], [236, 505], [473, 163], [154, 193], [-75, 734], [62, 355], [504, 730], [299, 695], [-67, 375], [287, 582], [-62, 331], [196, 500], [-307, 297], [-1251, 437], [-386, 547], [233, 503], [368, -74], [515, -626], [288, 156], [808, 807], [-651, 1718], [156, 620], [711, 7], [816, -530], [713, -86], [528, 320], [538, -172], [-55, -1002], [-1237, -65], [-215, -229], [-218, -1069], [509, -492], [20, -405], [-703, -672], [-717, -1938], [-1102, -1644], [-165, -878], [-1254, -1037], [-414, -131], [-584, -499], [38, -728], [-98, -225], [-657, -1020], [-382, -354], [-297, -84], [-158, -618], [-525, -216], [-142, -208], [-1066, 142], [-306, -164], [-128, -1636], [-211, -381], [220, -457], [10, -355], [-259, 14], [-456, -837], [-397, -88], [-213, 138], [-1076, -194], [-524, -478], [344, -870], [-245, -469], [-984, 353], [-197, -286], [-448, -37], [-729, 166], [-222, -31], [-265, -269], [-7, -320], [-162, -319], [231, -950], [-419, -638], [82, -198], [-730, -253], [-413, -903], [173, -504], [-427, -613], [170, -477], [-132, -875], [99, -419], [-284, 26], [-112, 153], [59, 551], [-231, 672], [-328, -140], [72, -1184], [-305, 103], [-760, 1035], [-813, -287], [-382, -489], [-244, 178], [-216, 657], [-413, 254], [-116, -100], [-100, -403], [-632, -22], [-306, -990], [-1272, -734], [50, -302], [445, -561], [-423, -574], [-435, -984], [-316, -202], [-366, 75], [-874, -312], [-49, -92], [212, -781], [442, -805], [-62, -278], [-324, -121], [-300, -330], [254, -569], [511, -364], [-26, -589], [263, -217], [1029, 30], [589, 187], [873, -215], [1670, 411], [1082, -489], [995, 526], [236, 515], [209, 153], [67, 659], [445, 36], [349, -127], [188, -534], [677, -122], [285, 132], [81, -523], [397, -398], [526, 38], [217, 347], [356, -102], [-41, -380], [-201, -68], [-126, -236], [-355, 1], [-669, 165], [-191, 205], [-271, -215], [-550, 15], [-495, 548], [-1655, -1456], [-1044, -130], [-1260, -1133], [-947, -11], [-261, -180], [-93, -511], [-443, -703], [-1081, -944], [-79, -315], [177, -545], [-1287, -544], [-59, -647], [285, -260], [544, -192], [557, 94], [892, -154], [838, -604], [598, 549], [1148, 42], [762, 581], [596, -7], [388, 501], [-75, 671], [744, 468], [72, 393], [265, 468], [544, -41], [525, -239], [835, -40], [397, 177], [223, 588], [-218, 672], [-542, 294], [-826, -626], [-1063, -325], [-761, -469], [-1145, -54], [-896, -767], [-251, -61], [82, 261], [-287, 612], [-405, 55], [482, 544], [877, 264], [1237, -174], [583, 663], [728, 134], [251, 309], [-225, 793], [-619, -43], [156, 496], [568, 351], [275, -64], [656, -1069], [572, -327], [405, 295], [1339, 1725], [459, 305], [410, -150], [1049, 136], [559, 1237], [1171, 1211], [193, 540], [-156, 419], [215, 494], [699, -188], [716, 136], [1234, 1085], [469, -243], [442, -571], [304, -69], [405, 232], [316, 490], [639, -110], [306, 357], [562, -406], [1264, 767], [478, 149], [553, -7], [87, 295], [-515, 137], [-55, 178], [204, 336], [523, 282], [244, 439], [422, 149], [104, 351], [-167, 210], [-23, 227], [451, 265], [108, 364], [-111, 406], [351, 328], [84, 363], [200, 216], [-200, 310], [-87, 592], [90, 200], [343, 245], [76, 935], [338, 167], [117, 201], [54, 363], [-135, 650], [493, 138], [101, 608], [-82, 286], [-214, 103], [-219, 324], [-788, -78], [-100, 115], [-82, 633], [-665, 614], [-954, 166], [-848, 341], [-428, -460], [-102, -389], [119, -823], [-482, -358], [-176, -578], [-286, -182], [-401, -627], [-594, -212], [295, -778], [538, -76], [87, -148], [-112, -312], [-476, -188], [101, -423], [-135, -145], [-198, 0], [6, 425], [-147, 231], [-431, -540], [-49, 151], [340, 860], [-142, 336], [26, 264], [-716, 76], [-243, -192], [-62, -329], [-146, -129], [-1395, -809], [-277, -510], [-1327, -493], [-485, -1191], [98, -620], [-247, -547], [36, -451], [-132, -314], [-17, -459], [-547, -443], [-651, -212], [-306, -758], [-224, 147], [98, 772], [-248, 208], [-875, -313], [-190, -271], [-322, 228], [-363, -16], [-467, -595], [-142, -388], [-189, 359], [310, 526], [115, 625], [1019, -295], [1040, 442], [727, -197], [737, 391], [178, 186], [76, 211], [-58, 127], [-122, 51], [-541, -275], [-351, 151], [-84, 79], [34, 208], [-220, 104], [-62, 164], [136, 381], [-85, 123], [-425, -290], [-531, 84], [-398, -345], [-262, 41], [-596, -650], [-541, 17], [-183, 114], [-111, 284], [49, 208], [609, 460], [577, 51], [132, 134], [-32, 252], [-491, 140], [0, 245], [137, 115], [1103, 264], [411, -179], [289, -296], [466, -45], [221, 235], [-53, 350], [87, 230], [364, 198], [581, 34], [604, 300], [469, 539], [749, 357], [217, 348], [1038, 350], [280, 247], [177, 572], [2196, 835], [285, -4], [153, 161], [210, 650], [-111, 657], [695, 166], [99, 132], [-49, 671], [-583, 626], [261, 378], [393, 130], [191, 379], [224, 33], [381, -195], [570, -548], [586, -323], [904, -230], [481, 96], [431, -547], [600, -188], [744, 554], [829, -190], [964, 1029], [408, 37], [191, 376], [11, 934], [136, 99], [174, -99], [250, -627], [-58, -734], [132, -509], [-237, -693], [-671, -526], [-124, 361], [318, 585], [4, 195], [-195, 191], [-205, -136], [-618, -737], [-88, -1068], [-732, -149], [-921, -1676], [-87, -1245], [-683, -1898], [73, -341], [-222, -297], [59, -924], [-222, -472], [-271, -158], [-49, -156], [245, -623], [-178, -355], [-33, -467], [-137, -115], [-305, 295], [-564, -18], [-126, -155], [-87, -566], [-210, -245], [-1344, -822], [-124, -412], [-1190, -1147], [-244, -457], [203, -522], [-198, -834], [98, -801], [-98, -231], [-1990, -1954], [-455, -1710], [219, -1116], [-177, -2203], [-358, -976], [-327, -375], [-226, -824], [-131, -1109], [229, -973], [21, -524], [-176, -433], [-825, -572], [-94, -2488], [65, -1732], [-71, -294], [117, -527], [363, -366], [70, -299], [-8, -669], [-142, -652], [431, -697], [-54, -558], [231, -235], [135, 9], [316, 385], [346, 1264], [6, 633], [-144, 79], [-588, -278], [-158, 1], [-86, 180], [-25, 410], [162, 335], [36, 492], [-309, 1237], [-1, 1285], [479, 346], [-20, 310], [91, 155], [-104, 364], [-359, 139], [-50, 245], [348, 361], [420, -213], [167, 757], [561, 35], [497, 184], [291, 960], [937, 509], [107, 592], [605, 578], [78, 291], [180, 66], [232, 401], [-108, 269], [248, 263], [1745, 295], [136, 829], [308, 489], [-238, 8], [-284, -364], [-656, -310], [-124, 82], [-112, 492], [488, 281], [621, 50], [122, 491], [463, 344], [132, 794], [-60, 391], [243, 350], [43, 541], [226, 542], [150, 146], [490, 0], [-21, 311], [134, 114], [360, -112], [311, 156], [79, 649], [335, 410], [601, -210], [243, 228], [-5, 205], [-858, -58], [-137, 131], [210, 359], [493, 395], [665, 2089], [716, -37], [503, 941], [1055, 775], [263, 606], [411, 303], [169, 577], [-95, 288], [73, 275], [364, 279], [-388, 218], [0, 131], [488, -34], [826, -441], [651, 196], [262, -139], [1018, 616], [672, -130], [1119, 162], [162, 444], [298, 263], [1256, -278], [1305, 345], [510, 410], [491, -239], [794, 395], [357, 633], [867, 131], [264, -65], [99, -115], [181, -937], [410, -411], [-228, -627], [6, -325], [1005, -1185], [-86, -787], [-150, -528], [-315, -363], [4, -459], [-151, -380], [-271, -195], [-329, 349], [-256, -38], [-442, -623], [7, -378], [-196, -569], [44, -242], [102, -196], [771, -375], [87, -147], [-123, -243], [-1321, -495], [-371, -528], [-482, 62], [9, -772], [-174, -862], [253, -743], [290, -164], [220, 110], [394, 791], [719, 872], [-77, 617], [916, 302], [287, -135], [397, 185], [177, -325], [315, 57], [208, 257], [-88, 301], [51, 342], [245, 63], [433, -163], [429, 107], [95, 257], [345, 146], [44, 665], [437, 62], [54, -699], [271, -177], [-308, -616], [41, -385], [-181, -390], [76, -987], [133, -285], [-653, -326], [-211, -687], [394, -243], [-174, -443], [-308, -156], [174, -770], [-52, -697], [-432, -339], [-209, -346], [-496, -1440], [343, -948], [265, -268], [226, 29], [118, 326], [-94, 296], [113, 368], [241, 65], [310, 758], [451, 518], [69, 400], [154, 210], [228, 75], [119, 596], [607, 995], [89, 983], [649, 769], [-87, 308], [502, -100], [491, 249], [434, -12], [291, 858], [-46, 600], [306, 468], [468, -204], [117, -540], [-713, -2080], [-335, -321], [-172, -827], [-715, -84], [253, -712], [-113, -672], [-173, -63], [-519, 344], [-345, -577], [232, -374], [-337, -291], [-246, -1116], [111, -432], [-83, -812], [244, -203], [-214, -406], [-11, -418], [-153, -178], [-203, 115], [-194, -76], [-93, -672], [200, -590], [-667, -1946], [-95, 1396], [-346, 102], [593, 1470], [663, 519], [-19, 546], [-223, 850], [204, 380], [-70, 1016], [-285, -51], [-123, -887], [-307, -545], [-479, -481], [203, -204], [20, -292], [-204, -139], [-235, -722], [-235, -279], [-184, -469], [-254, 64], [-255, -316], [-154, -419], [-265, -113], [-225, -507], [-773, 484], [-215, -862], [-255, -203], [-224, 141], [-439, -545], [10, -355], [-307, -875], [-298, -1433], [-51, -368], [121, -419], [459, 316], [388, 596], [247, 1217], [407, 253], [194, 393], [357, 227], [41, -101], [-555, -2866], [39, -1180], [-153, -419], [-225, -63], [10, -418], [264, -382], [122, -482], [-541, -506], [-478, 420], [-172, 825], [-153, -355], [-1, -495], [-572, -1153], [-450, -1433], [-1144, -1646], [-1, -584], [-594, -2257], [60, -482], [386, -1105], [-237, -1395], [193, -406], [119, -1726], [141, -408], [-2851, -8320], [-1033, 198], [-525, -205], [-3285, 813], [-445, -857], [-1772, 19], [-707, -325], [-3363, 1843], [-1057, 852], [-2351, 97], [-1755, 1435], [-1745, 565], [-2151, -549], [-233, 619], [-80, 685], [-193, 356], [-183, -38], [-103, -304], [61, -305], [-170, -799], [-628, -129], [-422, 399], [-837, -293], [-951, 557], [-1255, -339], [-1590, 856], [-1980, 553], [-386, 633], [-934, 295], [-966, -367], [-994, 313], [-2639, 2726], [-1646, 537], [-1191, 1448], [-3211, 1762], [-387, 961], [-1173, 1063], [-720, 1547], [-393, 145], [-1914, -469], [-1583, 750], [-339, -253], [-3657, -357], [-1889, 628], [-855, 919], [-636, 217], [-257, 703], [-598, 287], [-108, 607], [-446, 635], [-917, 104], [-165, 491], [-937, 81], [-371, 494], [-563, -41], [-764, 522], [-407, 821], [-1582, 1488], [-528, -391], [-355, 97], [-2009, 1595], [-470, 2362], [-1365, 411], [-1071, -408], [-589, 1523], [-2517, -789], [-746, 499], [-2566, 261], [-148, 282], [-470, -275], [-851, 440], [-1162, -104], [-2733, 427], [-548, -578], [-783, 499], [-750, -62], [-728, 382], [-577, 613], [-127, 515], [-580, 146], [-409, 565], [-2884, 1755], [15306, 28345], [146, 226], [212, 77], [49, 454]], [[62392, 35208], [-469, -659], [-277, -913], [704, 455], [918, 1102], [296, 557], [-8, 1040], [-520, -379], [-265, 14], [-316, -380], [-63, -837]], [[30972, 63102], [-200, -774], [-638, -555], [-408, -761], [-887, -365], [-487, 813], [-632, -87], [-325, 166], [-428, -240], [-125, -1331], [-673, -493], [-123, -330], [366, -318], [855, -167], [531, 506], [1182, 529], [336, -77], [397, 278], [715, 988], [795, 264], [316, 506], [-30, 368], [398, 88], [937, 568], [1326, 1215], [73, 545], [-260, 859], [477, 307], [1050, 355], [172, 473], [-134, 945], [-744, -47], [-496, -496], [-77, -568], [-191, -331], [-553, -496], [-420, -95], [-736, 180], [89, -1309], [-134, -380], [-1314, -733]], [[44390, 70583], [-385, -345], [-236, -542], [-324, -66], [-298, 246], [12, 526], [-634, 444], [-659, -181], [13, -230], [-709, -756], [-62, -756], [-238, -150], [71, -50], [-114, -374], [-455, -780], [-498, -10], [-316, -202], [-216, -1255], [-205, -457], [295, -521], [468, 75], [694, 519], [368, 887], [510, 595], [1558, 135], [989, 492], [540, 557], [155, 375], [37, 1643], [-224, 214], [-137, -33]], [[46796, 49257], [-430, -1014], [336, -51], [408, 227], [693, 23], [1193, 1253], [194, 456], [-580, 2], [-336, -266], [-418, 103], [-1060, -733]], [[46081, 71898], [-99, 82], [-348, -131], [-87, -674], [-311, -82], [-199, -280], [149, -312], [547, 99], [361, 641], [-13, 657]], [[53725, 40242], [102, 178], [-183, 153], [-264, 711], [-1731, -452], [-1398, -1227], [-1089, 282], [-204, -456], [19, -508], [-500, -633], [101, -406], [-540, -519], [111, -317], [336, -166], [855, 162], [1572, 1608], [1199, 1021], [1614, 569]], [[55332, 33387], [1060, 619], [368, 506], [-153, 64], [-601, -201], [-459, -494], [-479, -227], [264, -267]], [[57240, 35399], [-295, 1], [-164, -177], [1059, -244], [682, -370], [562, 1572], [-284, 203], [-622, -99], [-938, -886]], [[57715, 27392], [-448, 331], [-234, -50], [-113, -419], [-21, -507], [436, -864], [19, -939], [122, -76], [786, 847], [815, 151], [316, 544], [540, 113], [246, 1002], [674, 607], [-570, 230], [-406, 711], [-326, 103], [-194, -495], [-643, -353], [-90, 495], [-672, 179], [-103, -443], [100, -1079], [-234, -88]], [[65286, 34395], [249, -821], [-678, -798], [97, -271], [-72, -616], [406, -863], [-83, -381], [81, -355], [-451, -1813], [-316, -177], [-83, -901], [100, -1332], [-205, -660], [-347, -455], [-408, -152], [-134, -976], [-459, -481], [-114, -1421], [580, 189], [745, 594], [215, 482], [237, 1712], [348, 1027], [114, 1344], [523, 2042], [337, 405], [387, 99], [143, 280], [21, 584], [-252, 1624], [62, 508], [420, 1255], [255, 189], [256, 663], [42, 935], [-529, 484], [409, 900], [-142, 507], [143, 305], [-131, 393], [-387, 52], [-296, -329], [-214, -342], [29, -419], [-297, -913], [-244, -265], [-142, 457], [-9, 723], [92, 355], [317, 532], [1448, 1202], [890, 1762], [360, 378], [672, 313], [323, 378], [-199, 674], [0, 608], [336, 674], [-38, 164], [-261, 115], [-5, 533], [-286, 296], [-947, -176], [-520, -404], [-165, -723], [-398, -211], [-40, -156], [-530, -74], [-1356, -1215], [-165, -799], [-634, -1635], [436, -1282], [-184, -406], [-255, -139], [-316, -443], [385, -915], [-164, -697], [20, -508], [-327, -506], [-82, -444], [199, -324], [63, -920], [336, -267], [380, 296], [149, 739], [124, 246], [136, -33]], [[61006, 34107], [1634, 2825], [979, 784], [266, 685], [469, 646], [-466, 1194], [592, 797], [420, 1420], [459, 633], [-60, 407], [173, 405], [480, 392], [-254, 343], [-336, -75], [-399, -646], [-233, 293], [-990, -1190], [-612, -316], [-725, -1343], [-1060, -581], [-839, -2281], [-423, -3247], [99, -260], [-90, -476], [-409, -976], [213, -280], [1112, 847]], [[70020, 19772], [0, 460], [99, 180], [-62, 575], [187, 722], [-149, 394], [-125, 0], [-161, -1756], [-261, -460], [13, -739], [-187, -558], [63, -393], [583, -755], [112, 147], [161, 1018], [-136, 558], [37, 410], [-174, 197]], [[74377, 29977], [-683, -362], [-608, -131], [-137, 131], [187, 673], [198, 99], [621, -49], [509, 459], [137, 509], [385, 460], [-25, 164], [-199, 148], [193, 513], [522, 591], [285, 16], [137, 213], [-75, 444], [63, 147], [-236, 50], [-162, 689], [-524, 287], [411, 1019], [-75, 165], [-186, 0], [-510, -378], [-410, -50], [-125, -723], [-534, -740], [-150, -378], [-833, -892], [-422, -165], [-137, -902], [-186, -411], [-820, -476], [-558, -1592], [-224, -295], [-186, -542], [-186, -246], [-509, -148], [-87, -164], [50, -624], [-125, -32], [-149, 164], [-186, -66], [50, -558], [223, -164], [62, -607], [385, -706], [534, -263], [918, -153], [521, -476], [510, -870], [596, -262], [235, -329], [87, -394], [-683, -180], [-134, -375], [334, -211], [410, -65], [74, -394], [459, -263], [112, -197], [-112, -361], [0, -531], [-298, -902], [223, -394], [25, -559], [-99, -131], [-112, 49], [-273, 673], [-137, -65], [-12, -181], [248, -525], [0, -394], [559, -575], [1018, 1051], [99, 591], [249, 0], [335, 263], [435, 1083], [484, 739], [12, 180], [-310, 411], [-50, 311], [546, 706], [410, 805], [199, 1198], [633, 1083], [149, 722], [-37, 1067], [-199, 509], [50, 903], [-341, 1137], [434, 1309], [-583, 1104], [-397, 312], [149, -1100], [-236, -1723], [-249, 311], [-117, 999], [-498, -428], [-136, -854], [173, -1182], [-99, -903], [-174, -82], [-583, 1067], [99, 821], [-50, 755], [342, 662], [663, 802], [124, 262], [-99, 427], [-174, -16], [-236, -312], [-321, -832], [-63, 41], [-273, -377], [-136, -558], [-398, -476]], [[76848, 20029], [-223, 296], [-224, -17], [-136, -213], [-224, -985], [12, -197], [224, -279], [546, 574], [87, 345], [-62, 476]], [[81343, 23919], [310, 756], [-198, 443], [49, 164], [385, 427], [559, 82], [286, 295], [-174, 788], [186, 361], [1025, 210], [439, 887], [31, 253], [139, 12], [342, 1104], [459, 341], [174, 761], [428, 362], [410, 1052], [411, 329], [211, 345], [-199, 428], [-361, 49], [-522, -871], [-510, -50], [-24, 280], [497, 345], [348, 658], [-62, 279], [-510, 806], [0, 164], [448, 575], [0, 148], [-174, 247], [-336, -345], [-435, -17], [-982, -1118], [-38, -575], [-174, -460], [-87, -1513], [-236, -509], [25, -395], [-423, -443], [-124, -313], [-920, -592], [-112, 165], [149, 526], [808, 937], [460, 855], [-137, 690], [187, 1068], [199, 543], [-274, 49], [-211, -230], [-348, -66], [-634, -854], [-187, 115], [609, 1019], [896, 526], [298, -33], [746, 526], [249, 789], [522, 937], [-13, 559], [-571, 394], [-311, -213], [-299, -592], [-609, -82], [-112, 213], [522, 576], [336, 871], [-162, 33], [-945, -904], [-99, 33], [-37, 443], [-286, 576], [-38, 509], [-161, 99], [-386, -329], [311, -394], [-99, -789], [-100, -83], [-485, 165], [-236, -165], [-37, -180], [497, -839], [-149, -444], [-50, -838], [-261, 66], [99, 657], [-111, 378], [-249, 17], [-473, -625], [-273, -115], [-1268, 0], [149, 625], [808, 493], [311, 723], [-25, 871], [236, 494], [174, 147], [498, 50], [161, 263], [348, 148], [-37, 460], [373, 888], [323, 65], [212, 214], [50, 181], [-175, 838], [610, 724], [375, 818], [-829, -408], [-336, 50], [-174, 213], [174, 280], [485, 246], [87, 263], [-261, -16], [-50, 99], [535, 378], [584, 624], [25, 165], [-510, 394], [-49, 378], [-187, 115], [-460, -394], [-597, -247], [0, -641], [-199, -296], [-161, -49], [-311, 148], [-112, -82], [-199, -970], [-261, -362], [-13, -591], [-435, -214], [-360, -526], [-411, 214], [-99, -576], [-423, -213], [-74, -247], [-324, -296], [261, -477], [-211, -312], [-87, -394], [-572, -346], [240, -803], [-310, -361], [18, -263], [429, -131], [86, -443], [-86, -164], [-485, 344], [-189, -428], [438, -327], [-62, -919], [198, -345], [-12, -180], [-75, -148], [-136, 16], [-273, 493], [-361, 82], [25, -312], [373, -312], [37, -115], [-124, -147], [161, -214], [-161, -262], [-186, 32], [-100, -131], [-149, 82], [-62, -230], [100, -508], [397, -181], [-37, -509], [99, -328], [385, -296], [99, -229], [0, -378], [-223, -394], [422, -509], [112, -344], [24, -739], [112, -213], [248, 49], [174, -837], [224, -279], [25, -214], [236, -115], [-236, -131], [-733, 788], [-733, 9], [6, -637], [-174, -690], [25, -361], [472, -903], [-149, -870], [50, -837], [-162, -180], [-310, 115], [-298, -312], [-174, -1313], [298, -1937], [-37, -3004], [-435, -673], [-74, -1297], [-162, -591], [-260, -82], [-125, -345], [-322, -230], [-224, -377], [-410, -263], [-496, -115], [-75, -131], [497, -1280], [62, -739], [112, -197], [-187, -459], [50, -312], [373, -805], [-487, -962], [459, -279], [-37, -526], [385, -574], [509, -476], [658, -296], [224, -607], [648, -416], [683, -1034], [173, 115], [75, 279], [-99, 886], [-485, 821], [-509, 591], [87, 1067], [-112, 361], [-397, 279], [-87, 738], [75, 263], [223, 33], [37, 525], [423, -180], [248, 344], [-410, 378], [-49, 164], [111, 328], [-260, 558], [74, 460], [608, 460], [0, 410], [-136, 148], [-695, -66], [-336, -295], [-25, -214], [112, -180], [-174, -1034], [100, -378], [-509, -542], [124, -1017], [-398, -197], [-248, 82], [-559, 935], [348, 411], [224, 1067], [496, 558], [112, 295], [37, 542], [-174, 164], [-186, -410], [-434, -181], [99, 755], [211, 66], [310, 558], [298, 49], [112, 263], [708, 180], [385, 247], [782, 98], [757, 493], [125, 377], [-38, 181], [-124, 131], [-708, -164], [-459, 722], [-25, 378], [199, 443], [1241, 640], [162, 1133], [-435, 1214], [1478, 1986]], [[85046, 28583], [-1051, -1190], [40, -330], [-306, -532], [71, -317], [-561, -519], [-154, -786], [-490, -798], [-357, -266], [-133, -329], [9, -533], [284, -534], [357, -52], [1796, 2610], [73, 646], [-81, 280], [194, 418], [561, 633], [662, 315], [653, 811], [470, 836], [581, 443], [72, 304], [-93, 625], [-293, 91], [-423, -394], [-25, 148], [1069, 2416], [324, 444], [12, 444], [-298, 361], [-423, 0], [-410, -345], [-150, -805], [-472, -789], [-236, -1858], [-630, -1094], [-367, -329], [-275, -25]], [[83783, 22496], [112, -317], [-145, -1205], [234, -280], [357, -1], [61, 495], [286, 443], [326, -330], [346, -39], [52, 608], [213, 329], [641, 3276], [618, 1650], [969, 2082], [-1456, -1637], [-499, -802], [-454, -1071], [-444, -425], [-654, -1077], [-563, -1699]], [[86193, 38546], [137, 296], [-99, 312], [-510, 115], [-149, -592], [124, -838], [249, -214], [174, 33], [211, 526], [-137, 362]], [[87586, 37346], [162, 1068], [460, 444], [112, 345], [-100, 165], [-547, -165], [-162, -361], [-248, 49], [-274, -559], [37, -1118], [423, -772], [162, 98], [62, 395], [-87, 411]], [[85161, 40009], [249, 148], [112, 296], [-261, 279], [74, 411], [162, 82], [435, -82], [299, 197], [1053, 242], [377, 893], [-100, 131], [-336, 33], [-646, -378], [-112, 98], [12, 576], [261, 148], [684, 16], [535, 280], [162, 427], [-75, 460], [684, 855], [746, 395], [572, -116], [796, 379], [584, -329], [336, 82], [62, 312], [-527, 1351], [-474, -381], [-497, -131], [-162, -444], [-522, -66], [-261, -230], [-597, 247], [-895, -165], [-809, -329], [-671, 247], [-187, -99], [-360, -690], [-1076, -773], [-733, -723], [-547, -296], [-336, -526], [-87, -1594], [161, -50], [510, 247], [62, -82], [-621, -723], [-87, -740], [62, -280], [261, -213], [1057, 180], [273, 444], [398, -16]], [[86393, 24000], [-143, -305], [-83, -938], [-450, -1116], [161, -850], [-52, -685], [-480, -1103], [160, -1599], [92, -165], [346, 164], [470, 519], [-582, -874], [-103, -494], [90, -749], [500, 633], [929, 784], [306, 520], [611, -129], [591, 189], [1264, 961], [278, 1915], [-119, 1891], [633, 963], [-61, 317], [-193, 204], [-397, -279], [-286, -481], [-234, 77], [72, 570], [-274, 889], [234, 838], [155, 75], [62, 672], [-193, 330], [390, 1839], [-284, 546], [-775, -581], [-42, -457], [-347, -481], [60, -850], [346, -369], [-540, -88], [-508, -1242], [-218, -253], [-133, -482], [-367, -379], [-886, 53]], [[89046, 33407], [-563, -1927], [110, -787], [-429, -862], [51, -203], [631, -39], [836, 353], [122, 215], [421, 1915], [163, 253], [296, 114], [-101, 584], [-193, 330], [154, 812], [-111, 507], [-682, 408], [-365, 610], [-296, -151], [-12, -1358], [131, -533], [-163, -241]], [[91909, 34339], [-491, -1001], [-275, -177], [91, -673], [-561, -709], [-388, -189], [-122, -216], [466, -1498], [315, -242], [428, 63], [214, 164], [572, 1115], [540, 214], [265, 368], [124, 558], [-81, 330], [153, 228], [93, 799], [440, 1547], [-151, 990], [-210, 295], [180, 415], [-233, 584], [541, 481], [133, 342], [397, 342], [968, 391], [-152, 229], [-233, 1091], [-1089, 206], [-377, -342], [-72, -266], [91, -584], [-32, -748], [-417, 153], [-408, -100], [-275, -545], [70, -381], [-82, -444], [71, -241], [527, -539], [-40, -503], [-479, -379], [-12, -863], [-499, -265]], [[90433, 44661], [-211, 131], [-485, -197], [-298, -542], [-311, 16], [-174, -477], [-535, -345], [-423, -1644], [-373, -427], [-1007, -526], [-186, -543], [149, -378], [273, -164], [970, 132], [1666, 1265], [187, 543], [299, 84], [-1, 261], [808, 2318], [-335, 246], [-13, 247]], [[90564, 47389], [460, 642], [-149, 493], [-162, 131], [-1032, -115], [-273, -230], [-50, -296], [510, -575], [298, -115], [398, 65]], [[40693, 55778], [-632, -364], [-202, 685], [509, 404], [201, -126], [1235, 21], [-1, -291], [-1110, -329]], [[43718, 56228], [188, 1250], [-209, 663], [35, 228], [136, -22], [343, -992], [19, -1064], [-186, -354], [-1405, -1453], [-510, -267], [-456, 39], [-534, 254], [94, 242], [1072, 615], [283, 775], [173, 125], [957, -39]], [[31854, 91640], [848, 166], [141, 173], [-297, 533], [-565, 65], [-515, 219], [1551, 2872], [257, 48], [112, -98], [410, -970], [-169, -387], [-127, -888], [9, -705], [99, -111], [572, 965], [40, 1159], [342, 439], [20, 337], [247, 194], [905, 214], [1606, -225], [576, 373], [655, -295], [402, 113], [639, -149], [922, -15], [839, 411], [477, -81], [588, -378], [560, -165], [186, -165], [174, -608], [-174, -213], [-265, -33], [-1620, 427], [-694, -172], [-114, -237], [238, -228], [1142, -466], [1015, -31], [412, -383], [85, -481], [220, -313], [750, -270], [112, -395], [708, -131], [149, -164], [-64, -233], [-569, -295], [-215, -321], [774, -976], [-126, -321], [63, -323], [-374, -445], [993, -273], [234, -353], [1235, -1126], [201, -1136], [-162, -132], [-429, 122], [-77, -154], [150, -290], [578, -349], [-59, -197], [-1491, 148], [-299, -647], [334, -1198], [-50, -328], [-262, -62], [-24, -398], [-273, 33], [-62, 476], [196, 247], [-168, 85], [-613, -660], [-161, 509], [494, 538], [288, 538], [62, 814], [-330, 869], [-697, 513], [-722, -100], [-271, 263], [-657, 36], [-304, -382], [46, -1748], [183, -379], [542, -521], [420, -869], [323, -1163], [-124, -201], [-534, 346], [-409, 784], [18, 373], [-168, 256], [-31, 269], [-248, 150], [-77, -189], [243, -756], [100, -871], [-208, -392], [-379, -80], [76, -305], [-148, -358], [-547, -51], [-162, -128], [99, -1135], [-1237, -490], [-342, -628], [-520, -347], [-39, -344], [-134, -145], [-724, -232], [-151, 53], [-159, 735], [535, 1054], [67, 415], [-273, 220], [-404, -143], [-87, 98], [-21, 444], [-319, 182], [-255, 37], [-208, -231], [107, -1237], [360, -1036], [238, -1420], [192, -317], [428, -351], [74, -378], [-90, -164], [-463, 192], [-222, -60], [-218, -346], [-27, -907], [-184, -519], [-400, -431], [-744, -165], [24, -1068], [136, -818], [-112, -382], [-235, 291], [-167, 1975], [-154, 355], [-401, 223], [-38, 472], [918, -61], [141, 150], [160, 959], [-135, 744], [-335, 150], [-177, -293], [-795, -526], [-886, -116], [-631, 17], [-309, 128], [332, 497], [-42, 305], [-668, -636], [-209, -97], [-298, 181], [14, 250], [508, 867], [891, 100], [389, 1245], [-115, 888], [64, 335], [413, 835], [-63, 249], [-229, 14], [-1269, -359], [-293, -24], [-104, 102], [66, 468], [272, 296], [708, 16], [901, 287], [164, 264], [395, 192], [606, 621], [268, -4], [678, 509], [224, 654], [-310, 381], [545, 477], [65, 1713], [148, 1010], [661, 1243], [-89, 537], [-630, 1009], [-872, 562], [-66, 740], [-560, 689], [-310, 135], [-516, -340], [-198, 66], [-73, 413], [339, 499], [19, 366], [221, 403], [-73, 244], [-400, 131], [-347, -324], [-57, -614], [-257, -214], [-284, -504], [31, -630], [-298, -533], [-13, -648], [-158, -468], [37, -859], [137, -260], [459, 785], [196, 129], [258, -243], [33, -1125], [-533, -922], [-51, -722], [-85, -145], [-486, -112], [-486, -663], [-1096, -33], [-607, 361], [-37, 197], [171, 664], [-271, 306], [-11, 433], [1317, 1638], [353, 274], [-14, 961], [-1135, -52], [-796, -574], [-1004, 298], [1270, 2352], [169, -233], [681, -67]], [[37017, 93909], [-522, -477], [-87, -247], [136, -296], [-12, -345], [311, -279], [174, 66], [149, 378], [547, 164], [0, 164], [498, 313], [0, 164], [-585, 395], [212, 641], [-63, 164], [-621, -164], [-369, 296], [-270, 9], [-132, -240], [584, -526], [50, -180]], [[38024, 85607], [12, -641], [100, -230], [286, -148], [174, 198], [112, 493], [-261, 493], [87, 197], [447, -33], [187, 165], [162, 937], [-56, 117], [-635, 22], [-503, -271], [-286, -641], [174, -658]], [[39230, 90259], [0, 362], [212, 674], [-175, 592], [0, 624], [-273, 247], [-174, -99], [-162, -328], [-510, -280], [-480, -1022], [58, -326], [360, -394], [398, 65], [746, -115]], [[41642, 82846], [311, 690], [-62, 1529], [-224, 1249], [-404, -46], [-153, -855], [72, -69], [38, -1939], [99, -395], [323, -164]], [[27027, 83084], [-714, -644], [-329, 203], [943, 1746], [100, -1305]], [[29781, 85285], [137, 67], [308, 647], [176, -161], [-81, -312], [168, -527], [-137, -895], [8, -1520], [-61, -359], [-239, -266], [-597, 246], [-339, -219], [-259, -535], [-41, -334], [327, -696], [-37, -376], [-134, -138], [-533, 32], [-1597, 812], [-170, 311], [35, 558], [999, 2687], [181, 906], [-49, 399], [-145, 211], [1364, 2526], [317, -1141], [-97, -1223], [90, -335], [406, -365]], [[43940, 98883], [-146, 429], [112, 374], [884, 313], [867, -33], [794, -311], [52, -178], [-301, -178], [-133, -286], [-190, -117], [-1670, -367], [-201, -316], [59, -417], [-858, -887], [-407, 227], [-114, 245], [61, 612], [677, 284], [472, 402], [42, 204]], [[91074, 15538], [480, 823], [372, 277], [-1495, -4362], [-85, 447], [93, 786], [726, 1369], [-163, 254], [72, 406]], [[93759, 21987], [-138, 751], [235, 367], [289, 10], [-386, -1128]], [[94777, 25450], [254, 251], [-804, -2347], [58, 562], [-80, 660], [82, 520], [184, 342], [306, 12]], [[51649, 57547], [-353, -462], [-11, -495], [175, -824], [611, 201], [1680, 1791], [400, 189], [1901, 141], [310, 334], [-63, 572], [1141, 961], [376, -288], [398, 7], [91, -203], [-245, -506], [-133, -76], [-367, 613], [-132, 40], [-304, -184], [-204, -336], [-34, -541], [-311, -517], [-77, -924], [-402, 192], [-728, -468], [-631, 545], [-590, -47], [-163, 258], [-248, -32], [-213, -462], [-224, -1056], [-836, -670], [-224, -50], [-185, 273], [-186, 15], [-954, -868], [-50, 241], [294, 602], [-516, 693], [1134, 2115], [275, 240], [-12, -874], [-390, -140]], [[50570, 66128], [380, 338], [104, 320], [-123, 625], [201, 777], [-586, 764], [-229, -263], [-93, -406], [83, -649], [-164, -275], [-181, -70], [-51, -319], [-282, -437], [-318, 36], [-30, 203], [373, 699], [131, 751], [-470, 225], [136, 881], [-450, 249], [928, 669], [233, -62], [1081, 173], [460, 1053], [1207, 993], [36, 656], [360, 611], [791, 436], [941, 310], [124, 146], [257, 48], [478, -177], [347, 227], [58, 376], [-247, 360], [12, 320], [26, 129], [288, 48], [95, 149], [-236, 229], [2, 151], [1028, 678], [408, 503], [-39, 182], [-775, 735], [10, 200], [922, 683], [183, 857], [179, 371], [493, 523], [84, 197], [-52, 146], [-254, 16], [-878, -531], [-385, -397], [-403, -976], [-788, -1163], [-184, -682], [-226, -346], [-506, -375], [-161, -1016], [-222, -378], [-1345, -489], [-60, -709], [-679, -461], [-170, -382], [-298, -16], [-174, 394], [25, 263], [692, 170], [164, 264], [-8, 202], [-599, 794], [-50, 361], [1026, 296], [245, 414], [660, 251], [88, 165], [-116, 321], [414, 328], [110, 562], [221, 129], [448, -96], [293, 193], [143, 594], [646, 1495], [684, 641], [964, 523], [323, 341], [73, 327], [-136, 98], [-245, -70], [-231, 241], [10, 135], [547, 345], [590, 0], [268, 165], [71, 507], [-384, 302], [-196, 341], [11, 160], [186, 332], [-48, 412], [472, 431], [84, 205], [-22, 724], [200, 713], [499, 724], [393, 118], [243, 226], [495, 116], [147, 606], [361, 575], [211, 0], [37, -246], [-392, -792], [-32, -378], [-185, -210], [-732, -146], [-172, -436], [34, -780], [-162, -503], [-25, -1147], [162, -1230], [-283, -382], [-41, -357], [-304, -365], [-142, -744], [285, -716], [-720, -396], [-101, -219], [50, -963], [-252, -381], [-428, -167], [-98, -193], [317, -464], [-136, -1589], [-188, -320], [-73, -490], [67, -1185], [-287, -1523], [15, -417], [461, -1172], [-142, -2049], [-155, -931], [-573, -1340], [-457, -115], [135, -358], [286, -209], [-271, -598], [21, -157], [427, -392], [-133, -139], [-272, 88], [-203, -203], [-106, -454], [-151, -200], [-178, 12], [-384, -381], [273, 616], [514, 635], [17, 553], [-337, 329], [32, 1230], [285, 178], [479, 659], [522, 1550], [12, 896], [-232, 848], [-311, -37], [-274, 305], [230, 761], [-16, 823], [469, 795], [-145, 366], [-177, 60], [48, 585], [-136, 561], [-621, -152], [-253, -243], [-295, -1284], [1, -1430], [-162, -927], [-383, -326], [-2, -318], [-627, -784], [273, -579], [-87, -409], [78, -1062], [-201, -754], [-182, 36], [-494, -822], [-472, -201], [-214, -261], [171, -870], [-94, -738], [-365, -541], [-460, -128], [99, 168], [66, 1442], [638, 1924], [541, 1056], [-283, 521], [-375, 206], [61, 393], [325, 219], [360, 921], [472, 565], [344, 675], [392, 239], [218, 330], [74, 805], [-184, 319], [-596, -32], [-476, -551], [-304, 46], [-428, -493], [-669, -438], [-426, -703], [-258, -942], [19, -347], [181, -376], [-194, -193], [-692, 103], [-403, -601], [91, -1266], [229, -478], [484, -209], [33, -267], [-440, -312], [-18, -210], [418, -851], [-209, -153], [-37, -734], [-307, -761], [-183, -126], [-440, 216], [-442, -131], [-220, 375], [-208, 113], [-600, -221], [-567, -596], [-475, -84], [-223, 148], [-149, 723], [151, 132], [550, -61], [442, 537], [518, -76], [365, 651]], [[51191, 90910], [160, 400], [54, 687], [641, 748], [233, 479], [-192, 660], [609, 115], [243, -113], [752, 129], [111, -82], [-209, -393], [-818, -896], [-585, -1611], [-106, -998], [-911, -446], [-526, -748], [-193, -86], [-304, 97], [-227, 262], [-857, -79], [-311, 312], [62, 230], [403, 302], [370, 489], [1235, 293], [366, 249]]], "bbox": [164.60270999985238, -20.482371854496627, 164.67744259111456, -20.425842293335204], "objects": {"data": {"geometries": [{"arcs": [[[0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25]], [[26]], [[27]], [[28], [29], [30], [31], [32]], [[33]], [[34]], [[35]], [[36]], [[37]], [[38]], [[39]], [[40]], [[41]]], "id": "feature_0", "properties": {}, "type": "MultiPolygon"}], "type": "GeometryCollection"}}, "transform": {"scale": [7.473333859556209e-07, 5.653012646268712e-07], "translate": [164.60270999985238, -20.482371854496627]}, "type": "Topology"}, "shape_coords": {"arcs": [[[44241, 96381], [1125, 218], [1753, -681], [1372, -172], [1389, 264], [1225, 631], [1177, 7], [4137, -1234], [1719, -1234], [765, 80], [830, -1689], [1519, -1627], [498, -1441], [-193, -269], [-87, -2019], [823, -875], [425, -861], [1375, -1023], [1212, -379], [478, -1349], [983, -1012], [1368, -2877], [1375, -1895], [1749, -1528], [975, -468], [1027, -156], [1636, -857], [546, 237], [837, -1802], [1493, -643], [403, -1386], [947, -1021], [1095, -1865], [1822, -480], [1526, -3619], [1109, -974], [301, -1790], [-208, -1556], [799, -2721], [823, -422], [797, -1082], [1411, -2925], [1728, -1317], [1289, -1594], [1347, -595], [1036, -109], [783, -1115], [1387, -1120], [1614, -965], [2218, -770], [-15915, -43972], [-1006, 182], [-511, -188], [-3200, 749], [-433, -790], [-1726, 17], [-687, -299], [-3275, 1699], [-1030, 786], [-2290, 89], [-1708, 1323], [-1700, 520], [-2148, -519], [-975, 250], [-460, -158], [-411, 368], [-815, -270], [-926, 513], [-1222, -312], [-1548, 789], [-1929, 509], [-376, 584], [-909, 272], [-941, -338], [-968, 288], [-2569, 2513], [-1603, 496], [-1160, 1335], [-3127, 1624], [-377, 886], [-1142, 979], [-701, 1427], [-382, 133], [-1865, -432], [-1542, 692], [-330, -233], [-3561, -329], [-1839, 578], [-833, 848], [-619, 200], [-251, 648], [-582, 264], [-105, 560], [-434, 586], [-893, 95], [-161, 453], [-912, 74], [-361, 456], [-548, -38], [-745, 481], [-396, 757], [-1541, 1372], [-513, -361], [-346, 90], [-1956, 1470], [-459, 2178], [-1329, 379], [-1043, -376], [-573, 1404], [-2451, -727], [-727, 459], [-2498, 241], [-144, 260], [-458, -253], [-828, 405], [-1132, -96], [-2662, 394], [-533, -533], [-763, 460], [-730, -57], [-709, 352], [-562, 565], [-124, 475], [-565, 135], [-397, 520], [-2809, 1618], [38882, 68179], [541, -182], [1848, -1787], [2636, -1095], [334, -554]]], "bbox": [164.60270999985238, -20.482371854496627, 164.6794541518107, -20.42105351655614], "objects": {"data": {"geometries": [{"arcs": [[0]], "id": "feature_0", "properties": {}, "type": "Polygon"}], "type": "GeometryCollection"}}, "transform": {"scale": [7.674491940750283e-07, 6.131895112999932e-07], "translate": [164.60270999985238, -20.482371854496627]}, "type": "Topology"}}, "holdridge": {"forest": {"humide": 0.0809456773921444, "sec": 0.0, "tres_humide": 0.4317102794247715}, "non_forest": {"humide": 0.3735997771533089, "sec": 0.0, "tres_humide": 0.1137442660297751}}, "id": 65, "land_use": {"categories": ["NUM", "UM", "Sec", "Humide", "Tr\u00e8s Humide", "R\u00e9serve", "PPE", "Concessions", "For\u00eat"], "values": [3090.59703698969, 0.0, 0.0, 1404.81683499531, 1685.78020199438, 3047.74586565334, 528.963480942329, 0.0, 1584.41298113347]}, "name": "Zone tampon de l\u0027AGDR de Hyab\u00e9-l\u00e9 Jao", "shape_id": 65, "type": "protected_areas"};
+        const mapping = {"group_by": "shape", "widgets": {"elevation_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "data_key": "subset", "label": "For\u00eat", "stack": "Stack 0"}, {"backgroundColor": "#F4E4BC", "data_key": "complement", "label": "Hors-for\u00eat", "stack": "Stack 0"}], "description": "Distribution altitudinale de la for\u00eat dans l\u0027emprise", "labels_key": "classes", "options": {"indexAxis": "y", "scales": {"x": {"title": {"display": true, "text": "Superficie (ha)"}}, "y": {"reverse": true, "title": {"display": true, "text": "Altitude (m)"}}}}, "source": "elevation_distribution.elevation", "title": "Distribution altitudinale", "type": "bar_chart"}, "forest_cover": {"customPlugin": "customLabels", "datasets": [{"backgroundColors": ["#2E7D32", "#F4E4BC"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["emprise.forest", "emprise.non_forest"], "label": "Emprise", "transformData": "toPercentage"}, {"backgroundColors": ["#2E7D32", "#C5A98B"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["num.forest", "num.non_forest"], "label": "NUM", "transformData": "toPercentage"}, {"backgroundColors": ["#2E7D32", "#8B7355"], "borderColor": "#ffffff", "borderWidth": 2, "data_keys": ["um.forest", "um.non_forest"], "label": "UM", "transformData": "toPercentage"}], "description": "La couverture foresti\u00e8re (= superficie de for\u00eat / superficie disponible) est un indicateur de l\u0027importance de la for\u00eat dans le paysage.", "labels": ["For\u00eat", "Hors-for\u00eat"], "options": {"cutout": "20%", "plugins": {"legend": {"display": false}, "tooltip": {"enabled": false}}, "rotation": -90}, "source": "forest_cover", "title": "Couverture foresti\u00e8re", "type": "doughnut_chart"}, "forest_cover_by_elevation": {"datasets": [{"backgroundColor": "#90EE90", "data_key": "series.forest_um", "label": "For\u00eat (UM)", "stack": "Stack 0", "transformData": "negateValues"}, {"backgroundColor": "#2E7D32", "data_key": "series.forest_num", "label": "For\u00eat (NUM)", "stack": "Stack 0"}], "description": "Distribution altitudinale de la couverture foresti\u00e8re en fonction du substrat", "labels_key": "class_name", "options": {"indexAxis": "y", "maintainAspectRatio": false, "plugins": {"legend": {"align": "center", "labels": {"boxWidth": 10, "padding": 15}, "position": "bottom"}, "title": {"align": "center", "display": true, "position": "top", "text": "Couverture (%)"}, "tooltip": {"callbacks": {"label": "formatForestCoverTooltip"}, "intersect": false, "mode": "y"}}, "responsive": true, "scales": {"x": {"border": {"display": false}, "grid": {"borderDash": [5, 5], "drawTicks": false, "lineWidth": 1}, "max": 100, "min": -100, "position": "top", "stacked": true, "ticks": {"autoSkip": false, "callback": "formatAbsoluteValue", "maxRotation": 0, "stepSize": 20}}, "y": {"border": {"display": false}, "grid": {"borderDash": [5, 5], "display": true, "drawTicks": false, "lineWidth": 1}, "position": "left", "reverse": true, "stacked": true, "ticks": {"font": {"size": 12}}, "title": {"display": true, "font": {"size": 12}, "text": "Altitude (m)"}}}}, "source": "forest_cover_by_elevation", "title": "Couverture foresti\u00e8re par altitude", "type": "bar_chart"}, "forest_types": {"customPlugin": "forestTypeLabelsPlugin", "datasets": [{"backgroundColor": ["#2E7D32", "#7CB342", "#C5E1A5"], "borderColor": "#ffffff", "borderWidth": 2, "data_key": "values", "label": "Types de for\u00eat", "transformData": "toPercentage"}], "description": "R\u00e9partition de la for\u00eat selon les trois types de for\u00eat", "labels_key": "categories", "options": {"cutout": "60%", "plugins": {"legend": {"labels": {"boxWidth": 15, "font": {"size": 12}, "padding": 20, "usePointStyle": false}, "position": "bottom"}, "tooltip": {"callbacks": {"label": "formatForestTypeTooltip"}}}}, "source": "forest_types", "title": "Types forestiers", "type": "doughnut_chart"}, "forest_types_by_elevation": {"datasets": [{"backgroundColor": "#C5E1A5", "borderColor": "#C5E1A5", "data_key": "secondaire", "fill": true, "label": "For\u00eat secondaire", "pointHoverBackgroundColor": "#ffffff", "pointHoverRadius": 5, "pointRadius": 0, "pointStyle": "circle", "stack": "Stack 0", "tension": 0.4, "transformData": "stackedPercentage"}, {"backgroundColor": "#7CB342", "borderColor": "#7CB342", "data_key": "mature", "fill": true, "label": "For\u00eat mature", "pointHoverBackgroundColor": "#ffffff", "pointHoverRadius": 5, "pointRadius": 0, "pointStyle": "circle", "stack": "Stack 0", "tension": 0.4, "transformData": "stackedPercentage"}, {"backgroundColor": "#2E7D32", "borderColor": "#2E7D32", "data_key": "coeur", "fill": true, "label": "For\u00eat de coeur", "pointHoverBackgroundColor": "#ffffff", "pointHoverRadius": 5, "pointRadius": 0, "pointStyle": "circle", "stack": "Stack 0", "tension": 0.4, "transformData": "stackedPercentage"}], "description": "Distribution des types de for\u00eats selon l\u0027altitude", "labels_key": "altitudes", "options": {"interaction": {"axis": "x", "intersect": false, "mode": "nearest"}, "maintainAspectRatio": false, "plugins": {"legend": {"labels": {"boxWidth": 15, "padding": 20, "usePointStyle": false}, "position": "bottom"}, "tooltip": {"callbacks": {"label": "formatForestTypeElevationTooltip"}, "intersect": false, "mode": "index"}}, "responsive": true, "scales": {"x": {"grid": {"display": false}, "ticks": {"maxRotation": 0}, "title": {"display": true, "font": {"size": 12}, "text": "Altitude (m)"}}, "y": {"grid": {"borderDash": [2, 2], "color": "#e5e5e5"}, "max": 100, "min": 0, "stacked": true, "ticks": {"callback": "formatPercentage"}, "title": {"display": true, "font": {"size": 12}, "text": "Fr\u00e9quence (%)"}}}}, "sortBy": "altitudes", "source": "forest_types_by_elevation", "title": "Types forestiers par altitude", "type": "line_chart"}, "fragmentation": {"description": "La taille effective de maillage repr\u00e9sente la probabilit\u00e9 que deux points appartiennent au m\u00eame fragment de for\u00eat", "options": {"max": 1000, "min": 0, "sectors": [{"color": "#f02828", "range": [0, 200]}, {"color": "#fe6a00", "range": [200, 400]}, {"color": "#e8dd0f", "range": [400, 600]}, {"color": "#81e042", "range": [600, 800]}, {"color": "#049f50", "range": [800, 1000]}], "units": "km\u00b2"}, "source": "fragmentation.meff", "title": "Fragmentation", "type": "gauge", "value_key": "value"}, "fragmentation_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "borderColor": "#2E7D32", "borderWidth": 2, "data_key": "values", "fill": true, "label": "Aire Cumul\u00e9e", "pointRadius": 0, "tension": 0.3, "transformData": "toPercentage"}], "description": "Aire cumul\u00e9e de chaque fragment forestier class\u00e9 du plus petit au plus grand", "labels_key": "sizes", "options": {"plugins": {"legend": {"labels": {"boxWidth": 15, "padding": 20, "usePointStyle": false}, "position": "bottom"}}, "scales": {"x": {"grid": {"display": false}, "title": {"display": true, "text": "Surface (ha)"}, "type": "logarithmic"}, "y": {"beginAtZero": true, "grid": {"borderDash": [2, 2], "color": "#e5e5e5"}, "max": 100, "min": 0, "ticks": {"callback": "formatPercentage"}, "title": {"display": true, "text": "Fr\u00e9quence (%)"}}}}, "sortBy": "sizes", "sortData": true, "source": "fragmentation_distribution", "title": "Fragments forestiers", "type": "line_chart"}, "general_info": {"fields": [{"format": "number", "label": "Surface totale", "source": "land_area_ha"}, {"format": "number", "label": "Surface for\u00eat", "source": "forest_area_ha"}, {"format": "number", "label": "For\u00eat sur mine", "source": "forest_mining_ha"}, {"format": "number", "label": "For\u00eat en r\u00e9serve", "source": "forest_reserve_ha"}, {"format": "number", "label": "For\u00eat sur captage (PPE)", "source": "forest_ppe_ha"}, {"format": "range", "label": "Pluviom\u00e9trie", "source": "rainfall"}, {"format": "number", "label": "Altitude m\u00e9diane", "source": "elevation_median"}, {"format": "number", "label": "Altitude maximale", "source": "elevation_max"}], "layout": "grid", "title": "Informations g\u00e9n\u00e9rales", "type": "info_panel"}, "holdridge_distribution": {"datasets": [{"backgroundColor": "#2E7D32", "data_keys": ["forest.sec", "forest.humide", "forest.tres_humide"], "label": "For\u00eat", "stack": "Stack 0", "transformData": "toPercentage"}, {"backgroundColor": "#F4E4BC", "data_keys": ["non_forest.sec", "non_forest.humide", "non_forest.tres_humide"], "label": "Hors-for\u00eat", "stack": "Stack 0", "transformData": "toPercentage"}], "description": "Distribution de la for\u00eat selon les milieux de vie de Holdridge", "labels": ["Sec", "Humide", "Tr\u00e8s humide"], "options": {"indexAxis": "x", "scales": {"x": {"title": {"display": true, "text": "Type de milieu"}}, "y": {"title": {"display": true, "text": "Proportion (%)"}}}}, "source": "holdridge", "title": "For\u00eat et milieux de vie", "type": "bar_chart"}, "land_use": {"datasets": [{"color_mapping": {"Concessions": "#E57373", "For\u00eat": "#2E7D32", "Humide": "#FFEB3B", "NUM": "#8B4513", "PPE": "#90CAF9", "R\u00e9serve": "#4CAF50", "Sec": "#8B0000", "Tr\u00e8s Humide": "#1E88E5", "UM": "#CD853F"}, "data_key": "values", "label": "Occupation du sol"}], "description": "Superficie occup\u00e9e par le substrat, les milieux de vie de Holdridge, les limites administratives et la for\u00eat dans l\u0027emprise s\u00e9lectionn\u00e9e", "labels_key": "categories", "options": {"indexAxis": "x", "scales": {"x": {"title": {"display": true, "text": ""}}, "y": {"ticks": {"callback": "formatSurfaceValue"}, "title": {"display": true, "text": "Superficie (ha)"}}}}, "source": "land_use", "title": "Occupation du sol", "type": "bar_chart"}, "map_panel": {"description": "Distribution de la for\u00eat dans l\u0027emprise s\u00e9lectionn\u00e9e", "layers": [{"id": "shape", "source": "geography.shape_coords", "style": {"color": "#1fb99d", "fillOpacity": 0, "weight": 2}}, {"id": "forest", "source": "geography.forest_cover_coords", "style": {"color": "#228b22", "fillColor": "#228b22cc", "fillOpacity": 0.8, "weight": 0.3}}], "source": "geography", "title": "Distribution de la for\u00eat", "type": "map_panel"}}};
+        const currentShapeType = "protected_areas";
+        const currentShapeId = 65;
+        let maps = {};  // Store map instances
+
+        // =====================================
+        // Core Initialization
+        // =====================================
+        /**
+         * Initialize all components when DOM is loaded
+         * - Maps initialization
+         * - Shape tree creation
+         * - Widgets initialization
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+
+
+            // Initialize maps
+            if (mapping.widgets.map_panel) {
+                initShapeMaps(mapping, shape);
+            }
+
+            // Initialize tree
+            createShapeTree(document.getElementById('shape-tree'), shapeTypes);
+
+            // Initialize charts based on widget configuration
+            initializeWidgets(mapping.widgets, shape);
+        });
+
+        // =====================================
+        // Chart Type Management & Data Processing
+        // =====================================
+        /**
+         * Maps widget types to Chart.js chart types
+         * @param {string} widgetType - Type from widget configuration
+         * @returns {string} Corresponding Chart.js type
+         */
+        function getChartTypeFromWidgetType(widgetType) {
+            const typeMapping = {
+                'doughnut_chart': 'doughnut',
+                'pie_chart': 'pie',
+                'bar_chart': 'bar',
+                'line_chart': 'line',
+                'stacked_bar_chart': 'bar',
+                'gauge': 'gauge'
+            };
+            return typeMapping[widgetType] || 'bar'; //
+        }
+
+        /**
+         * Prepares data for chart rendering, including sorting and transformation
+         * @param {Object} config - Widget configuration
+         * @param {Object} data - Raw data for the chart
+         * @returns {Object} Formatted data for Chart.js
+         */
+        function prepareChartData(config, data) {
+            const datasets = [];
+            let labels = [];
+
+            if (!config.datasets || !Array.isArray(config.datasets)) {
+                console.warn('No datasets configuration provided');
+                return {labels: [], datasets: []};
+            }
+
+            // Get and sort data if needed
+            let sortedData = data;
+            let sortedIndices = null;
+            if (config.sortBy) {
+                const values = _.get(data, config.sortBy, []);
+                sortedIndices = values.map((v, i) => i);
+                sortedIndices.sort((a, b) => values[a] - values[b]);
+
+                // Create new sorted data object
+                sortedData = Object.keys(data).reduce((acc, key) => {
+                    if (Array.isArray(data[key])) {
+                        acc[key] = sortedIndices.map(i => data[key][i]);
+                    } else {
+                        acc[key] = data[key];
+                    }
+                    return acc;
+                }, {});
+            }
+
+            // Get labels before dataset processing
+            labels = config.labels_key ?
+                _.get(sortedData, config.labels_key, []).map(v => v.toString()) :
+                config.labels ? config.labels :
+                    [];
+
+            config.datasets.forEach((datasetConfig) => {
+                const dataset = {
+                    label: datasetConfig.label,
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: datasetConfig.borderWidth ?? 1,
+                    fill: datasetConfig.fill ?? false,
+                    tension: datasetConfig.tension ?? 0,
+                    stack: datasetConfig.stack,
+                    pointRadius: datasetConfig.pointRadius ?? undefined,
+                    pointHoverRadius: datasetConfig.pointHoverRadius ?? undefined,
+                    pointHoverBackgroundColor: datasetConfig.pointHoverBackgroundColor ?? undefined,
+                };
+
+                // Process data
+                dataset.data = processDataset(datasetConfig, sortedData, config.type);
+
+                // Transform data if needed
+                if (datasetConfig.transformData) {
+                    dataset.data = dataset.data.map((value, index) =>
+                        transformDataValue(value, datasetConfig.transformData, index, sortedData)
+                    );
+                }
+
+                // Process colors after data is loaded
+                processColors(dataset, datasetConfig, labels);
+
+                datasets.push(dataset);
+            });
+
+            return {labels, datasets};
+        }
+
+        /**
+         * Prepares chart options by merging defaults with configuration
+         * Handles scales, plugins, and callbacks configuration
+         * @param {Object} config - Widget configuration
+         * @returns {Object} Complete Chart.js options
+         */
+        function prepareChartOptions(config) {
+            // Default options restent les mêmes
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: false,
+                            boxWidth: 15,
+                        },
+                    },
+                    title: {
+                        display: false,
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                },
+                scales: {},
+            };
+
+            // Merge custom options with defaults
+            const options = _.merge({}, defaultOptions, config.options);
+
+            // Handle scales configuration
+            if (config.options && config.options.scales) {
+                Object.keys(options.scales || {}).forEach(scaleKey => {
+                    const scale = options.scales[scaleKey];
+                    if (scale.ticks && scale.ticks.callback) {
+                        const callbackName = scale.ticks.callback;
+                        if (typeof window[callbackName] === 'function') {
+                            scale.ticks.callback = window[callbackName];
+                        }
+                    }
+                });
+            }
+
+            // Handle stacked charts
+            if (config.type === 'stacked_bar_chart' || (config.options && config.options.stacked)) {
+                if (options.scales.x) options.scales.x.stacked = true;
+                if (options.scales.y) options.scales.y.stacked = true;
+            }
+
+            // Process plugin callbacks
+            if (options.plugins) {
+                for (const pluginKey in options.plugins) {
+                    const plugin = options.plugins[pluginKey];
+                    if (plugin.callbacks) {
+                        for (const callbackKey in plugin.callbacks) {
+                            const callbackName = plugin.callbacks[callbackKey];
+                            if (typeof callbackName === 'string' && typeof window[callbackName] === 'function') {
+                                plugin.callbacks[callbackKey] = window[callbackName];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return options;
+        }
+
+        /**
+         * Process dataset values according to chart type
+         */
+        function processDataset(datasetConfig, data, chartType) {
+            let processedData = [];
+
+            if (datasetConfig.data_keys && Array.isArray(datasetConfig.data_keys)) {
+                processedData = datasetConfig.data_keys.map(key => {
+                    const value = parseFloat(_.get(data, key, 0)) || 0;
+                    return formatValue(value, chartType);
+                });
+            } else if (datasetConfig.data_key) {
+                const values = _.get(data, datasetConfig.data_key, []);
+                processedData = Array.isArray(values) ?
+                    values.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(values) || 0, chartType)];
+            } else if (datasetConfig.data) {
+                processedData = Array.isArray(datasetConfig.data) ?
+                    datasetConfig.data.map(value => formatValue(parseFloat(value) || 0, chartType)) :
+                    [formatValue(parseFloat(datasetConfig.data) || 0, chartType)];
+            }
+
+            return processedData;
+        }
+
+        /**
+         * Process colors for chart datasets
+         */
+        function processColors(dataset, datasetConfig, labels) {
+            if (datasetConfig.color_mapping && labels) {
+                // Pour le color_mapping, on utilise les labels pour mapper les couleurs
+                dataset.backgroundColor = Array.isArray(dataset.data) ?
+                    dataset.data.map((_, index) => {
+                        const label = labels[index];
+                        return datasetConfig.color_mapping[label] || '#000000';
+                    }) :
+                    datasetConfig.color_mapping[labels[0]] || '#000000';
+
+                dataset.borderColor = datasetConfig.borderColor || dataset.backgroundColor;
+            } else if (datasetConfig.backgroundColors) {
+                dataset.backgroundColor = datasetConfig.backgroundColors;
+                dataset.borderColor = datasetConfig.borderColor || datasetConfig.backgroundColors;
+            } else if (datasetConfig.backgroundColor) {
+                dataset.backgroundColor = datasetConfig.backgroundColor;
+                dataset.borderColor = datasetConfig.borderColor || datasetConfig.backgroundColor;
+            } else {
+                dataset.backgroundColor = '#000000';
+                dataset.borderColor = '#000000';
+            }
+        }
+
+        // =====================================
+        // Widget Initialization
+        // =====================================
+        /**
+         * Main widgets initialization router
+         * Handles different widget types initialization
+         */
+        function initializeWidgets(widgets, stats) {
+            // Mapping des types vers leurs fonctions d'initialisation
+            const initializerMap = {
+                'bar_chart': initChart,
+                'line_chart': initChart,
+                'pie_chart': initChart,
+                'doughnut_chart': initChart,
+                'gauge': initChart,
+                'map_panel': initMapFromConfig
+            };
+
+            Object.entries(widgets)
+                .filter(([_, config]) => config.type in initializerMap)  // Ignore les types non gérés
+                .forEach(([widgetKey, config]) => {
+                    // Génère l'ID du widget automatiquement si non spécifié
+                    const suffix = config.type.includes('chart') ? 'Chart' :
+                        config.type === 'gauge' ? 'Gauge' : 'Map';
+                    const widgetId = config.id || `${widgetKey}${suffix}`;
+
+                    // Pour les cartes, on passe directement stats
+                    if (config.type === 'map_panel') {
+                        initializerMap[config.type](widgetId, stats, config);
+                        return;
+                    }
+
+                    // Pour les autres widgets, on vérifie la source dans stats
+                    const data = _.get(stats, config.source);
+                    if (!data) return;  // Skip si pas de données
+
+                    // Initialise le widget avec la fonction appropriée
+                    initializerMap[config.type](widgetId, data, config);
+                });
+        }
+
+        /**
+         * Initialize chart widgets including gauges
+         * Handles both Chart.js charts and JustGage gauges
+         */
+        function initChart(widgetId, data, config) {
+            const ctx = document.getElementById(widgetId);
+            if (!ctx) return;
+
+            const chartType = getChartTypeFromWidgetType(config.type);
+
+            if (chartType === 'gauge') {
+                const value = parseFloat(_.get(data, config.value_key, 0).toFixed(1));
+
+                const gaugeOptions = {
+                    id: widgetId,
+                    value: value,
+                    min: config.options.min,
+                    max: config.options.max,
+                    label: config.options.units,
+                    title: config.title,
+                    gaugeColor: "#eee",
+                    levelColors: config.options.sectors.map(s => s.color),
+                    decimals: 1,
+                    gaugeWidthScale: 0.6,
+                    counter: true,
+                    pointer: true,
+                    pointerOptions: {
+                        toplength: 8,
+                        bottomlength: -20,
+                        bottomwidth: 6,
+                        color: '#8e8e93'
+                    },
+                    // Default options that don't need to be in config
+                    showMinMax: false,
+                    donut: false,
+                    relativeGaugeSize: true,
+                    // Font colors that don't need to be in config
+                    titleFontColor: "#333",
+                    valueFontColor: "#333",
+                    labelFontColor: "#666"
+                };
+
+                const gauge = new JustGage(gaugeOptions);
+
+                // Add value text below
+                const valueText = document.createElement('p');
+                valueText.textContent = `Taille effective de maillage: ${value} ${config.options.units}`;
+                valueText.className = 'text-center mt-5 text-lg text-gray-700';
+                ctx.parentNode.appendChild(valueText);
+
+                return;
+            }
+
+            // Pour les autres types de graphiques...
+            const chartData = prepareChartData(config, data);
+
+            // Vérifier si les données sont vides
+            let hasData = false;
+
+            if (chartData && chartData.datasets) {
+                // Vérifier si au moins un dataset contient des données
+                hasData = chartData.datasets.some(dataset => {
+                    // Vérifier si le dataset a des données et qu'elles ne sont pas toutes nulles/0
+                    return dataset.data &&
+                           dataset.data.length > 0 &&
+                           dataset.data.some(value => value !== null && value !== undefined && value !== 0);
+                });
+            }
+
+            // Si aucune donnée n'est disponible, afficher un message
+            if (!hasData) {
+                if (ctx) {
+                    // Remplacer le canvas par un div avec le message
+                    const container = ctx.parentNode;
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'flex items-center justify-center h-64';
+                    messageDiv.innerHTML = '<p class="text-gray-500 italic">Pas de données disponibles</p>';
+                    container.replaceChild(messageDiv, ctx);
+                }
+                return;
+            }
+
+            const chartOptions = prepareChartOptions(config);
+            const plugins = [];
+
+            if (config.customPlugin && typeof window[config.customPlugin] === 'object') {
+                plugins.push(window[config.customPlugin]);
+            }
+
+            new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: chartOptions,
+                plugins: plugins,
+            });
+        }
+
+        // =====================================
+        // Map Management
+        // =====================================
+        /**
+         * Initialize maps based on configuration
+         */
+        function initShapeMaps(mapping, shape) {
+            if (mapping.widgets.map_panel) {
+                // Initialize main map with widget config
+                //initMapFromConfig('map_panelMap', shape, mapping.widgets.map_panel);
+
+                // Initialize overview map
+                initOverviewMap('allShapesMap', shape, mapping.widgets.map_panel);
+            }
+        }
+
+        /**
+         * Initialize main map with configured layers
+         */
+        function initMapFromConfig(mapId, shape, mapConfig) {
+            const mapContainer = document.getElementById(mapId);
+            if (!mapContainer || maps[mapId]) return;
+
+            // Base configuration
+            const defaultZoom = 7;
+
+            // Base layers with backup options
+            const baseLayers = {
+                "Satellite": L.tileLayer.wms("https://carto10.gouv.nc/arcgis/services/fond_imagerie/MapServer/WMSServer", {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                "Carte": L.tileLayer.wms('https://carto.gouv.nc/arcgis/services/fond_cartographie/MapServer/WMSServer', {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                // Backup map sources (global)
+                "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }),
+                // Alternative satellite imagery
+                "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                })
+            };
+
+            // Tracker to check if primary map sources are available
+            let primaryLayerAvailable = false;
+            let primaryLayersLoaded = 0;
+            const totalPrimaryLayers = 2; // Number of primary layers (Satellite and Carte)
+
+            // Function to check layer availability
+            function checkLayersAvailability() {
+                if (primaryLayersLoaded >= totalPrimaryLayers && !primaryLayerAvailable) {
+                    // No primary map source is available, switch to ESRI Satellite
+                    console.log("Primary map sources are unavailable, using ESRI Satellite");
+                    map.removeLayer(baseLayers["Satellite"]); // Remove default layer
+                    map.addLayer(baseLayers["ESRI Satellite"]); // Add backup layer
+                }
+            }
+
+            // Create map with Satellite as default layer
+            const map = L.map(mapId, {
+                layers: [baseLayers["Satellite"]],
+                zoom: defaultZoom,
+                scrollWheelZoom: false
+            });
+
+            // Add layer control
+            L.control.layers(baseLayers).addTo(map);
+            map.attributionControl.setPrefix(false);
+
+            // Set a timeout to automatically switch to backup layer if primary layers don't load quickly
+            let mapLoadTimeout = setTimeout(function() {
+                if (!primaryLayerAvailable) {
+                    console.log("Map load timeout reached, switching to backup layer");
+                    map.removeLayer(baseLayers["Satellite"]);
+                    map.addLayer(baseLayers["ESRI Satellite"]);
+                    // Force the primaryLayersLoaded to avoid further checks
+                    primaryLayersLoaded = totalPrimaryLayers;
+                }
+            }, 3000); // 3 seconds timeout
+
+            // Listen for tile loading events on primary layers
+            baseLayers["Satellite"].on('tileerror', function(error) {
+                console.log("Error loading Satellite layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Satellite"].on('load', function() {
+                console.log("Satellite layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            baseLayers["Carte"].on('tileerror', function(error) {
+                console.log("Error loading Carte layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Carte"].on('load', function() {
+                console.log("Carte layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            // Add configured layers
+            const layers = [];
+            mapConfig.layers.forEach(layer => {
+                const sourceData = _.get(shape, layer.source);
+                if (sourceData) {
+                    try {
+                        // Convert TopoJSON to GeoJSON if needed
+                        let geoJson;
+                        if (sourceData.type === 'Topology') {
+                            // Convert TopoJSON to GeoJSON
+                            const geometryKey = Object.keys(sourceData.objects)[0];
+                            geoJson = topojson.feature(sourceData, sourceData.objects[geometryKey]);
+                        } else {
+                            // Already GeoJSON
+                            geoJson = typeof sourceData === 'string' ? JSON.parse(sourceData) : sourceData;
+                        }
+
+                        const geoLayer = L.geoJSON(geoJson, {
+                            style: layer.style
+                        }).addTo(map);
+                        layers.push(geoLayer);
+                    } catch (e) {
+                        console.error(`Error loading layer ${layer.id}:`, e);
+                    }
+                }
+            });
+
+            // Adjust view
+            if (layers.length > 0) {
+                const group = L.featureGroup(layers);
+                map.fitBounds(group.getBounds());
+            }
+
+            maps[mapId] = map;
+        }
+
+        /**
+         * Initialize overview map showing all shapes of same type
+         */
+        function initOverviewMap(mapId, currentShape, mapConfig) {
+            const mapContainer = document.getElementById(mapId);
+            if (!mapContainer || maps[mapId]) return;
+
+            // Base layers with backup options
+            const baseLayers = {
+                "Satellite": L.tileLayer.wms("https://carto10.gouv.nc/arcgis/services/fond_imagerie/MapServer/WMSServer", {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                "Carte": L.tileLayer.wms('https://carto.gouv.nc/arcgis/services/fond_cartographie/MapServer/WMSServer', {
+                    layers: '0',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: "<a href='http://www.geoportal.gouv.nc/'>Géorep</a> <i> - Gouvernement de la Nouvelle-Calédonie</i>",
+                    // Add a short timeout to avoid waiting for the full browser timeout
+                    timeout: 5000
+                }),
+                // Backup map sources (global)
+                "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }),
+                // Alternative satellite imagery
+                "ESRI Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                })
+            };
+
+            // Tracker to check if primary map sources are available
+            let primaryLayerAvailable = false;
+            let primaryLayersLoaded = 0;
+            const totalPrimaryLayers = 2; // Number of primary layers (Satellite and Carte)
+
+            // Create map with Satellite as default layer
+            const map = L.map(mapId, {
+                layers: [baseLayers["Satellite"]],
+                scrollWheelZoom: false
+            });
+
+            // Add layer control
+            L.control.layers(baseLayers).addTo(map);
+            map.attributionControl.setPrefix(false);
+
+            // Function to check layer availability
+            function checkLayersAvailability() {
+                if (primaryLayersLoaded >= totalPrimaryLayers && !primaryLayerAvailable) {
+                    // No primary map source is available, switch to ESRI Satellite
+                    console.log("Primary map sources are unavailable, using ESRI Satellite");
+                    map.removeLayer(baseLayers["Satellite"]); // Remove default layer
+                    map.addLayer(baseLayers["ESRI Satellite"]); // Add backup layer
+                }
+            }
+
+            // Set a timeout to automatically switch to backup layer if primary layers don't load quickly
+            let mapLoadTimeout = setTimeout(function() {
+                if (!primaryLayerAvailable) {
+                    console.log("Map load timeout reached, switching to backup layer");
+                    map.removeLayer(baseLayers["Satellite"]);
+                    map.addLayer(baseLayers["ESRI Satellite"]);
+                    // Force the primaryLayersLoaded to avoid further checks
+                    primaryLayersLoaded = totalPrimaryLayers;
+                }
+            }, 3000); // 3 seconds timeout
+
+            // Listen for tile loading events on primary layers
+            baseLayers["Satellite"].on('tileerror', function(error) {
+                console.log("Error loading Satellite layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Satellite"].on('load', function() {
+                console.log("Satellite layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            baseLayers["Carte"].on('tileerror', function(error) {
+                console.log("Error loading Carte layer:", error);
+                primaryLayersLoaded++;
+                checkLayersAvailability();
+            });
+
+            baseLayers["Carte"].on('load', function() {
+                console.log("Carte layer loaded successfully");
+                primaryLayerAvailable = true;
+                primaryLayersLoaded++;
+                clearTimeout(mapLoadTimeout); // Clear the timeout as we have a successful load
+            });
+
+            // Add shapes of same category
+            const group = L.featureGroup();
+            let currentShapeLayer;
+
+            if (shapeTypes) {
+                Object.entries(shapeTypes).forEach(([typeName, typeInfo]) => {
+                    if (typeName === currentShape.type && typeInfo.shapes) {
+                        try {
+                            // Convert TopoJSON to GeoJSON
+                            const features = topojson.feature(
+                                typeInfo.shapes,     // Complete TopoJSON
+                                typeInfo.shapes.objects.data  // Reference to data
+                            );
+
+                            // Process each feature
+                            if (features && features.features && features.features.length > 0) {
+                                features.features.forEach(feature => {
+                                    if (!feature.geometry) return;
+
+                                    const shapeName = feature.properties.name;
+                                    const style = shapeName === currentShape.name ?
+                                        {...mapConfig.layers[0].style, fillOpacity: 0.7} :
+                                        {...mapConfig.layers[0].style, fillOpacity: 0.2};
+
+                                    const layer = L.geoJSON(feature.geometry, {style});
+
+                                    if (shapeName === currentShape.name) {
+                                        currentShapeLayer = layer;
+                                    }
+
+                                    layer.bindTooltip(shapeName, {
+                                        permanent: false,
+                                        direction: 'right',
+                                        className: 'custom-tooltip'
+                                    });
+
+                                    layer.on('click', () => {
+                                        // Trouver l'ID à partir du nom
+                                        const clickedFeature = features.features.find(f => f.properties.name === shapeName);
+                                        if (clickedFeature && clickedFeature.id) {
+                                            window.location.href = `../shape/${clickedFeature.id}.html`;
+                                        }
+                                    });
+
+                                    group.addLayer(layer);
+                                });
+                            }
+                        } catch (error) {
+                            console.error("Error processing features for tree:", error);
+                        }
+                    }
+                });
+            }
+
+            // Vérifier que le groupe a des couches avant de faire fitBounds
+            group.addTo(map);
+            if (group.getLayers().length > 0) {
+                try {
+                    const bounds = group.getBounds();
+                    if (bounds.isValid()) {
+                        map.fitBounds(bounds);
+                    } else {
+                        console.warn("Invalid bounds, setting default view");
+                        map.setView([-21.3, 165.5], 7); // Vue par défaut sur la Nouvelle-Calédonie
+                    }
+                } catch (error) {
+                    console.error("Error fitting bounds:", error);
+                    map.setView([-21.3, 165.5], 7);
+                }
+            }
+
+            if (currentShapeLayer) {
+                currentShapeLayer.bringToFront();
+            }
+        }
+
+        // =====================================
+        // Shape Tree Management
+        // =====================================
+        /**
+         * Creates hierarchical tree view of shapes
+         * Handles shape type grouping and current selection
+         */
+        function createShapeTree(container, shapeTypes) {
+            const $ul = $('<ul class="mb-3"></ul>');
+
+            Object.entries(shapeTypes).forEach(([type, typeInfo]) => {
+                const $li = $('<li></li>');
+                const $typeLink = $('<a href="javascript:void(0)" class="shape-type-link"></a>')
+                    .text(typeInfo.type_label);
+
+                const $childUl = $('<ul style="display:none;"></ul>');
+
+                try {
+                    // Convertir TopoJSON en GeoJSON
+                    const features = topojson.feature(
+                        typeInfo.shapes,
+                        typeInfo.shapes.objects.data
+                    );
+
+                    if (features && features.features) {
+                        // Ajouter le nombre de shapes
+                        $typeLink.append($('<span class="badge"></span>').text(features.features.length));
+
+                        // Trier par nom
+                        const sortedFeatures = [...features.features].sort((a, b) =>
+                            a.properties.name.localeCompare(b.properties.name)
+                        );
+
+                        sortedFeatures.forEach(feature => {
+                            const $shapeLi = $('<li></li>');
+                            const $shapeLink = $('<a></a>')
+                                .attr('href', `../shape/${feature.id}.html`)
+                                .text(feature.properties.name)
+                                .addClass('shape-link');
+
+                            if (feature.id === currentShapeId) {
+                                $shapeLink.addClass('current-shape');
+                            }
+
+                            $shapeLi.append($shapeLink);
+                            $childUl.append($shapeLi);
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error processing features for tree:", error);
+                }
+
+                $typeLink.on('click', function(e) {
+                    e.stopPropagation();
+                    $childUl.slideToggle();
+                    $(this).toggleClass('open');
+                });
+
+                if (type === currentShapeType) {
+                    $childUl.show();
+                    $typeLink.addClass('open');
+                }
+
+                $li.append($typeLink).append($childUl);
+                $ul.append($li);
+            });
+
+            $(container).append($ul);
+        }
+
+
+        // =====================================
+        // Value Formatters
+        // =====================================
+        // Various formatters for different data types
+        window.formatLogValue = function (value) {
+            return value.toString();
+        };
+        window.formatSurfaceValue = function (value) {
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(0) + 'k';
+            }
+            return value;
+        };
+        window.formatPercentage = function (value) {
+            return value.toFixed(0) + '%';
+        };
+        window.formatForestTypeTooltip = function (context) {
+            return context.dataset.label + ': ' + context.raw.toFixed(1) + '%';
+        };
+        window.formatTooltipLabel = function (context) {
+            return `${context.label}: ${context.parsed}%`;
+        };
+        window.formatForestTypeElevationTooltip = function (context) {
+            const value = Math.round(context.raw);  // ou .toFixed(0) pour aucune décimale
+            return context.dataset.label + ': ' + value + '%';
+        };
+        window.formatAbsoluteValue = function (value) {
+            // Si c'est zéro, on l'affiche au centre
+            if (value === 0) return '0';
+            // Pour les autres valeurs, on affiche la valeur absolue
+            return Math.abs(value).toString();
+        };
+
+        window.formatForestCoverTooltip = function (context) {
+            const label = context.dataset.label;
+            const value = Math.abs(context.raw).toFixed(1);
+            return `${label}: ${value}%`;
+        };
+
+        function transformDataValue(value, transform, valueIndex, allData) {
+            if (!transform) return value;
+
+            switch (transform) {
+                case 'negateValues':
+                    return isNaN(value) ? 0 : -value;
+                case 'toPercentage':
+                    return isNaN(value) ? 0 : value * 100;
+                case 'stackedPercentage':
+                    const total = ['secondaire', 'mature', 'coeur'].reduce((sum, key) =>
+                        sum + (allData[key] ? allData[key][valueIndex] : 0), 0);
+                    return total === 0 ? 0 : (value / total * 100);
+                default:
+                    return value;
+            }
+        }
+
+        function formatValue(value, chartType) {
+            switch (chartType) {
+                case 'doughnut_chart':
+                case 'pie_chart':
+                    return Number(value);
+                default:
+                    return value;
+            }
+        }
+
+        // =====================================
+        // Custom Plugins
+        // =====================================
+        /**
+         * Custom plugin for drawing labels on doughnut charts
+         */
+        window.customLabels = {
+            id: 'customLabels',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = '11px system-ui';
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center';
+
+                const datasets = chart.data.datasets;
+                const meta = chart.getDatasetMeta(0);
+                const centerX = meta.data[0].x;
+                const centerY = meta.data[0].y;
+
+                datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    const percentage = dataset.data[0];
+                    const element = meta.data[0];
+
+                    const percentageAngle = -Math.PI + 0.2;
+                    const radius = (element.innerRadius + element.outerRadius) / 2;
+                    const x = centerX + Math.cos(percentageAngle) * radius;
+                    const y = centerY + Math.sin(percentageAngle) * radius;
+
+                    ctx.fillText(percentage.toFixed(1) + '%', x, y);
+
+                    // Affichage du label
+                    ctx.fillText(dataset.label, centerX, centerY + element.outerRadius - 10);
+                });
+
+                ctx.restore();
+            }
+        };
+
+        /**
+         * Custom plugin for drawing percentage labels on forest type charts
+         */
+        window.forestTypeLabelsPlugin = {
+            id: 'text',
+            afterDraw: function (chart) {
+                const ctx = chart.ctx;
+                chart.data.datasets.forEach(function (dataset, i) {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach(function (element, index) {
+                        const value = dataset.data[index];
+                        const position = element.getCenterPoint();
+
+                        // Draw value
+                        ctx.save();
+                        ctx.fillStyle = '#000000';
+                        ctx.font = '12px system-ui';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(value.toFixed(1) + '%', position.x, position.y);
+                        ctx.restore();
+                    });
+                });
+            }
+        };
+
+
+    </script>
+
+</body>
+</html>

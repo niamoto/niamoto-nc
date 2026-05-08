@@ -1,0 +1,1650 @@
+{
+    "id": 918,
+    "full_name": "Gossia clusioides",
+    "authors": "(Brongn. & Gris) Burret.",
+    "rank_name": "species",
+    "metadata": {
+        "auto_generated": false,
+        "taxon_type": "species",
+        "parent_family": "Myrtaceae",
+        "parent_genus": "Gossia",
+        "id_taxonref": 13183,
+        "taxonref": "Gossia clusioides (Brongn. & Gris) Burret.",
+        "id_endemia": 6374,
+        "id_florical": 22039,
+        "endemia_url": "https://endemia.nc/flore/fiche6374",
+        "endemic": true,
+        "protected": false,
+        "protected_provnord": false,
+        "protected_provsud": false,
+        "redlist": true,
+        "image_small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg",
+        "image_big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg",
+        "image_auteur": "Herve VV",
+        "images": [
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg",
+                "auteur": "Herve VV",
+                "section": "flore",
+                "datmaj": "2021-12-15 10:47:38"
+            }
+        ]
+    },
+    "lft": 1793,
+    "rght": 1794,
+    "level": 2,
+    "parent_id": 239,
+    "taxon_id": 918,
+    "general_info": {
+        "name": {
+            "value": "Gossia clusioides"
+        },
+        "rank": {
+            "value": "species"
+        },
+        "taxon_type": {
+            "value": "species"
+        },
+        "parent_family": {
+            "value": "Myrtaceae"
+        },
+        "parent_genus": {
+            "value": "Gossia"
+        },
+        "occurrences_count": {
+            "value": 129
+        },
+        "endemic": {
+            "value": "True"
+        },
+        "id_florical": {
+            "value": "22039"
+        },
+        "redlist_cat": {
+            "value": null
+        },
+        "endemia_url": {
+            "value": "https://endemia.nc/flore/fiche6374"
+        },
+        "image_url": {
+            "value": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg"
+        },
+        "images": {
+            "value": "[{'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/8/89d41320fc18da0fe605aee7d71b8132.jpeg', 'auteur': 'Herve VV', 'section': 'flore', 'datmaj': '2021-12-15 10:47:38'}]"
+        }
+    },
+    "distribution_map": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9151153564453,
+                        -22.306982040405273
+                    ]
+                },
+                "properties": {
+                    "count": 6
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.8941650390625,
+                        -22.28333282470703
+                    ]
+                },
+                "properties": {
+                    "count": 5
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.91944885253906,
+                        -22.324722290039062
+                    ]
+                },
+                "properties": {
+                    "count": 10
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        167.00456238,
+                        -22.28775024
+                    ]
+                },
+                "properties": {
+                    "count": 5
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.3564392014976,
+                        -21.906185430812624
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9206543,
+                        -22.31817436
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.76361083984375,
+                        -22.178054809570312
+                    ]
+                },
+                "properties": {
+                    "count": 7
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.99455261,
+                        -22.27308273
+                    ]
+                },
+                "properties": {
+                    "count": 12
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.91786194,
+                        -22.31809235
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.6113341667,
+                        -21.2017419444
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.79989,
+                        -21.04283
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.76387024,
+                        -22.17289734
+                    ]
+                },
+                "properties": {
+                    "count": 6
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.90829468,
+                        -22.28225136
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.571243,
+                        -20.78752
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.9235941,
+                        -21.5779379
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.89729309,
+                        -22.27966118
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.795624758403,
+                        -21.0160069566965
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9288472222,
+                        -22.0958416667
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.2292236,
+                        -20.4737172
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.775218391418,
+                        -21.0151508500179
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.89189148,
+                        -22.15380478
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.91035461,
+                        -22.28154564
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.00839233,
+                        -20.85251427
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.797916666667,
+                        -21.0142833332221
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.5281901,
+                        -20.396605
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.90792847,
+                        -22.28219223
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.99339294,
+                        -22.27563858
+                    ]
+                },
+                "properties": {
+                    "count": 6
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.3116161,
+                        -21.1726421
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.99478149,
+                        -22.27308273
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.5460263,
+                        -20.7247878
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.99424744,
+                        -22.27291679
+                    ]
+                },
+                "properties": {
+                    "count": 3
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        167.00440979,
+                        -22.28725052
+                    ]
+                },
+                "properties": {
+                    "count": 3
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9932251,
+                        -22.27527809
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9929657,
+                        -22.27480888
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.7042186,
+                        -22.2905383
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.5402831,
+                        -21.3799
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.7119529,
+                        -21.3047226
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9746661,
+                        -22.1882755
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        167.0159226,
+                        -22.2850008
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.82149,
+                        -22.32038
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.662188,
+                        -22.2220638
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.9972287,
+                        -22.2614004
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.3088326,
+                        -21.6561789
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.772705078125,
+                        -21.607946395874023
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.3522160459708,
+                        -21.91610080444884
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.36204941123543,
+                        -21.92742022983963
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.77777099609375,
+                        -21.608482360839844
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.91659546,
+                        -22.32164764
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.69225971391592,
+                        -21.382393173002114
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.69604491193948,
+                        -21.418972845454864
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.49525451660156,
+                        -21.945119857788086
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.97318172353815,
+                        -22.276286946450234
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.97811857521114,
+                        -22.277760654585695
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.91879272,
+                        -22.31930351
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.92913818,
+                        -22.32357216
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.91809082,
+                        -22.32460022
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.74862670898438,
+                        -21.010400772094727
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.77528381347656,
+                        -21.354734420776367
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.90634155273438,
+                        -22.292007446289062
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.90350341796875,
+                        -22.274744033813477
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.85342407226562,
+                        -22.074304580688477
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.90322875976562,
+                        -22.274202346801758
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.89682006835938,
+                        -22.28926658630371
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.6471710205078,
+                        -22.11350440979004
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.68862915039062,
+                        -22.159528732299805
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.81333923339844,
+                        -22.246944427490234
+                    ]
+                },
+                "properties": {
+                    "count": 2
+                }
+            }
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Gossia clusioides"
+        ],
+        "counts": [
+            129
+        ]
+    },
+    "distribution_substrat": {
+        "um": 119,
+        "num": 10,
+        "um_percent": 92.25,
+        "num_percent": 7.75
+    },
+    "phenology": {
+        "phenology_raw": {
+            "month_data": {
+                "fleur": [
+                    0.0,
+                    33.33,
+                    66.67,
+                    20.0,
+                    100.0,
+                    66.67,
+                    50.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    8.33
+                ],
+                "fruit": [
+                    0.0,
+                    33.33,
+                    0.0,
+                    0.0,
+                    0.0,
+                    66.67,
+                    50.0,
+                    0.0,
+                    0.0,
+                    27.27,
+                    33.33,
+                    16.67
+                ]
+            },
+            "labels": [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Avr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aou",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ]
+        },
+        "phenology_peaks": {
+            "fleur": {
+                "value": [
+                    2,
+                    4
+                ],
+                "count": 2,
+                "heights": [
+                    66.67,
+                    100.0
+                ],
+                "threshold": 30.0,
+                "mean": 28.75,
+                "std": 32.978914475767695,
+                "min": 0.0,
+                "max": 100.0
+            },
+            "fruit": {
+                "value": [
+                    1,
+                    5,
+                    10
+                ],
+                "count": 3,
+                "heights": [
+                    33.33,
+                    66.67,
+                    33.33
+                ],
+                "threshold": 30.0,
+                "mean": 18.93916666666667,
+                "std": 22.143291105258545,
+                "min": 0.0,
+                "max": 66.67
+            }
+        },
+        "phenology_periods": {
+            "value": {
+                "fleur": {
+                    "periods": [
+                        {
+                            "start": 1,
+                            "end": 6,
+                            "duration": 6,
+                            "start_label": "Fev",
+                            "end_label": "Jul",
+                            "mean_value": 56.11166666666667,
+                            "max_value": 100.0
+                        },
+                        {
+                            "start": 11,
+                            "end": 11,
+                            "duration": 1,
+                            "start_label": "Dec",
+                            "end_label": "Dec",
+                            "mean_value": 8.33,
+                            "max_value": 8.33
+                        }
+                    ],
+                    "count": 2,
+                    "total_active_duration": 7,
+                    "activity_percentage": 58.333333333333336
+                },
+                "fruit": {
+                    "periods": [
+                        {
+                            "start": 1,
+                            "end": 1,
+                            "duration": 1,
+                            "start_label": "Fev",
+                            "end_label": "Fev",
+                            "mean_value": 33.33,
+                            "max_value": 33.33
+                        },
+                        {
+                            "start": 5,
+                            "end": 6,
+                            "duration": 2,
+                            "start_label": "Jun",
+                            "end_label": "Jul",
+                            "mean_value": 58.335,
+                            "max_value": 66.67
+                        },
+                        {
+                            "start": 9,
+                            "end": 11,
+                            "duration": 3,
+                            "start_label": "Oct",
+                            "end_label": "Dec",
+                            "mean_value": 25.756666666666664,
+                            "max_value": 33.33
+                        }
+                    ],
+                    "count": 3,
+                    "total_active_duration": 6,
+                    "activity_percentage": 50.0
+                }
+            },
+            "series_count": 2,
+            "threshold": 0.0,
+            "min_duration": 1
+        },
+        "phenology_data": {
+            "value": {
+                "raw": {
+                    "month_data": {
+                        "fleur": [
+                            0.0,
+                            33.33,
+                            66.67,
+                            20.0,
+                            100.0,
+                            66.67,
+                            50.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            8.33
+                        ],
+                        "fruit": [
+                            0.0,
+                            33.33,
+                            0.0,
+                            0.0,
+                            0.0,
+                            66.67,
+                            50.0,
+                            0.0,
+                            0.0,
+                            27.27,
+                            33.33,
+                            16.67
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "peaks": {
+                    "fleur": {
+                        "value": [
+                            2,
+                            4
+                        ],
+                        "count": 2,
+                        "heights": [
+                            66.67,
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 28.75,
+                        "std": 32.978914475767695,
+                        "min": 0.0,
+                        "max": 100.0
+                    },
+                    "fruit": {
+                        "value": [
+                            1,
+                            5,
+                            10
+                        ],
+                        "count": 3,
+                        "heights": [
+                            33.33,
+                            66.67,
+                            33.33
+                        ],
+                        "threshold": 30.0,
+                        "mean": 18.93916666666667,
+                        "std": 22.143291105258545,
+                        "min": 0.0,
+                        "max": 66.67
+                    }
+                },
+                "periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [
+                                {
+                                    "start": 1,
+                                    "end": 6,
+                                    "duration": 6,
+                                    "start_label": "Fev",
+                                    "end_label": "Jul",
+                                    "mean_value": 56.11166666666667,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 8.33,
+                                    "max_value": 8.33
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 7,
+                            "activity_percentage": 58.333333333333336
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 1,
+                                    "end": 1,
+                                    "duration": 1,
+                                    "start_label": "Fev",
+                                    "end_label": "Fev",
+                                    "mean_value": 33.33,
+                                    "max_value": 33.33
+                                },
+                                {
+                                    "start": 5,
+                                    "end": 6,
+                                    "duration": 2,
+                                    "start_label": "Jun",
+                                    "end_label": "Jul",
+                                    "mean_value": 58.335,
+                                    "max_value": 66.67
+                                },
+                                {
+                                    "start": 9,
+                                    "end": 11,
+                                    "duration": 3,
+                                    "start_label": "Oct",
+                                    "end_label": "Dec",
+                                    "mean_value": 25.756666666666664,
+                                    "max_value": 33.33
+                                }
+                            ],
+                            "count": 3,
+                            "total_active_duration": 6,
+                            "activity_percentage": 50.0
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            },
+            "formula": "{'raw': phenology_raw, 'peaks': phenology_peaks, 'periods': phenology_periods}",
+            "description": "Custom formula",
+            "variables": {
+                "phenology_raw": {
+                    "month_data": {
+                        "fleur": [
+                            0.0,
+                            33.33,
+                            66.67,
+                            20.0,
+                            100.0,
+                            66.67,
+                            50.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            8.33
+                        ],
+                        "fruit": [
+                            0.0,
+                            33.33,
+                            0.0,
+                            0.0,
+                            0.0,
+                            66.67,
+                            50.0,
+                            0.0,
+                            0.0,
+                            27.27,
+                            33.33,
+                            16.67
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "phenology_peaks": {
+                    "fleur": {
+                        "value": [
+                            2,
+                            4
+                        ],
+                        "count": 2,
+                        "heights": [
+                            66.67,
+                            100.0
+                        ],
+                        "threshold": 30.0,
+                        "mean": 28.75,
+                        "std": 32.978914475767695,
+                        "min": 0.0,
+                        "max": 100.0
+                    },
+                    "fruit": {
+                        "value": [
+                            1,
+                            5,
+                            10
+                        ],
+                        "count": 3,
+                        "heights": [
+                            33.33,
+                            66.67,
+                            33.33
+                        ],
+                        "threshold": 30.0,
+                        "mean": 18.93916666666667,
+                        "std": 22.143291105258545,
+                        "min": 0.0,
+                        "max": 66.67
+                    }
+                },
+                "phenology_periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [
+                                {
+                                    "start": 1,
+                                    "end": 6,
+                                    "duration": 6,
+                                    "start_label": "Fev",
+                                    "end_label": "Jul",
+                                    "mean_value": 56.11166666666667,
+                                    "max_value": 100.0
+                                },
+                                {
+                                    "start": 11,
+                                    "end": 11,
+                                    "duration": 1,
+                                    "start_label": "Dec",
+                                    "end_label": "Dec",
+                                    "mean_value": 8.33,
+                                    "max_value": 8.33
+                                }
+                            ],
+                            "count": 2,
+                            "total_active_duration": 7,
+                            "activity_percentage": 58.333333333333336
+                        },
+                        "fruit": {
+                            "periods": [
+                                {
+                                    "start": 1,
+                                    "end": 1,
+                                    "duration": 1,
+                                    "start_label": "Fev",
+                                    "end_label": "Fev",
+                                    "mean_value": 33.33,
+                                    "max_value": 33.33
+                                },
+                                {
+                                    "start": 5,
+                                    "end": 6,
+                                    "duration": 2,
+                                    "start_label": "Jun",
+                                    "end_label": "Jul",
+                                    "mean_value": 58.335,
+                                    "max_value": 66.67
+                                },
+                                {
+                                    "start": 9,
+                                    "end": 11,
+                                    "duration": 3,
+                                    "start_label": "Oct",
+                                    "end_label": "Dec",
+                                    "mean_value": 25.756666666666664,
+                                    "max_value": 33.33
+                                }
+                            ],
+                            "count": 3,
+                            "total_active_duration": 6,
+                            "activity_percentage": 50.0
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            }
+        }
+    },
+    "phenology_distribution": {
+        "month_data": {
+            "fleur": [
+                0.0,
+                33.33,
+                66.67,
+                20.0,
+                100.0,
+                66.67,
+                50.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                8.33
+            ],
+            "fruit": [
+                0.0,
+                33.33,
+                0.0,
+                0.0,
+                0.0,
+                66.67,
+                50.0,
+                0.0,
+                0.0,
+                27.27,
+                33.33,
+                16.67
+            ]
+        },
+        "labels": [
+            "Jan",
+            "Fev",
+            "Mar",
+            "Avr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aou",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            200,
+            300,
+            400,
+            500
+        ],
+        "counts": [
+            43,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            93.48,
+            2.17,
+            2.17,
+            2.17,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "dbh_max": {
+        "max": 44.1,
+        "units": "cm",
+        "max_value": 500
+    },
+    "height_max": {
+        "max": 8.0,
+        "units": "m",
+        "max_value": 40
+    },
+    "elevation_distribution": {
+        "bins": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            1000,
+            1100,
+            1200,
+            1700
+        ],
+        "counts": [
+            19,
+            71,
+            10,
+            7,
+            7,
+            4,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            15.83,
+            59.17,
+            8.33,
+            5.83,
+            5.83,
+            3.33,
+            0.83,
+            0.83,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "wood_density": {
+        "mean": 0.81,
+        "units": "g/cm3",
+        "max_value": 1.2
+    },
+    "rainfall_distribution": {
+        "bins": [
+            1000,
+            1500,
+            2000,
+            2500,
+            3000,
+            3500,
+            4000,
+            4500,
+            5000
+        ],
+        "counts": [
+            4,
+            13,
+            25,
+            76,
+            11,
+            0,
+            0,
+            0
+        ],
+        "percentages": [
+            3.1,
+            10.08,
+            19.38,
+            58.91,
+            8.53,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "holdridge_distribution": {
+        "categories": [
+            1,
+            2,
+            3
+        ],
+        "counts": [
+            0,
+            25,
+            100
+        ],
+        "labels": [
+            "Sec",
+            "Humide",
+            "Tr\u00e8s humide"
+        ],
+        "percentages": [
+            0.0,
+            20.0,
+            80.0
+        ]
+    },
+    "strata_distribution": {
+        "categories": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "counts": [
+            1,
+            0,
+            1,
+            0
+        ],
+        "labels": [
+            "Sous-bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ]
+    },
+    "bark_thickness": {
+        "mean": null,
+        "units": "mm",
+        "max_value": 80
+    },
+    "leaf_sla": {
+        "mean": 7.22,
+        "units": "g/m2",
+        "max_value": 50
+    },
+    "leaf_area": {
+        "mean": 12.41,
+        "units": "cm2",
+        "max_value": 1500
+    },
+    "leaf_thickness": {
+        "mean": 270.81,
+        "units": "\u00b5m",
+        "max_value": 800
+    }
+}

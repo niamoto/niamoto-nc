@@ -1,0 +1,232 @@
+{
+    "id": 20,
+    "locality": "Tiebaghi",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            164.22599792,
+            -20.43131065
+        ]
+    },
+    "plot_id": 20,
+    "general_info": {
+        "plot_name": {
+            "value": "Tiebaghi"
+        },
+        "elevation": {
+            "value": "23",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "1220",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "1"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "25"
+        },
+        "nb_species": {
+            "value": "35"
+        },
+        "occurrences_count": {
+            "value": "1065"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.22599792,
+                        -20.43131065
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Cunoniaceae",
+            "Calophyllaceae",
+            "Apocynaceae",
+            "Myrtaceae",
+            "Elaeocarpaceae",
+            "Chrysobalanaceae",
+            "Clusiaceae",
+            "Ebenaceae",
+            "Malvaceae",
+            "Casuarinaceae"
+        ],
+        "counts": [
+            408.0,
+            202.0,
+            141.0,
+            88.0,
+            50.0,
+            37.0,
+            33.0,
+            30.0,
+            16.0,
+            13.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Geissois pruinosa",
+            "Calophyllum caledonicum",
+            "Cerberiopsis candelabra",
+            "Melaleuca quinquenervia",
+            "Elaeocarpus rotundifolius",
+            "Alstonia balansae",
+            "Diospyros macrocarpa",
+            "Garcinia neglecta",
+            "Tabernaemontana cerifera",
+            "Maxwellia lepidota"
+        ],
+        "counts": [
+            393.0,
+            202.0,
+            82.0,
+            72.0,
+            50.0,
+            34.0,
+            28.0,
+            26.0,
+            25.0,
+            16.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            766.0,
+            207.0,
+            67.0,
+            17.0,
+            8.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            25,
+            185,
+            842,
+            13
+        ],
+        "percentages": [
+            2.35,
+            17.37,
+            79.06,
+            1.22
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            1065
+        ],
+        "percentages": [
+            0.0,
+            0.0,
+            0.0,
+            100.0
+        ]
+    },
+    "species_level": {
+        "value": "0.9756",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1065,
+            82
+        ],
+        "percentages": [
+            92.85,
+            7.15
+        ],
+        "arbres_vivants": {
+            "value": 1065,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 82,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "11.6",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6871135938136405",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "32.6",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 35,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "2.2",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.62",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.8",
+        "units": ""
+    },
+    "biomass": {
+        "value": "171.554415158782",
+        "units": "t/ha"
+    }
+}

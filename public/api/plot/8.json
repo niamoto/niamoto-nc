@@ -1,0 +1,232 @@
+{
+    "id": 8,
+    "locality": "Djeve",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.43495178,
+            -21.22610474
+        ]
+    },
+    "plot_id": 8,
+    "general_info": {
+        "plot_name": {
+            "value": "Djeve"
+        },
+        "elevation": {
+            "value": "369",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "1880",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "2"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "43"
+        },
+        "nb_species": {
+            "value": "98"
+        },
+        "occurrences_count": {
+            "value": "1036"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.43495178,
+                        -21.22610474
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Apocynaceae",
+            "Meliaceae",
+            "Myrtaceae",
+            "Rhizophoraceae",
+            "Sapotaceae",
+            "Moraceae",
+            "Sapindaceae",
+            "Cunoniaceae",
+            "Monimiaceae",
+            "Elaeocarpaceae"
+        ],
+        "counts": [
+            136.0,
+            131.0,
+            85.0,
+            84.0,
+            74.0,
+            72.0,
+            59.0,
+            55.0,
+            51.0,
+            44.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Tabernaemontana cerifera",
+            "Crossostylis grandiflora",
+            "Pycnandra balansae",
+            "Didymocheton macranthus",
+            "Syzygium lifuanum",
+            "Geissois racemosa",
+            "Didymocheton rufescens",
+            "Sparattosyce balansae",
+            "Hedycarya cupulata",
+            "Barringtonia neocaledonica"
+        ],
+        "counts": [
+            117.0,
+            84.0,
+            68.0,
+            66.0,
+            54.0,
+            52.0,
+            42.0,
+            40.0,
+            35.0,
+            29.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            692.0,
+            210.0,
+            61.0,
+            38.0,
+            22.0,
+            7.0,
+            4.0,
+            1.0,
+            1.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            86,
+            425,
+            504,
+            21
+        ],
+        "percentages": [
+            8.3,
+            41.02,
+            48.65,
+            2.03
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            4,
+            0,
+            4,
+            1027
+        ],
+        "percentages": [
+            0.39,
+            0.0,
+            0.39,
+            99.23
+        ]
+    },
+    "species_level": {
+        "value": "0.9836",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1036,
+            37
+        ],
+        "percentages": [
+            96.55,
+            3.45
+        ],
+        "arbres_vivants": {
+            "value": 1036,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 37,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "14.9",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6498226721826132",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "52.4",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 98,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.65",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.8",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.96",
+        "units": ""
+    },
+    "biomass": {
+        "value": "363.185416140985",
+        "units": "t/ha"
+    }
+}

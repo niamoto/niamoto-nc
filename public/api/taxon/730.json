@@ -1,0 +1,860 @@
+{
+    "id": 730,
+    "full_name": "Dicksonia perriei",
+    "authors": "Noben & Lehnert",
+    "rank_name": "species",
+    "metadata": {
+        "auto_generated": false,
+        "taxon_type": "species",
+        "parent_family": "Dicksoniaceae",
+        "parent_genus": "Dicksonia",
+        "id_taxonref": 15729,
+        "taxonref": "Dicksonia perriei Noben & Lehnert",
+        "id_endemia": 8040,
+        "id_florical": 24148,
+        "endemia_url": "https://endemia.nc/flore/fiche8040",
+        "endemic": true,
+        "protected": false,
+        "protected_provnord": false,
+        "protected_provsud": false,
+        "redlist": true,
+        "redlist_cat": "VU",
+        "image_small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg",
+        "image_big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg",
+        "image_auteur": "Beno\u00eet Henry",
+        "images": [
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg",
+                "auteur": "Beno\u00eet Henry",
+                "section": "flore",
+                "datmaj": "2018-11-04 08:09:37"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg",
+                "auteur": "Amice R\u00e9my",
+                "section": "flore",
+                "datmaj": "2022-12-06 11:44:46"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg",
+                "auteur": "Jean-Christophe Pintaud",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:46:38"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg",
+                "auteur": "Jean-Christophe Pintaud",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:46:55"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg",
+                "auteur": "Jean-Christophe Pintaud",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:47:12"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg",
+                "auteur": "Beno\u00eet Henry",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:51:48"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:48:56"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:50:58"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:53:23"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:55:14"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2017-06-22 09:57:12"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg",
+                "auteur": "Beno\u00eet Henry",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:49:24"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:47:09"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:46:34"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:46:24"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg",
+                "auteur": "Amice R\u00e9my",
+                "section": "flore",
+                "datmaj": "2022-12-06 11:45:30"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg",
+                "auteur": "R\u00e9my Amice",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:46:15"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg",
+                "auteur": "Beno\u00eet Henry",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:57:50"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg",
+                "auteur": "Beno\u00eet Henry",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:46:04"
+            },
+            {
+                "url": "http://api.endemia.nc/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg",
+                "small_thumb": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg",
+                "mid_thumb": "http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg",
+                "big_thumb": "http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg",
+                "auteur": "Beno\u00eet Henry",
+                "section": "flore",
+                "datmaj": "2021-09-17 19:45:53"
+            }
+        ]
+    },
+    "lft": 853,
+    "rght": 854,
+    "level": 2,
+    "parent_id": 199,
+    "taxon_id": 730,
+    "general_info": {
+        "name": {
+            "value": "Dicksonia perriei"
+        },
+        "rank": {
+            "value": "species"
+        },
+        "taxon_type": {
+            "value": "species"
+        },
+        "parent_family": {
+            "value": "Dicksoniaceae"
+        },
+        "parent_genus": {
+            "value": "Dicksonia"
+        },
+        "occurrences_count": {
+            "value": 8
+        },
+        "endemic": {
+            "value": "True"
+        },
+        "id_florical": {
+            "value": "24148"
+        },
+        "redlist_cat": {
+            "value": "VU"
+        },
+        "endemia_url": {
+            "value": "https://endemia.nc/flore/fiche8040"
+        },
+        "image_url": {
+            "value": "http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg"
+        },
+        "images": {
+            "value": "[{'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/f879388a6d73b474de9b4b2007a2e62b.jpeg', 'auteur': 'Beno\u00eet Henry', 'section': 'flore', 'datmaj': '2018-11-04 08:09:37'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/8/866ad3889739088c558e54111e0b8fe4.jpeg', 'auteur': 'Amice R\u00e9my', 'section': 'flore', 'datmaj': '2022-12-06 11:44:46'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/7/7f18ac204332585be1e5196d54464030.jpg', 'auteur': 'Jean-Christophe Pintaud', 'section': 'flore', 'datmaj': '2017-06-22 09:46:38'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/3/3dea93471fdea10529c817261364bc71.jpg', 'auteur': 'Jean-Christophe Pintaud', 'section': 'flore', 'datmaj': '2017-06-22 09:46:55'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/d/d74f97c055ff324f30365fbdcfb9affe.jpg', 'auteur': 'Jean-Christophe Pintaud', 'section': 'flore', 'datmaj': '2017-06-22 09:47:12'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/b/bf9a30e03c9e197be0b27fcb67854dcd.jpeg', 'auteur': 'Beno\u00eet Henry', 'section': 'flore', 'datmaj': '2021-09-17 19:51:48'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/3/3f7c05f3eaaa80eabcac6e1550f799c3.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2017-06-22 09:48:56'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/6/66b829d7b024a5dadbbccb69463d3a34.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2017-06-22 09:50:58'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/9/992bee3625405e12bd5417a41659bae0.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2017-06-22 09:53:23'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/8/845754d8eb4c42ad4630fbc74abdc457.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2017-06-22 09:55:14'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/51e864238793953cdc2229b173a8c9c8.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2017-06-22 09:57:12'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/5/5a91fe9a442edf3a900d12213e32cf85.jpeg', 'auteur': 'Beno\u00eet Henry', 'section': 'flore', 'datmaj': '2021-09-17 19:49:24'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/9/9266a6c6fe9e979e24cc69c80d54ef62.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2021-09-17 19:47:09'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/7/7e898fc7e0375b4ce277365260d7df6d.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2021-09-17 19:46:34'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/0/06beb1b95bfad978804e691331944763.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2021-09-17 19:46:24'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/c5ec378695596677997cefbfd2c85adc.jpeg', 'auteur': 'Amice R\u00e9my', 'section': 'flore', 'datmaj': '2022-12-06 11:45:30'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/e/e7de12255e34ba912621090fd3d79d99.jpeg', 'auteur': 'R\u00e9my Amice', 'section': 'flore', 'datmaj': '2021-09-17 19:46:15'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/big_thumb/ressources/images/flore/media/photo/f/f7ac74a37e4125ab9328e065468c1a30.jpeg', 'auteur': 'Beno\u00eet Henry', 'section': 'flore', 'datmaj': '2021-09-17 19:57:50'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/e/e897c0fed8f1a224f5e80ca49dd583f1.jpeg', 'auteur': 'Beno\u00eet Henry', 'section': 'flore', 'datmaj': '2021-09-17 19:46:04'}, {'url': 'http://api.endemia.nc/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg', 'small_thumb': 'http://api.endemia.nc/media/cache/small_thumb/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg', 'mid_thumb': 'http://api.endemia.nc/media/cache/mid_thumb/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg', 'big_thumb': 'http://api.endemia.nc/media/cache/resolve/big_thumb/ressources/images/flore/media/photo/c/cdfea69c27c5fa775860dfb9c18239f7.jpeg', 'auteur': 'Beno\u00eet Henry', 'section': 'flore', 'datmaj': '2021-09-17 19:45:53'}]"
+        }
+    },
+    "distribution_map": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.2330555556,
+                        -21.6708333333
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.7588333333,
+                        -20.5995
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.919649119,
+                        -20.9508941953333
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.62905,
+                        -22.0777166667
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        166.4723833333,
+                        -22.02675
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.9203056,
+                        -20.9500383
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        164.76667,
+                        -20.58333
+                    ]
+                },
+                "properties": {
+                    "count": 1
+                }
+            }
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Dicksonia perriei"
+        ],
+        "counts": [
+            8
+        ]
+    },
+    "distribution_substrat": {
+        "um": 3,
+        "num": 5,
+        "um_percent": 37.5,
+        "num_percent": 62.5
+    },
+    "phenology": {
+        "phenology_raw": {
+            "month_data": {
+                "fleur": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.0,
+                    0.0,
+                    0,
+                    0.0
+                ],
+                "fruit": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.0,
+                    0.0,
+                    0,
+                    0.0
+                ]
+            },
+            "labels": [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Avr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aou",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ]
+        },
+        "phenology_peaks": {
+            "fleur": {
+                "value": [],
+                "count": 0,
+                "heights": [],
+                "threshold": 30.0,
+                "mean": 0.0,
+                "std": 0.0,
+                "min": 0.0,
+                "max": 0.0
+            },
+            "fruit": {
+                "value": [],
+                "count": 0,
+                "heights": [],
+                "threshold": 30.0,
+                "mean": 0.0,
+                "std": 0.0,
+                "min": 0.0,
+                "max": 0.0
+            }
+        },
+        "phenology_periods": {
+            "value": {
+                "fleur": {
+                    "periods": [],
+                    "count": 0,
+                    "total_active_duration": 0,
+                    "activity_percentage": 0.0
+                },
+                "fruit": {
+                    "periods": [],
+                    "count": 0,
+                    "total_active_duration": 0,
+                    "activity_percentage": 0.0
+                }
+            },
+            "series_count": 2,
+            "threshold": 0.0,
+            "min_duration": 1
+        },
+        "phenology_data": {
+            "value": {
+                "raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            0.0,
+                            0,
+                            0.0
+                        ],
+                        "fruit": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            0.0,
+                            0,
+                            0.0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "peaks": {
+                    "fleur": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    },
+                    "fruit": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    }
+                },
+                "periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        },
+                        "fruit": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            },
+            "formula": "{'raw': phenology_raw, 'peaks': phenology_peaks, 'periods': phenology_periods}",
+            "description": "Custom formula",
+            "variables": {
+                "phenology_raw": {
+                    "month_data": {
+                        "fleur": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            0.0,
+                            0,
+                            0.0
+                        ],
+                        "fruit": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.0,
+                            0.0,
+                            0,
+                            0.0
+                        ]
+                    },
+                    "labels": [
+                        "Jan",
+                        "Fev",
+                        "Mar",
+                        "Avr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aou",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec"
+                    ]
+                },
+                "phenology_peaks": {
+                    "fleur": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    },
+                    "fruit": {
+                        "value": [],
+                        "count": 0,
+                        "heights": [],
+                        "threshold": 30.0,
+                        "mean": 0.0,
+                        "std": 0.0,
+                        "min": 0.0,
+                        "max": 0.0
+                    }
+                },
+                "phenology_periods": {
+                    "value": {
+                        "fleur": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        },
+                        "fruit": {
+                            "periods": [],
+                            "count": 0,
+                            "total_active_duration": 0,
+                            "activity_percentage": 0.0
+                        }
+                    },
+                    "series_count": 2,
+                    "threshold": 0.0,
+                    "min_duration": 1
+                }
+            }
+        }
+    },
+    "phenology_distribution": {
+        "month_data": {
+            "fleur": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0,
+                0.0,
+                0,
+                0.0
+            ],
+            "fruit": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0,
+                0.0,
+                0,
+                0.0
+            ]
+        },
+        "labels": [
+            "Jan",
+            "Fev",
+            "Mar",
+            "Avr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aou",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            200,
+            300,
+            400,
+            500
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    "dbh_max": {
+        "max": null,
+        "units": "cm",
+        "max_value": 500
+    },
+    "height_max": {
+        "max": 4.0,
+        "units": "m",
+        "max_value": 40
+    },
+    "elevation_distribution": {
+        "bins": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            1000,
+            1100,
+            1200,
+            1700
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            2
+        ],
+        "percentages": [
+            0.0,
+            0.0,
+            0.0,
+            28.57,
+            0.0,
+            0.0,
+            28.57,
+            0.0,
+            14.29,
+            0.0,
+            0.0,
+            28.57
+        ]
+    },
+    "wood_density": {
+        "mean": null,
+        "units": "g/cm3",
+        "max_value": 1.2
+    },
+    "rainfall_distribution": {
+        "bins": [
+            1000,
+            1500,
+            2000,
+            2500,
+            3000,
+            3500,
+            4000,
+            4500,
+            5000
+        ],
+        "counts": [
+            0,
+            0,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "percentages": [
+            0.0,
+            0.0,
+            28.57,
+            14.29,
+            14.29,
+            14.29,
+            14.29,
+            14.29
+        ]
+    },
+    "holdridge_distribution": {
+        "categories": [
+            1,
+            2,
+            3
+        ],
+        "counts": [
+            0,
+            0,
+            7
+        ],
+        "labels": [
+            "Sec",
+            "Humide",
+            "Tr\u00e8s humide"
+        ],
+        "percentages": [
+            0.0,
+            0.0,
+            100.0
+        ]
+    },
+    "strata_distribution": {
+        "categories": [
+            1,
+            2,
+            3,
+            4
+        ],
+        "counts": [
+            0,
+            0,
+            0,
+            0
+        ],
+        "labels": [
+            "Sous-bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ]
+    },
+    "bark_thickness": {
+        "mean": null,
+        "units": "mm",
+        "max_value": 80
+    },
+    "leaf_sla": {
+        "mean": null,
+        "units": "g/m2",
+        "max_value": 50
+    },
+    "leaf_area": {
+        "mean": null,
+        "units": "cm2",
+        "max_value": 1500
+    },
+    "leaf_thickness": {
+        "mean": null,
+        "units": "\u00b5m",
+        "max_value": 800
+    }
+}

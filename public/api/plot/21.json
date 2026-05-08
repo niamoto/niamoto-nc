@@ -1,0 +1,232 @@
+{
+    "id": 21,
+    "locality": "Tiwae",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            165.13356018,
+            -20.8148365
+        ]
+    },
+    "plot_id": 21,
+    "general_info": {
+        "plot_name": {
+            "value": "Tiwae"
+        },
+        "elevation": {
+            "value": "247",
+            "units": "m"
+        },
+        "rainfall": {
+            "value": "2480",
+            "units": "mm/an"
+        },
+        "holdridge": {
+            "value": "3"
+        },
+        "in_um": {
+            "value": "False"
+        },
+        "nb_families": {
+            "value": "40"
+        },
+        "nb_species": {
+            "value": "98"
+        },
+        "occurrences_count": {
+            "value": "1318"
+        }
+    },
+    "map_panel": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        165.13356018,
+                        -20.8148365
+                    ]
+                },
+                "properties": {}
+            }
+        ]
+    },
+    "top_families": {
+        "tops": [
+            "Sapindaceae",
+            "Myrtaceae",
+            "Meliaceae",
+            "Monimiaceae",
+            "Lauraceae",
+            "Hernandiaceae",
+            "Annonaceae",
+            "Euphorbiaceae",
+            "Arecaceae",
+            "Salicaceae"
+        ],
+        "counts": [
+            282.0,
+            149.0,
+            83.0,
+            77.0,
+            58.0,
+            54.0,
+            52.0,
+            48.0,
+            47.0,
+            45.0
+        ]
+    },
+    "top_species": {
+        "tops": [
+            "Syzygium {macrophylla_mackee26643}",
+            "Cupaniopsis sylvatica",
+            "Hernandia cordigera",
+            "Hedycarya cupulata",
+            "Xylopia vieillardii",
+            "Cupaniopsis petiolulata",
+            "Guioa villosa",
+            "Cupaniopsis macrocarpa",
+            "Burretiokentia vieillardii",
+            "Homalium deplanchei"
+        ],
+        "counts": [
+            96.0,
+            57.0,
+            54.0,
+            52.0,
+            51.0,
+            50.0,
+            48.0,
+            47.0,
+            47.0,
+            43.0
+        ]
+    },
+    "dbh_distribution": {
+        "bins": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            75,
+            100,
+            150,
+            200,
+            500
+        ],
+        "counts": [
+            0.0,
+            1052.0,
+            196.0,
+            51.0,
+            11.0,
+            8.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "strata_distribution": {
+        "labels": [
+            "Sous-Bois",
+            "Sous-Canop\u00e9e",
+            "Canop\u00e9e",
+            "Emergent"
+        ],
+        "counts": [
+            44,
+            390,
+            858,
+            26
+        ],
+        "percentages": [
+            3.34,
+            29.59,
+            65.1,
+            1.97
+        ]
+    },
+    "taxonomic_distribution": {
+        "labels": [
+            "Pteridophytes",
+            "Gymnospermae",
+            "Monocotyledonae",
+            "Dicotyledonae"
+        ],
+        "counts": [
+            4,
+            0,
+            47,
+            1267
+        ],
+        "percentages": [
+            0.3,
+            0.0,
+            3.57,
+            96.13
+        ]
+    },
+    "species_level": {
+        "value": "0.9917",
+        "units": ""
+    },
+    "living_dead_distribution": {
+        "labels": [
+            "Arbres vivants",
+            "Arbres morts"
+        ],
+        "counts": [
+            1318,
+            49
+        ],
+        "percentages": [
+            96.42,
+            3.58
+        ],
+        "arbres_vivants": {
+            "value": 1318,
+            "units": ""
+        },
+        "arbres_morts": {
+            "value": 49,
+            "units": ""
+        }
+    },
+    "height": {
+        "value": "11.5",
+        "units": "m"
+    },
+    "wood_density": {
+        "value": "0.6497181967050814",
+        "units": "g/cm3"
+    },
+    "basal_area": {
+        "value": "32.8",
+        "units": "m\u00b2/ha"
+    },
+    "richness": {
+        "value": 98,
+        "units": "Nombre d'esp\u00e8ces/ha"
+    },
+    "shannon": {
+        "value": "3.95",
+        "units": ""
+    },
+    "pielou": {
+        "value": "0.86",
+        "units": ""
+    },
+    "simpson": {
+        "value": "0.97",
+        "units": ""
+    },
+    "biomass": {
+        "value": "155.092106971303",
+        "units": "t/ha"
+    }
+}
